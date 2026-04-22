@@ -175,58 +175,62 @@ export default function Home() {
 
         {/* Mascottes */}
         <div className="card">
-          <h2 className="text-2xl font-bold mb-6 text-center">🎭 Les Mascottes officielles</h2>
-          <div className="grid md:grid-cols-3 gap-6">
+          <h2 className="text-2xl font-bold mb-2 text-center">🎭 Les Mascottes officielles</h2>
+          <p className="text-center text-gray-400 text-sm mb-6">Annoncées le 25 septembre 2025</p>
+
+          {/* Photo officielle des 3 mascottes */}
+          <div className="flex justify-center mb-8">
+            <img
+              src="https://upload.wikimedia.org/wikipedia/en/thumb/9/94/Maple-Zayu-Clutch_%28mascot%29.jpeg/800px-Maple-Zayu-Clutch_%28mascot%29.jpeg"
+              alt="Maple, Zayu et Clutch — Mascottes FIFA World Cup 2026"
+              className="rounded-2xl max-h-72 object-contain shadow-xl"
+            />
+          </div>
+
+          {/* Fiches individuelles */}
+          <div className="grid md:grid-cols-3 gap-4">
             {[
               {
-                name: 'Cachanilla',
-                country: '🇲🇽 Mexique',
-                desc: 'Mascotte représentant la culture et la chaleur du Mexique',
-                color: 'from-green-800 to-red-900',
-                img: '/mascot_mexico.png',
-              },
-              {
-                name: 'Striker',
-                country: '🇺🇸 États-Unis',
-                desc: 'Mascotte symbole de l\'énergie et du sport américain',
-                color: 'from-blue-800 to-red-900',
-                img: '/mascot_usa.png',
-              },
-              {
-                name: 'Poutine',
+                name: 'Maple',
+                animal: 'Orignal (Moose)',
                 country: '🇨🇦 Canada',
-                desc: 'Mascotte représentant la nature et l\'esprit canadien',
-                color: 'from-red-900 to-gray-800',
-                img: '/mascot_canada.png',
+                role: 'Gardien de but',
+                desc: 'Créatif et résilient, il incarne les valeurs canadiennes avec sa tenue rouge.',
+                color: 'border-red-600',
+                emoji: '🦌',
+              },
+              {
+                name: 'Zayu',
+                animal: 'Jaguar',
+                country: '🇲🇽 Mexique',
+                role: 'Attaquant · N°9',
+                desc: 'Symbole du pouvoir mésoaméricain, agile et fougueux en vert mexicain.',
+                color: 'border-green-600',
+                emoji: '🐆',
+              },
+              {
+                name: 'Clutch',
+                animal: 'Aigle chauve',
+                country: '🇺🇸 États-Unis',
+                role: 'Milieu de terrain',
+                desc: 'Intrépide et optimiste, il inspire le courage et l\'unité en bleu américain.',
+                color: 'border-blue-600',
+                emoji: '🦅',
               },
             ].map((m) => (
-              <div key={m.name} className={`rounded-xl overflow-hidden bg-gradient-to-b ${m.color} p-1`}>
-                <div className="bg-gray-800/80 rounded-lg p-4 h-full flex flex-col items-center text-center gap-3">
-                  <div className="w-32 h-32 rounded-full overflow-hidden bg-gray-700 flex items-center justify-center">
-                    <img
-                      src={m.img}
-                      alt={m.name}
-                      className="w-full h-full object-cover"
-                      onError={(e) => {
-                        const t = e.currentTarget
-                        t.style.display = 'none'
-                        const p = t.parentElement
-                        if (p) p.innerHTML = '<span class="text-5xl">⚽</span>'
-                      }}
-                    />
-                  </div>
+              <div key={m.name} className={`bg-gray-700/50 rounded-xl p-4 border-l-4 ${m.color} flex flex-col gap-2`}>
+                <div className="flex items-center gap-3">
+                  <span className="text-4xl">{m.emoji}</span>
                   <div>
                     <h3 className="text-xl font-bold">{m.name}</h3>
-                    <p className="text-sm text-gray-300 mt-0.5">{m.country}</p>
-                    <p className="text-xs text-gray-400 mt-2">{m.desc}</p>
+                    <p className="text-sm text-gray-300">{m.country} · {m.animal}</p>
                   </div>
                 </div>
+                <span className="text-xs font-medium bg-gray-600 rounded-full px-2 py-0.5 w-fit">{m.role}</span>
+                <p className="text-xs text-gray-400">{m.desc}</p>
               </div>
             ))}
           </div>
-          <p className="text-xs text-gray-500 text-center mt-4">
-            Ajoutez les images officielles dans /public/mascot_mexico.png · mascot_usa.png · mascot_canada.png
-          </p>
         </div>
       </div>
     </div>
