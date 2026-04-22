@@ -20,6 +20,7 @@ const FIFA_TO_ISO: Record<string, string> = {
   MNE: 'me', GEO: 'ge', ARM: 'am', AZE: 'az',
   KAZ: 'kz', GUB: 'gw', GAM: 'gm', BEN: 'bj',
   MLI: 'ml', BFA: 'bf', GUI: 'gn',
+  RSA: 'za', COD: 'cd', CGO: 'cg',
 }
 
 const NAME_TO_CODE: Record<string, string> = {
@@ -75,6 +76,10 @@ const NAME_TO_CODE: Record<string, string> = {
   'montenegro': 'me',
   'georgie': 'ge', 'georgia': 'ge',
   'armenie': 'am', 'armenia': 'am',
+  'afrique du sud': 'za', 'south africa': 'za',
+  'republique democratique du congo': 'cd', 'democratic republic of the congo': 'cd',
+  'dr congo': 'cd', 'rdc': 'cd', 'congo dr': 'cd', 'rd congo': 'cd',
+  'congo': 'cg', 'republique du congo': 'cg', 'congo brazzaville': 'cg',
 }
 
 function normalize(s: string): string {
