@@ -8,6 +8,15 @@ body {
   color: #ffffff;
 }
 
+/* Scrolling ticker animation for refresh info */
+@keyframes ticker {
+  0%   { transform: translateX(100%); }
+  100% { transform: translateX(-100%); }
+}
+.animate-ticker {
+  animation: ticker 10s linear infinite;
+}
+
 @layer components {
   .card {
     @apply bg-gray-800 rounded-xl p-6 shadow-lg;
