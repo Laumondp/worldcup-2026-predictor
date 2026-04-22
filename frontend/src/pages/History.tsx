@@ -24,13 +24,15 @@ export default function History() {
       ]
     : []
 
+
+
   const COLORS = ['#10B981', '#EF4444']
 
   return (
     <div className="space-y-8">
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-        <h1 className="text-3xl font-bold">Prediction History</h1>
-        <div className="text-gray-400">Track our model's accuracy</div>
+        <h1 className="text-3xl font-bold">Historique des prédictions</h1>
+        <div className="text-gray-400">Précision du modèle</div>
       </div>
 
       {/* Accuracy Overview */}
@@ -42,7 +44,7 @@ export default function History() {
           <div className="text-4xl font-bold text-blue-400">
             {hasData ? `${(accuracyData.accuracy * 100).toFixed(1)}%` : '--'}
           </div>
-          <div className="text-gray-400 mt-2">Overall Accuracy</div>
+          <div className="text-gray-400 mt-2">Précision globale</div>
         </div>
 
         <div className="card text-center">
@@ -52,7 +54,7 @@ export default function History() {
           <div className="text-4xl font-bold text-green-400">
             {hasData ? accuracyData.correct_predictions : '--'}
           </div>
-          <div className="text-gray-400 mt-2">Correct Predictions</div>
+          <div className="text-gray-400 mt-2">Prédictions correctes</div>
         </div>
 
         <div className="card text-center">
@@ -62,14 +64,14 @@ export default function History() {
           <div className="text-4xl font-bold">
             {hasData ? accuracyData.total_predictions : '--'}
           </div>
-          <div className="text-gray-400 mt-2">Total Predictions</div>
+          <div className="text-gray-400 mt-2">Total des prédictions</div>
         </div>
       </div>
 
       {/* Accuracy Chart */}
       {hasData && (
         <div className="card">
-          <h2 className="text-xl font-bold mb-6 text-center">Prediction Accuracy</h2>
+          <h2 className="text-xl font-bold mb-6 text-center">Précision des prédictions</h2>
           <div className="h-64">
             <ResponsiveContainer width="100%" height="100%">
               <PieChart>
@@ -98,7 +100,7 @@ export default function History() {
 
       {/* Played Matches with Results */}
       <div className="card">
-        <h2 className="text-xl font-bold mb-6">Completed Matches</h2>
+        <h2 className="text-xl font-bold mb-6">Matchs terminés</h2>
 
         {playedMatches?.data && playedMatches.data.length > 0 ? (
           <div className="space-y-4">
@@ -155,7 +157,7 @@ export default function History() {
 
                   {prediction && (
                     <div className={`text-sm ${isCorrect ? 'text-green-400' : 'text-red-400'}`}>
-                      {isCorrect ? 'Correct' : 'Wrong'}
+                      {isCorrect ? 'Correct' : 'Incorrect'}
                     </div>
                   )}
                 </div>
@@ -165,9 +167,9 @@ export default function History() {
         ) : (
           <div className="text-center py-12 text-gray-400">
             <Clock className="w-16 h-16 mx-auto mb-4 opacity-50" />
-            <p className="text-lg">No matches completed yet</p>
+            <p className="text-lg">Aucun match terminé pour l'instant</p>
             <p className="text-sm mt-2">
-              Results will appear here once matches are played
+              Les résultats apparaîtront ici une fois les matchs joués
             </p>
           </div>
         )}
@@ -175,13 +177,13 @@ export default function History() {
 
       {/* Model Info */}
       <div className="card bg-blue-900/30">
-        <h3 className="text-lg font-bold mb-3">About Our Predictions</h3>
+        <h3 className="text-lg font-bold mb-3">À propos de nos prédictions</h3>
         <ul className="space-y-2 text-gray-300">
-          <li>- Ensemble model combining Random Forest and XGBoost</li>
-          <li>- Features: FIFA rankings, ELO ratings, form, head-to-head history</li>
-          <li>- Trained on historical World Cup and international matches</li>
-          <li>- Predictions update as new data becomes available</li>
-          <li>- Target accuracy: 50% (baseline random is 33%)</li>
+          <li>- Modèle combinant Random Forest et XGBoost</li>
+          <li>- Critères : classement FIFA, cotes ELO, forme, historique des confrontations</li>
+          <li>- Entraîné sur les matchs historiques de Coupes du Monde et internationaux</li>
+          <li>- Les prédictions se mettent à jour à chaque nouvelle donnée</li>
+          <li>- Précision cible : 50% (base aléatoire : 33%)</li>
         </ul>
       </div>
     </div>

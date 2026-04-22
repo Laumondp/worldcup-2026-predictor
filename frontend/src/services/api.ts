@@ -56,6 +56,23 @@ export interface Prediction {
   predicted_away_score: number
 }
 
+export interface TeamDetails extends Team {
+  stats: {
+    matches: number
+    wins: number
+    draws: number
+    losses: number
+    goals_scored: number
+    goals_conceded: number
+    goal_difference: number
+  }
+  qualification: {
+    points: number
+    goal_diff: number
+    played: number
+  }
+}
+
 export interface GroupStanding {
   group: string
   teams: {
@@ -80,25 +97,25 @@ export interface TournamentSimulation {
   win_probabilities: Record<string, number>
 }
 
-// API calls
+// API calls — all use flat single-segment paths to work with Vercel's serverless routing
 export const teamsApi = {
   getAll: (confederation?: string) =>
     api.get<Team[]>('/teams', { params: { confederation } }),
 
   getByName: (name: string) =>
-    api.get<Team>(`/teams/${name}`),
+    api.get<TeamDetails>('/team', { params: { name } }),
 
   getGroup: (group: string) =>
-    api.get<Team[]>(`/teams/group/${group}`),
+    api.get<Team[]>('/teams', { params: { group } }),
 
   getTopTeams: (n: number = 20) =>
-    api.get(`/teams/rankings/top/${n}`),
+    api.get('/top-teams', { params: { n } }),
 
   getConfederationSummary: () =>
-    api.get('/teams/confederations/summary'),
+    api.get('/confederations'),
 
   getHeadToHead: (team1: string, team2: string) =>
-    api.get(`/teams/h2h/${team1}/${team2}`),
+    api.get('/h2h', { params: { team1, team2 } }),
 }
 
 export const matchesApi = {
@@ -106,39 +123,56 @@ export const matchesApi = {
     api.get<Match[]>('/matches', { params: { stage, played } }),
 
   getById: (id: number) =>
-    api.get<Match>(`/matches/${id}`),
+    api.get<Match>('/match', { params: { id } }),
 
   getUpcoming: (n: number = 10) =>
-    api.get(`/matches/upcoming/next/${n}`),
+    api.get('/upcoming', { params: { n } }),
 
   getGroupStandings: () =>
-    api.get<GroupStanding[]>('/matches/groups/standings'),
+    api.get<GroupStanding[]>('/standings'),
 
   getGroupMatches: (group: string) =>
-    api.get(`/matches/groups/${group}/matches`),
+    api.get('/group-matches', { params: { group } }),
 
   getBracket: () =>
-    api.get('/matches/knockout/bracket'),
+    api.get('/bracket'),
 }
 
 export const predictionsApi = {
   predictMatch: (homeTeam: string, awayTeam: string, isKnockout: boolean = false) =>
-    api.post<Prediction>('/predictions/match', {
+    api.post<Prediction>('/predict', {
       home_team: homeTeam,
       away_team: awayTeam,
       is_knockout: isKnockout,
     }),
 
   getMatchPrediction: (matchId: number) =>
-    api.get<Prediction>(`/predictions/match/${matchId}`),
+    api.get<Prediction>('/predict', { params: { match_id: matchId } }),
 
   simulateTournament: (numSimulations: number = 1000) =>
-    api.post<TournamentSimulation>('/predictions/simulate-tournament', null, {
-      params: { num_simulations: numSimulations },
+    api.post<TournamentSimulation>('/simulate', null, {
+      params: { n: numSimulations },
     }),
 
   getAccuracy: () =>
-    api.get('/predictions/accuracy'),
+    api.get('/accuracy'),
+}
+
+export const adminApi = {
+  refreshFriendlies: () =>
+    api.post<{
+      status: string
+      source: string
+      matches_added: number
+      matches_removed: number
+      teams_updated: number
+      played: number
+      upcoming: number
+      live: number
+      rankings_date: string | null
+      last_updated: string
+      message?: string
+    }>('/admin'),
 }
 
 export default api

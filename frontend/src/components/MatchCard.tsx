@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import { predictionsApi } from '../services/api'
+import { FlagImg } from '../utils/flags'
 import ProbabilityChart from './ProbabilityChart'
 
 interface MatchCardProps {
@@ -34,7 +35,7 @@ export default function MatchCard({
     enabled: showPrediction && !played,
   })
 
-  const formattedDate = new Date(date).toLocaleDateString('en-US', {
+  const formattedDate = new Date(date).toLocaleDateString('fr-FR', {
     weekday: 'short',
     month: 'short',
     day: 'numeric',
@@ -52,7 +53,7 @@ export default function MatchCard({
       <div className="flex items-center justify-between mb-4">
         {/* Home Team */}
         <div className="flex-1 text-center">
-          <div className="text-3xl mb-2">{homeCode}</div>
+          <div className="flex justify-center mb-2"><FlagImg code={homeCode} size={48} /></div>
           <div className="text-sm text-gray-300">{homeTeam}</div>
         </div>
 
@@ -75,7 +76,7 @@ export default function MatchCard({
 
         {/* Away Team */}
         <div className="flex-1 text-center">
-          <div className="text-3xl mb-2">{awayCode}</div>
+          <div className="flex justify-center mb-2"><FlagImg code={awayCode} size={48} /></div>
           <div className="text-sm text-gray-300">{awayTeam}</div>
         </div>
       </div>
@@ -87,13 +88,13 @@ export default function MatchCard({
             onClick={() => setShowPrediction(!showPrediction)}
             className="w-full btn-secondary text-sm"
           >
-            {showPrediction ? 'Hide Prediction' : 'Show Prediction'}
+            {showPrediction ? 'Masquer la prédiction' : 'Voir la prédiction'}
           </button>
 
           {showPrediction && (
             <div className="mt-4">
               {isLoading ? (
-                <div className="text-center text-gray-400">Loading prediction...</div>
+                <div className="text-center text-gray-400">Chargement...</div>
               ) : prediction ? (
                 <div>
                   <ProbabilityChart
@@ -104,12 +105,12 @@ export default function MatchCard({
                     awayTeam={awayTeam}
                   />
                   <div className="text-center mt-4">
-                    <div className="text-sm text-gray-400 mb-1">Predicted Score</div>
+                    <div className="text-sm text-gray-400 mb-1">Score prédit</div>
                     <div className="text-xl font-bold">
                       {prediction.data.predicted_home_score.toFixed(1)} - {prediction.data.predicted_away_score.toFixed(1)}
                     </div>
                     <div className="text-sm text-gray-400 mt-2">
-                      Confidence: {(prediction.data.confidence * 100).toFixed(1)}%
+                      Confiance : {(prediction.data.confidence * 100).toFixed(1)}%
                     </div>
                   </div>
                 </div>

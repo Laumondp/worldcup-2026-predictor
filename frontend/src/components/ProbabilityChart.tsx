@@ -35,7 +35,7 @@ export default function ProbabilityChart({
             outerRadius={80}
             paddingAngle={5}
             dataKey="value"
-            label={({ name, value }) => `${value.toFixed(1)}%`}
+            label={({ value }) => `${value.toFixed(1)}%`}
           >
             {data.map((_, index) => (
               <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />

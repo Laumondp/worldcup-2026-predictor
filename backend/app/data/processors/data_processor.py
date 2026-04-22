@@ -59,7 +59,10 @@ class DataProcessor:
         logger.info(f"Loaded {len(rankings)} FIFA rankings")
 
     def _load_historical_matches(self):
-        """Load historical match data."""
+        """Load historical match data (skip if already present)."""
+        if self.db.query(HistoricalMatch).count() > 0:
+            logger.info("Historical matches already in database, skipping")
+            return
         matches = self.historical_collector.get_all_historical_data()
 
         for match_data in matches:
@@ -78,7 +81,10 @@ class DataProcessor:
         logger.info(f"Loaded {len(matches)} historical matches")
 
     def _initialize_wc2026_teams(self):
-        """Initialize World Cup 2026 qualified teams."""
+        """Initialize World Cup 2026 qualified teams (skip if already present)."""
+        if self.db.query(Team).count() > 0:
+            logger.info("Teams already in database, skipping initialization")
+            return
         # 48-team World Cup 2026
         # This is a projected list based on current qualifications
         wc2026_teams = [
@@ -264,6 +270,152 @@ class DataProcessor:
                 "played": team.quali_played,
             },
         }
+
+    async def refresh_friendly_matches(self) -> Dict:
+        """Refresh friendly/international match data and recalculate team form."""
+        from app.data.collectors.football_data_org import FootballDataOrgCollector
+        from datetime import timedelta
+
+        new_matches = []
+        source = "static"
+
+        # Try Football-Data.org API first (free tier)
+        try:
+            collector = FootballDataOrgCollector()
+            if collector.api_key:
+                date_from = (datetime.utcnow() - timedelta(days=400)).strftime("%Y-%m-%d")
+                date_to = datetime.utcnow().strftime("%Y-%m-%d")
+                api_matches = await collector.get_international_matches(
+                    date_from=date_from, date_to=date_to
+                )
+                for m in api_matches:
+                    parsed = collector.parse_match(m)
+                    if (
+                        parsed.get("home_score") is not None
+                        and parsed.get("away_score") is not None
+                        and parsed.get("home_team", {}).get("name")
+                        and parsed.get("away_team", {}).get("name")
+                    ):
+                        new_matches.append({
+                            "date": (parsed["date"] or "")[:10],
+                            "home": parsed["home_team"]["name"],
+                            "away": parsed["away_team"]["name"],
+                            "home_score": parsed["home_score"],
+                            "away_score": parsed["away_score"],
+                            "tournament": parsed.get("competition") or "International",
+                        })
+                if new_matches:
+                    source = "football-data.org"
+        except Exception as e:
+            logger.warning(f"Football-Data.org API unavailable, using static data: {e}")
+
+        # Always supplement/replace with curated static 2024-2025 data
+        static_matches = self.historical_collector.get_recent_international_matches()
+        if not new_matches:
+            new_matches = static_matches
+        else:
+            existing_keys = {(m["date"], m["home"], m["away"]) for m in new_matches}
+            for m in static_matches:
+                key = (m.get("date", ""), m.get("home", ""), m.get("away", ""))
+                if key not in existing_keys:
+                    new_matches.append(m)
+
+        # Remove old non-WC international matches before reinserting
+        REFRESH_TOURNAMENTS = [
+            "Friendly", "International",
+            "UEFA Nations League", "CONCACAF Nations League",
+            "UEFA Euro 2024", "Copa America 2024",
+        ]
+        deleted = self.db.query(HistoricalMatch).filter(
+            HistoricalMatch.tournament.in_(REFRESH_TOURNAMENTS)
+        ).delete(synchronize_session=False)
+
+        # Insert refreshed matches
+        added = 0
+        for match_data in new_matches:
+            if not match_data.get("date"):
+                continue
+            try:
+                match = HistoricalMatch(
+                    date=datetime.strptime(match_data["date"], "%Y-%m-%d"),
+                    home_team=match_data["home"],
+                    away_team=match_data["away"],
+                    home_score=int(match_data["home_score"]),
+                    away_score=int(match_data["away_score"]),
+                    tournament=match_data["tournament"],
+                    neutral=match_data.get("neutral", True),
+                )
+                self.db.add(match)
+                added += 1
+            except Exception as e:
+                logger.warning(f"Skipping match {match_data}: {e}")
+
+        self.db.commit()
+
+        # Recalculate team form from refreshed data
+        teams_updated = self._recalculate_team_form()
+
+        return {
+            "source": source,
+            "matches_added": added,
+            "matches_removed": deleted,
+            "teams_updated": teams_updated,
+            "last_updated": datetime.utcnow().isoformat() + "Z",
+        }
+
+    def _recalculate_team_form(self) -> int:
+        """Recalculate form_points and goal averages for all qualified teams."""
+        from sqlalchemy import or_
+        teams = self.db.query(Team).filter(Team.qualified == True).all()
+        updated = 0
+
+        for team in teams:
+            recent = (
+                self.db.query(HistoricalMatch)
+                .filter(
+                    or_(
+                        HistoricalMatch.home_team == team.name,
+                        HistoricalMatch.away_team == team.name,
+                    )
+                )
+                .order_by(HistoricalMatch.date.desc())
+                .limit(10)
+                .all()
+            )
+
+            if not recent:
+                continue
+
+            last5 = recent[:5]
+            form_pts = 0
+            goals_scored = 0
+            goals_conceded = 0
+
+            for m in last5:
+                if m.home_team == team.name:
+                    goals_scored += m.home_score
+                    goals_conceded += m.away_score
+                    if m.home_score > m.away_score:
+                        form_pts += 3
+                    elif m.home_score == m.away_score:
+                        form_pts += 1
+                else:
+                    goals_scored += m.away_score
+                    goals_conceded += m.home_score
+                    if m.away_score > m.home_score:
+                        form_pts += 3
+                    elif m.away_score == m.home_score:
+                        form_pts += 1
+
+            n = len(last5)
+            team.form_points = form_pts
+            team.goals_scored_avg = round(goals_scored / n, 2) if n > 0 else 0.0
+            team.goals_conceded_avg = round(goals_conceded / n, 2) if n > 0 else 0.0
+            team.updated_at = datetime.utcnow()
+            updated += 1
+
+        self.db.commit()
+        return updated
 
     def get_head_to_head(self, team1_name: str, team2_name: str) -> Dict:
         """Get head-to-head statistics between two teams."""

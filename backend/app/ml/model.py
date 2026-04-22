@@ -51,7 +51,6 @@ class WorldCupPredictor:
             subsample=0.8,
             colsample_bytree=0.8,
             random_state=42,
-            use_label_encoder=False,
             eval_metric="mlogloss",
         )
 
@@ -90,6 +89,10 @@ class WorldCupPredictor:
         # Train final models on all data
         self.ensemble.fit(X_scaled, y)
         self.is_trained = True
+
+        # VotingClassifier clones estimators — update refs to fitted versions
+        self.rf_model = self.ensemble.named_estimators_.get("rf")
+        self.xgb_model = self.ensemble.named_estimators_.get("xgb")
 
         metrics = {
             "rf_cv_accuracy": cv_scores_rf.mean(),

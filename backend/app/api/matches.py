@@ -44,7 +44,7 @@ class MatchResultUpdate(BaseModel):
     away_score: int
 
 
-@router.get("/", response_model=List[MatchResponse])
+@router.get("", response_model=List[MatchResponse])
 def get_all_matches(
     stage: Optional[str] = None,
     played: Optional[bool] = None,

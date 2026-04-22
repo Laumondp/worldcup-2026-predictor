@@ -23,7 +23,7 @@ export default function TeamSelector({
     return (
       <div className="space-y-2">
         <label className="block text-sm font-medium text-gray-400">{label}</label>
-        <div className="input w-full animate-pulse bg-gray-600">Loading...</div>
+        <div className="input w-full animate-pulse bg-gray-600">Chargement...</div>
       </div>
     )
   }
@@ -38,7 +38,7 @@ export default function TeamSelector({
         onChange={(e) => onChange(e.target.value)}
         className="input w-full"
       >
-        <option value="">Select a team</option>
+        <option value="">Sélectionner une équipe</option>
         {availableTeams.map((team: Team) => (
           <option key={team.id} value={team.name}>
             {team.name} (#{team.fifa_ranking})

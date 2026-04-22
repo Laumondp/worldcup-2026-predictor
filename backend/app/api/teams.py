@@ -55,7 +55,7 @@ class HeadToHeadResponse(BaseModel):
     team2_goals: int
 
 
-@router.get("/", response_model=List[TeamResponse])
+@router.get("", response_model=List[TeamResponse])
 def get_all_teams(
     confederation: Optional[str] = None,
     qualified: Optional[bool] = None,
