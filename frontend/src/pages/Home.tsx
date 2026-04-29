@@ -59,9 +59,23 @@ export default function Home() {
           <p className="text-2xl text-gray-200 mb-4 drop-shadow">
             USA · Mexico · Canada
           </p>
-          <p className="text-gray-300 max-w-2xl mx-auto drop-shadow text-lg mb-10">
+          <p className="text-gray-300 max-w-2xl mx-auto drop-shadow text-lg mb-6">
             Prédictions par Machine Learning · Statistiques · Simulation du tournoi
           </p>
+
+          {/* Bannière Adrenalyn dans le hero */}
+          <a
+            href="https://wc2026-doubles.vercel.app/"
+            target="_blank"
+            rel="noopener noreferrer"
+            onClick={e => e.stopPropagation()}
+            className="flex items-center justify-center gap-3 px-6 py-2.5 rounded-2xl bg-yellow-400/15 hover:bg-yellow-400/25 border border-yellow-400/30 transition-all animate-pulse mb-8"
+          >
+            <span className="text-xl">🃏</span>
+            <span className="text-sm font-semibold text-yellow-300">Gestion des cartes Adrenalyn 2026</span>
+            <span className="text-yellow-400 font-bold">→</span>
+          </a>
+
           <div className="animate-bounce text-gray-300 flex flex-col items-center gap-1 text-sm">
             <span>Voir les détails</span>
             <ChevronDown className="w-6 h-6" />
@@ -192,17 +206,6 @@ export default function Home() {
           <ShareButtons />
         </div>
 
-        {/* Bannière Adrenalyn */}
-        <a
-          href="https://wc2026-doubles.vercel.app/"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="flex items-center justify-center gap-3 w-full py-3 rounded-2xl bg-yellow-400/10 hover:bg-yellow-400/20 transition-all animate-pulse"
-        >
-          <span className="text-xl">🃏</span>
-          <span className="text-sm font-semibold text-yellow-300">Gestion des cartes Adrenalyn 2026</span>
-          <span className="text-yellow-400 font-bold">→</span>
-        </a>
 
       </div>
     </div>
