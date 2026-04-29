@@ -92,7 +92,7 @@ export default function Layout() {
               href="https://wc2026-doubles.vercel.app/"
               target="_blank"
               rel="noopener noreferrer"
-              className="flex-shrink-0 flex items-center gap-2 px-3 py-1.5 rounded-xl border border-yellow-500/40 bg-gradient-to-r from-yellow-900/40 to-orange-900/30 hover:from-yellow-800/50 hover:to-orange-800/40 transition-all group overflow-hidden max-w-[220px]"
+              className="flex-shrink-0 flex items-center gap-2 px-3 py-1.5 rounded-xl border border-yellow-500/40 bg-gradient-to-r from-yellow-900/40 to-orange-900/30 hover:from-yellow-800/50 hover:to-orange-800/40 transition-all group overflow-hidden max-w-[220px] animate-pulse"
             >
               <span className="text-lg">🃏</span>
               <div className="overflow-hidden">
