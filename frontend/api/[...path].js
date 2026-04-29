@@ -1,5 +1,15 @@
 // Routeur unique — toutes les routes /api/* sont gérées ici
 
+import Redis from 'ioredis';
+let _redis = null;
+function getRedis() {
+  if (!_redis && process.env.REDIS_URL) {
+    _redis = new Redis(process.env.REDIS_URL, { maxRetriesPerRequest: 2, connectTimeout: 3000, commandTimeout: 2000 });
+    _redis.on('error', () => {});
+  }
+  return _redis;
+}
+
 const TEAMS = [
   { name:"USA",          code:"USA", confederation:"CONCACAF", group:"A", fifa_ranking:13, elo:1780 },
   { name:"France",       code:"FRA", confederation:"UEFA",     group:"A", fifa_ranking:2,  elo:1950 },
@@ -195,14 +205,86 @@ async function fetchFifaMatches() {
   }));
 }
 
+// Alias de noms (français, variantes FIFA officielles, etc.) -> nom anglais du tableau TEAMS
+const NAME_ALIASES = {
+  // Français
+  'etatsuns':'USA','etatsunis':'USA','etatsunisdamerique':'USA',
+  'france':'France','pologne':'Poland','maroc':'Morocco',
+  'mexique':'Mexico','espagne':'Spain','serbie':'Serbia','senegal':'Senegal',
+  'canada':'Canada','angleterre':'England','ukraine':'Ukraine','nigeria':'Nigeria',
+  'argentine':'Argentina','allemagne':'Germany','turquie':'Turkey','cameroun':'Cameroon',
+  'bresil':'Brazil','portugal':'Portugal','japon':'Japan','egypte':'Egypt',
+  'colombie':'Colombia','paysbas':'Netherlands','coreedusud':'South Korea',
+  'algerie':'Algeria','uruguay':'Uruguay','belgique':'Belgium','australie':'Australia',
+  'tunisie':'Tunisia','equateur':'Ecuador','italie':'Italy','iran':'Iran',
+  'cotedivoire':'Ivory Coast','paraguay':'Paraguay','croatie':'Croatia',
+  'arabiesaoudite':'Saudi Arabia','ghana':'Ghana','suisse':'Switzerland',
+  'qatar':'Qatar','costarica':'Costa Rica','venezuela':'Venezuela',
+  'danemark':'Denmark','irak':'Iraq','panama':'Panama','bolivie':'Bolivia',
+  'autriche':'Austria','emiratsarabesunis':'UAE','eau':'UAE',
+  'jamaique':'Jamaica','nouvellezelande':'New Zealand',
+  'afriquedusud':'South Africa','suede':'Sweden','norvege':'Norway',
+  'ecosse':'Scotland','galles':'Wales','chili':'Chile','perou':'Peru','chine':'China',
+  // Variantes FIFA anglaises officielles
+  'korearepublic':'South Korea','republicofkorea':'South Korea',
+  'unitedstates':'USA','unitedstatesofamerica':'USA',
+  'unitedarabemirates':'UAE',
+  'iriran':'Iran','islamicrepublicofiran':'Iran',
+  'bosniaherzegovina':'Bosnia-Herzegovina',
+  'czechia':'Czechia',
+};
+
+// Equipes non qualifiees WC2026 pouvant apparaitre dans les calendriers FIFA
+const EXTRA_TEAMS = [
+  { name:'South Africa',       code:'RSA', confederation:'CAF',      group:null, fifa_ranking:60,  elo:1460 },
+  { name:'Scotland',           code:'SCO', confederation:'UEFA',     group:null, fifa_ranking:28,  elo:1630 },
+  { name:'Wales',              code:'WAL', confederation:'UEFA',     group:null, fifa_ranking:31,  elo:1610 },
+  { name:'Sweden',             code:'SWE', confederation:'UEFA',     group:null, fifa_ranking:32,  elo:1605 },
+  { name:'Norway',             code:'NOR', confederation:'UEFA',     group:null, fifa_ranking:33,  elo:1595 },
+  { name:'Chile',              code:'CHI', confederation:'CONMEBOL', group:null, fifa_ranking:34,  elo:1580 },
+  { name:'Peru',               code:'PER', confederation:'CONMEBOL', group:null, fifa_ranking:39,  elo:1555 },
+  { name:'China',              code:'CHN', confederation:'AFC',      group:null, fifa_ranking:88,  elo:1360 },
+  { name:'Czechia',            code:'CZE', confederation:'UEFA',     group:null, fifa_ranking:37,  elo:1570 },
+  { name:'Bosnia-Herzegovina', code:'BIH', confederation:'UEFA',     group:null, fifa_ranking:65,  elo:1490 },
+  { name:'Greece',             code:'GRE', confederation:'UEFA',     group:null, fifa_ranking:50,  elo:1510 },
+  { name:'Hungary',            code:'HUN', confederation:'UEFA',     group:null, fifa_ranking:44,  elo:1530 },
+  { name:'Romania',            code:'ROU', confederation:'UEFA',     group:null, fifa_ranking:46,  elo:1520 },
+  { name:'Slovakia',           code:'SVK', confederation:'UEFA',     group:null, fifa_ranking:48,  elo:1515 },
+  { name:'Slovenia',           code:'SVN', confederation:'UEFA',     group:null, fifa_ranking:57,  elo:1485 },
+  { name:'Finland',            code:'FIN', confederation:'UEFA',     group:null, fifa_ranking:58,  elo:1480 },
+  { name:'Iceland',            code:'ISL', confederation:'UEFA',     group:null, fifa_ranking:72,  elo:1450 },
+  { name:'Albania',            code:'ALB', confederation:'UEFA',     group:null, fifa_ranking:66,  elo:1470 },
+  { name:'North Macedonia',    code:'MKD', confederation:'UEFA',     group:null, fifa_ranking:67,  elo:1465 },
+  { name:'Montenegro',         code:'MNE', confederation:'UEFA',     group:null, fifa_ranking:70,  elo:1455 },
+  { name:'Georgia',            code:'GEO', confederation:'UEFA',     group:null, fifa_ranking:74,  elo:1445 },
+  { name:'Uzbekistan',         code:'UZB', confederation:'AFC',      group:null, fifa_ranking:71,  elo:1450 },
+  { name:'Jordan',             code:'JOR', confederation:'AFC',      group:null, fifa_ranking:73,  elo:1445 },
+  { name:'Morocco',            code:'MAR', confederation:'CAF',      group:null, fifa_ranking:14,  elo:1760 },
+  { name:'Egypt',              code:'EGY', confederation:'CAF',      group:null, fifa_ranking:37,  elo:1570 },
+  { name:'Colombia',           code:'COL', confederation:'CONMEBOL', group:null, fifa_ranking:9,   elo:1830 },
+  { name:'Costa Rica',         code:'CRC', confederation:'CONCACAF', group:null, fifa_ranking:49,  elo:1510 },
+];
+
+const ALL_TEAMS = [...TEAMS, ...EXTRA_TEAMS];
+
 function normName(s) {
-  return (s||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9]/g,'');
+  return (s||'').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/[^a-z0-9]/g,'');
 }
 
 function findTeam(name) {
+  if (!name) return null;
   const n = normName(name);
-  return TEAMS.find(t => normName(t.name) === n || normName(t.code) === n) ||
-    TEAMS.find(t => n.includes(normName(t.name)) || normName(t.name).includes(n));
+  const direct = ALL_TEAMS.find(t => normName(t.name) === n || normName(t.code) === n);
+  if (direct) return direct;
+  const alias = NAME_ALIASES[n];
+  if (alias) {
+    const found = ALL_TEAMS.find(t => t.name === alias);
+    if (found) return found;
+  }
+  const partial = ALL_TEAMS.find(t => n.includes(normName(t.name)) || normName(t.name).includes(n));
+  if (partial) return partial;
+  // Fallback : équipe inconnue avec ELO moyen
+  return { name: name.trim(), code: name.slice(0,3).toUpperCase(), confederation:'Unknown', group:null, fifa_ranking:100, elo:1500 };
 }
 
 export default async function handler(req, res) {
@@ -299,7 +381,7 @@ export default async function handler(req, res) {
   if (route === 'upcoming') {
     const n = parseInt(q.n) || 10;
     try {
-      const r = await fetch('https://api.fifa.com/api/v3/calendar/matches?idCompetition=17&idSeason=285023&count=200&language=fr-FR', { headers: { 'User-Agent': 'Mozilla/5.0', Accept: 'application/json' } });
+      const r = await fetch('https://api.fifa.com/api/v3/calendar/matches?idCompetition=17&idSeason=285023&count=200&language=en-GB', { headers: { 'User-Agent': 'Mozilla/5.0', Accept: 'application/json' } });
       const data = await r.json();
       const desc = lst => Array.isArray(lst) && lst[0] ? lst[0].Description||'' : '';
       const upcoming = (data.Results||[]).filter(m => m.Home?.Score == null).slice(0, n).map(m => ({ id:m.IdMatch, home_team:desc(m.Home?.TeamName), away_team:desc(m.Away?.TeamName), date:m.Date, stage:desc(m.StageName), venue:null, city:null, played:false, home_score:null, away_score:null }));
@@ -332,8 +414,8 @@ export default async function handler(req, res) {
   // POST /api/predict — match prediction
   if (route === 'predict' && method === 'POST') {
     const { home_team, away_team, is_knockout } = req.body || {};
-    const home = getTeam(home_team), away = getTeam(away_team);
-    if (!home || !away) return res.status(404).json({ error: 'Team not found' });
+    const home = findTeam(home_team), away = findTeam(away_team);
+    if (!home || !away) return res.status(404).json({ error: 'Team not found: ' + (!home ? home_team : away_team) });
     return res.json({ ...predictMatch(home.elo, away.elo, is_knockout||false), home_team:home.name, away_team:away.name });
   }
 
@@ -385,6 +467,43 @@ export default async function handler(req, res) {
     } catch(e) {
       return res.status(500).json({ status:'error', message:String(e) });
     }
+  }
+
+  // POST /api/visit — enregistre ou rafraîchit une visite
+  if (route === 'visit' && method === 'POST') {
+    const r = getRedis();
+    const now = Date.now();
+    const body = req.body || {};
+    // visit_id stable par session ; is_new=false pour les heartbeats (pas d'incr du total)
+    const visitId = body.visit_id || (now + ':' + Math.random().toString(36).slice(2));
+    const isNew = body.is_new !== false;
+    const fiveMinAgo = now - 5 * 60 * 1000;
+    let total = 0;
+    if (r) {
+      const pipe = r.pipeline();
+      if (isNew) pipe.incr('wc:total');
+      pipe.zadd('wc:recent', now, visitId); // met à jour le score si l'ID existe déjà
+      pipe.zremrangebyscore('wc:recent', 0, fiveMinAgo);
+      const results = await pipe.exec();
+      if (isNew) {
+        total = results[0][1] || 0;
+      } else {
+        const t = await r.get('wc:total');
+        total = parseInt(t) || 0;
+      }
+    }
+    return res.json({ status: 'ok', total_visits: total, visit_id: visitId });
+  }
+
+  if (route === 'visitors') {
+    const r = getRedis();
+    if (r) {
+      const now = Date.now();
+      const threeMinAgo = now - 3 * 60 * 1000;
+      const [total, active] = await Promise.all([r.get('wc:total'), r.zcount('wc:recent', threeMinAgo, '+inf')]);
+      return res.json({ total_visits: parseInt(total) || 0, active_now: active || 0 });
+    }
+    return res.json({ total_visits: 0, active_now: 0 });
   }
 
   return res.status(404).json({ error:`Route not found: /api/${route}`, url:req.url });

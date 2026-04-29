@@ -197,11 +197,11 @@ export default function Home() {
           href="https://wc2026-doubles.vercel.app/"
           target="_blank"
           rel="noopener noreferrer"
-          className="flex items-center justify-center gap-3 w-full py-4 rounded-2xl border-2 border-yellow-400 bg-yellow-400/10 hover:bg-yellow-400/20 transition-all animate-pulse"
+          className="flex items-center justify-center gap-3 w-full py-3 rounded-2xl bg-yellow-400/10 hover:bg-yellow-400/20 transition-all animate-pulse"
         >
-          <span className="text-3xl">🃏</span>
-          <span className="text-lg font-bold text-yellow-300">Gestion des cartes Adrenalyn 2026</span>
-          <span className="text-yellow-400 text-xl font-bold">→</span>
+          <span className="text-xl">🃏</span>
+          <span className="text-sm font-semibold text-yellow-300">Gestion des cartes Adrenalyn 2026</span>
+          <span className="text-yellow-400 font-bold">→</span>
         </a>
 
       </div>
