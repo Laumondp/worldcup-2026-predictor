@@ -1,7 +1,7 @@
 import axios from 'axios'
 
 const api = axios.create({
-  baseURL: '/api',
+  baseURL: `${import.meta.env.VITE_API_URL ?? ''}/api`,
   headers: {
     'Content-Type': 'application/json',
   },
@@ -97,7 +97,6 @@ export interface TournamentSimulation {
   win_probabilities: Record<string, number>
 }
 
-// API calls — all use flat single-segment paths to work with Vercel's serverless routing
 export const teamsApi = {
   getAll: (confederation?: string) =>
     api.get<Team[]>('/teams', { params: { confederation } }),
@@ -173,6 +172,12 @@ export const adminApi = {
       last_updated: string
       message?: string
     }>('/admin'),
+}
+
+export const statsApi = {
+  recordVisit: (visitId?: string, isNew: boolean = true) =>
+    api.post('/visit', { visit_id: visitId, is_new: isNew }),
+  getVisitors: () => api.get<{ total_visits: number; active_now: number }>('/visitors'),
 }
 
 export default api
