@@ -43,19 +43,19 @@ export default function Home() {
         href="https://wc2026-doubles.vercel.app/"
         target="_blank"
         rel="noopener noreferrer"
-        className="flex overflow-hidden bg-yellow-400/10 border border-yellow-400/25 rounded-xl py-2 hover:bg-yellow-400/20 transition-colors"
+        className="flex overflow-hidden bg-blue-500/10 border border-blue-500/25 rounded-xl py-2 hover:bg-blue-500/20 transition-colors"
       >
         <div className="flex whitespace-nowrap animate-marquee">
           {[...Array(2)].map((_, i) => (
-            <span key={i} className="flex items-center gap-4 px-12 text-sm font-semibold text-yellow-300">
+            <span key={i} className="flex items-center gap-4 px-12 text-sm font-semibold text-blue-300">
               🃏 Gestion des cartes Adrenalyn 2026
-              <span className="text-yellow-500 mx-2">·</span>
+              <span className="text-blue-500 mx-2">·</span>
               Retrouvez vos doubles, échangez et complétez votre collection !
-              <span className="text-yellow-500 mx-2">·</span>
+              <span className="text-blue-500 mx-2">·</span>
               🃏 Gestion des cartes Adrenalyn 2026
-              <span className="text-yellow-500 mx-2">·</span>
+              <span className="text-blue-500 mx-2">·</span>
               Retrouvez vos doubles, échangez et complétez votre collection !
-              <span className="text-yellow-500 mx-2">·</span>
+              <span className="text-blue-500 mx-2">·</span>
             </span>
           ))}
         </div>
@@ -151,7 +151,7 @@ export default function Home() {
                 <div className="space-y-4">
                   <div className="text-center pb-4 border-b border-gray-700">
                     <div className="text-sm text-gray-400 mb-1">Vainqueur prédit</div>
-                    <div className="text-2xl font-bold text-yellow-500">{simulation.data.winner}</div>
+                    <div className="text-2xl font-bold text-blue-500">{simulation.data.winner}</div>
                   </div>
                   <div className="space-y-3">
                     {Object.entries(simulation.data.win_probabilities).slice(0, 5).map(([team, prob]) => (
