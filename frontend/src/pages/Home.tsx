@@ -48,11 +48,25 @@ export default function Home() {
         <div className="flex whitespace-nowrap animate-marquee">
           {[...Array(2)].map((_, i) => (
             <span key={i} className="flex items-center gap-4 px-12 text-sm font-semibold text-blue-300">
-              🃏 Gestion des cartes Adrenalyn 2026
+              <span className="inline-block overflow-hidden flex-shrink-0" style={{ width: 72, height: 28 }}>
+                <img
+                  src="https://www.panini.co.uk/media/wysiwyg/005461_WC26_AXL_Web_Banner_Desktop_ON_SALE_1.jpg"
+                  alt="Adrenalyn XL"
+                  style={{ height: 28, width: 'auto', objectFit: 'cover', objectPosition: 'left center', display: 'block' }}
+                />
+              </span>
+              Gestion des cartes FIFA World Cup 2026
               <span className="text-blue-500 mx-2">·</span>
               Retrouvez vos doubles, échangez et complétez votre collection !
               <span className="text-blue-500 mx-2">·</span>
-              🃏 Gestion des cartes Adrenalyn 2026
+              <span className="inline-block overflow-hidden flex-shrink-0" style={{ width: 72, height: 28 }}>
+                <img
+                  src="https://www.panini.co.uk/media/wysiwyg/005461_WC26_AXL_Web_Banner_Desktop_ON_SALE_1.jpg"
+                  alt="Adrenalyn XL"
+                  style={{ height: 28, width: 'auto', objectFit: 'cover', objectPosition: 'left center', display: 'block' }}
+                />
+              </span>
+              Gestion des cartes FIFA World Cup 2026
               <span className="text-blue-500 mx-2">·</span>
               Retrouvez vos doubles, échangez et complétez votre collection !
               <span className="text-blue-500 mx-2">·</span>
