@@ -87,6 +87,22 @@ export default function Layout() {
         <div className="container mx-auto px-4">
           <div className="flex items-center justify-between h-16">
 
+            {/* Bannière Adrenalyn */}
+            <a
+              href="https://wc2026-doubles.vercel.app/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex-shrink-0 flex items-center gap-2 px-3 py-1.5 rounded-xl border border-yellow-500/40 bg-gradient-to-r from-yellow-900/40 to-orange-900/30 hover:from-yellow-800/50 hover:to-orange-800/40 transition-all group overflow-hidden max-w-[220px]"
+            >
+              <span className="text-lg">🃏</span>
+              <div className="overflow-hidden">
+                <div className="text-xs font-bold text-yellow-300 group-hover:text-yellow-200 whitespace-nowrap animate-ticker">
+                  Gestion des cartes Adrenalyn 2026
+                </div>
+                <div className="text-[10px] text-yellow-600 whitespace-nowrap">wc2026-doubles.vercel.app</div>
+              </div>
+            </a>
+
             <nav className="hidden md:flex items-center gap-1 whitespace-nowrap">
               {/* Visitor counter */}
               <div
@@ -165,17 +181,6 @@ export default function Layout() {
                 <ShareButtons compact />
               </div>
 
-              {/* Lien doubles */}
-              <div className="ml-2 pl-2 border-l border-gray-700">
-                <a
-                  href="https://wc2026-doubles.vercel.app"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm font-medium bg-blue-600 text-white hover:bg-blue-500 transition-colors whitespace-nowrap"
-                >
-                  🌐 Doubles
-                </a>
-              </div>
             </nav>
           </div>
         </div>
