@@ -296,7 +296,12 @@ export default async function handler(req, res) {
   const method = req.method;
   const q = req.query || {};
 
-  res.setHeader('Cache-Control', 's-maxage=60, stale-while-revalidate=30');
+  // Pas de cache pour les endpoints temps-réel
+  if (route === 'visitors' || route === 'visit') {
+    res.setHeader('Cache-Control', 'no-store');
+  } else {
+    res.setHeader('Cache-Control', 's-maxage=60, stale-while-revalidate=30');
+  }
 
   // GET /api/teams — list all teams (optional ?confederation= or ?group=)
   if (route === 'teams') {
