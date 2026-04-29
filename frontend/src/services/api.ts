@@ -175,4 +175,12 @@ export const adminApi = {
     }>('/admin'),
 }
 
+export const statsApi = {
+  getVisitors: () =>
+    api.get<{ total_visits: number; active_now: number }>('/visitors'),
+
+  recordVisit: (visitId: string, isNew: boolean = true) =>
+    api.post('/visitors', { visit_id: visitId, is_new: isNew }),
+}
+
 export default api
