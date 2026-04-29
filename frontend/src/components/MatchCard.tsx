@@ -29,10 +29,11 @@ export default function MatchCard({
 }: MatchCardProps) {
   const [showPrediction, setShowPrediction] = useState(false)
 
-  const { data: prediction, isLoading } = useQuery({
+  const { data: prediction, isLoading, isError } = useQuery({
     queryKey: ['prediction', homeTeam, awayTeam],
-    queryFn: () => predictionsApi.predictMatch(homeTeam, awayTeam, !stage.includes('Group')),
+    queryFn: () => predictionsApi.predictMatch(homeTeam, awayTeam, !(stage ?? '').toLowerCase().includes('group')),
     enabled: showPrediction && !played,
+    retry: 1,
   })
 
   const formattedDate = new Date(date).toLocaleDateString('fr-FR', {
@@ -95,6 +96,8 @@ export default function MatchCard({
             <div className="mt-4">
               {isLoading ? (
                 <div className="text-center text-gray-400">Chargement...</div>
+              ) : isError ? (
+                <div className="text-center text-red-400 text-sm py-2">Prédiction indisponible pour ce match</div>
               ) : prediction ? (
                 <div>
                   <ProbabilityChart

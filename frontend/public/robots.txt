@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://worldcup-2026-predictor.vercel.app/sitemap.xml

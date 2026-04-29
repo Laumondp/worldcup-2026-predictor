@@ -1,14 +1,16 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useQuery } from '@tanstack/react-query'
+import { Helmet } from 'react-helmet-async'
 import { predictionsApi, teamsApi } from '../services/api'
 import TeamSelector from '../components/TeamSelector'
 import ProbabilityChart from '../components/ProbabilityChart'
-import { Sparkles } from 'lucide-react'
+import { Sparkles, ChevronDown, ChevronUp } from 'lucide-react'
 
 export default function Predictions() {
   const [homeTeam, setHomeTeam] = useState('')
   const [awayTeam, setAwayTeam] = useState('')
   const [isKnockout, setIsKnockout] = useState(false)
+  const [showPrediction, setShowPrediction] = useState(true)
 
   const { data: prediction, isLoading, refetch } = useQuery({
     queryKey: ['prediction', homeTeam, awayTeam, isKnockout],
@@ -21,6 +23,10 @@ export default function Predictions() {
     queryFn: () => teamsApi.getHeadToHead(homeTeam, awayTeam),
     enabled: !!homeTeam && !!awayTeam,
   })
+
+  useEffect(() => {
+    if (prediction?.data) setShowPrediction(true)
+  }, [prediction?.data])
 
   const handlePredict = () => {
     if (homeTeam && awayTeam) {
@@ -43,6 +49,10 @@ export default function Predictions() {
 
   return (
     <div className="max-w-4xl mx-auto space-y-8">
+      <Helmet>
+        <title>Prédictions de matchs — FIFA World Cup 2026</title>
+        <meta name="description" content="Prédictions IA pour n'importe quel match de la Coupe du Monde 2026. Probabilités de victoire, score prédit et historique des confrontations entre équipes." />
+      </Helmet>
       <div className="text-center">
         <h1 className="text-3xl font-bold mb-2">Prédictions de matchs</h1>
         <p className="text-gray-400">
@@ -97,7 +107,40 @@ export default function Predictions() {
 
       {/* Prediction Results */}
       {prediction?.data && (
-        <div className="card">
+        <>
+          <button
+            onClick={() => setShowPrediction(v => !v)}
+            className="w-full flex items-center justify-center gap-3 py-3 px-6 bg-gray-800 hover:bg-gray-700 border border-gray-700 rounded-xl transition-all font-semibold text-lg"
+          >
+            {showPrediction ? (
+              <>
+                <ChevronUp className="w-5 h-5 text-gray-400" />
+                Masquer la prédiction
+                <ChevronUp className="w-5 h-5 text-gray-400" />
+              </>
+            ) : (
+              <div className="flex flex-col items-center gap-1 w-full">
+                <span className="text-yellow-400 font-bold text-base">
+                  {getOutcomeLabel(prediction.data?.predicted_outcome ?? '')}
+                </span>
+                <span className="text-sm text-gray-300 flex items-center gap-2">
+                  <span className="text-blue-300">{homeTeam}</span>
+                  <span className="font-bold text-white">
+                    {(prediction.data?.predicted_home_score ?? 0).toFixed(1)}
+                    {' – '}
+                    {(prediction.data?.predicted_away_score ?? 0).toFixed(1)}
+                  </span>
+                  <span className="text-red-300">{awayTeam}</span>
+                </span>
+                <span className="text-xs text-gray-500 mt-0.5 flex items-center gap-1">
+                  <ChevronDown className="w-3 h-3" /> Afficher les détails
+                </span>
+              </div>
+            )}
+          </button>
+
+          {showPrediction && (
+          <div className="card">
           <h2 className="text-2xl font-bold text-center mb-6">
             {homeTeam} vs {awayTeam}
           </h2>
@@ -178,7 +221,33 @@ export default function Predictions() {
             </div>
           </div>
         </div>
+          )}
+        </>
       )}
+
+      {/* Mascots banner */}
+      <div className="rounded-2xl overflow-hidden">
+        <img
+          src="/mascottes-figurines.jpg"
+          alt="Maple, Zayu et Clutch — FIFA World Cup 2026"
+          className="w-full object-contain"
+        />
+      </div>
+
+      {/* Amazon link */}
+      <div className="flex justify-center">
+        <a
+          href="https://www.amazon.fr/s?k=coupe+du+monde+2026&crid=24PG4PM056YSN&sprefix=coupe+du+monde+2026+%2Caps%2C233&ref=nb_sb_ss_mvt-t11-ranker_1_14"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <img
+            src="https://upload.wikimedia.org/wikipedia/commons/a/a9/Amazon_logo.svg"
+            alt="Amazon — Produits Coupe du Monde 2026"
+            className="h-8 opacity-80 hover:opacity-100 transition-opacity"
+          />
+        </a>
+      </div>
 
       {/* Head to Head */}
       {h2h?.data && h2h.data.total_matches > 0 && (
