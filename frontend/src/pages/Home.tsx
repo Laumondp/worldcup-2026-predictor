@@ -61,15 +61,11 @@ export default function Home() {
             href="https://wc2026-doubles.vercel.app/"
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-3 mb-5 px-5 py-2.5 rounded-full border border-yellow-400/60 bg-black/40 backdrop-blur-sm hover:bg-black/60 transition-all animate-pulse"
+            className="inline-flex items-center gap-3 mb-5 px-5 py-3 rounded-full border-2 border-yellow-400 bg-black/50 backdrop-blur-sm hover:bg-yellow-400/20 transition-all animate-pulse shadow-lg shadow-yellow-400/20"
           >
             <span className="text-2xl">🃏</span>
-            <div className="overflow-hidden w-56 text-left">
-              <div className="text-sm font-bold text-yellow-300 whitespace-nowrap animate-ticker">
-                Gestion des cartes Adrenalyn 2026 — wc2026-doubles.vercel.app
-              </div>
-            </div>
-            <span className="text-yellow-400 text-xs font-semibold whitespace-nowrap">Voir →</span>
+            <span className="text-sm font-bold text-yellow-300">Gestion des cartes Adrenalyn 2026</span>
+            <span className="text-yellow-400 font-bold">→</span>
           </a>
 
           <p className="text-2xl text-gray-200 mb-4 drop-shadow">
