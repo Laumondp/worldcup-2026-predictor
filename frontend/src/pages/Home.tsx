@@ -38,6 +38,29 @@ export default function Home() {
         <meta name="description" content="Prédictions par intelligence artificielle pour la Coupe du Monde 2026 (USA, Mexique, Canada). Simulateur Monte Carlo, classements FIFA en direct et tableau éliminatoire interactif." />
       </Helmet>
 
+      {/* Bandeau défilant Adrenalyn — tout en haut */}
+      <a
+        href="https://wc2026-doubles.vercel.app/"
+        target="_blank"
+        rel="noopener noreferrer"
+        className="flex overflow-hidden bg-yellow-400/10 border border-yellow-400/25 rounded-xl py-2 hover:bg-yellow-400/20 transition-colors"
+      >
+        <div className="flex whitespace-nowrap animate-marquee">
+          {[...Array(2)].map((_, i) => (
+            <span key={i} className="flex items-center gap-4 px-12 text-sm font-semibold text-yellow-300">
+              🃏 Gestion des cartes Adrenalyn 2026
+              <span className="text-yellow-500 mx-2">·</span>
+              Retrouvez vos doubles, échangez et complétez votre collection !
+              <span className="text-yellow-500 mx-2">·</span>
+              🃏 Gestion des cartes Adrenalyn 2026
+              <span className="text-yellow-500 mx-2">·</span>
+              Retrouvez vos doubles, échangez et complétez votre collection !
+              <span className="text-yellow-500 mx-2">·</span>
+            </span>
+          ))}
+        </div>
+      </a>
+
       {/* Hero Section — pleine hauteur, cliquable */}
       <div
         onClick={scrollToDetails}
@@ -59,23 +82,9 @@ export default function Home() {
           <p className="text-2xl text-gray-200 mb-4 drop-shadow">
             USA · Mexico · Canada
           </p>
-          <p className="text-gray-300 max-w-2xl mx-auto drop-shadow text-lg mb-6">
+          <p className="text-gray-300 max-w-2xl mx-auto drop-shadow text-lg mb-10">
             Prédictions par Machine Learning · Statistiques · Simulation du tournoi
           </p>
-
-          {/* Bannière Adrenalyn dans le hero */}
-          <a
-            href="https://wc2026-doubles.vercel.app/"
-            target="_blank"
-            rel="noopener noreferrer"
-            onClick={e => e.stopPropagation()}
-            className="flex items-center justify-center gap-3 px-6 py-2.5 rounded-2xl bg-yellow-400/15 hover:bg-yellow-400/25 border border-yellow-400/30 transition-all animate-pulse mb-8"
-          >
-            <span className="text-xl">🃏</span>
-            <span className="text-sm font-semibold text-yellow-300">Gestion des cartes Adrenalyn 2026</span>
-            <span className="text-yellow-400 font-bold">→</span>
-          </a>
-
           <div className="animate-bounce text-gray-300 flex flex-col items-center gap-1 text-sm">
             <span>Voir les détails</span>
             <ChevronDown className="w-6 h-6" />

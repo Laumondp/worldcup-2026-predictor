@@ -17,6 +17,15 @@ body {
   animation: ticker 10s linear infinite;
 }
 
+/* Bandeau défilant en boucle (home banner) */
+@keyframes marquee {
+  0%   { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+.animate-marquee {
+  animation: marquee 22s linear infinite;
+}
+
 @layer components {
   .card {
     @apply bg-gray-800 rounded-xl p-6 shadow-lg;
