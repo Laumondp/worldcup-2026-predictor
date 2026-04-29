@@ -86,9 +86,6 @@ export default function Layout() {
       <header className="border-b border-gray-700 bg-gray-900/80 backdrop-blur-sm sticky top-0 z-50">
         <div className="container mx-auto px-4">
           <div className="flex items-center justify-between h-16">
-            <Link to="/" className="flex items-center">
-              <img src="/logo_cup.png" alt="FIFA World Cup 2026" className="h-12 w-auto" />
-            </Link>
 
             <nav className="hidden md:flex items-center gap-1 whitespace-nowrap">
               {/* Visitor counter */}
