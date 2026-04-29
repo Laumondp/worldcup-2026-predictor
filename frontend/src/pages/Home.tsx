@@ -1,10 +1,11 @@
 import { useRef } from 'react'
 import { useQuery } from '@tanstack/react-query'
-import { Trophy, Users, Calendar, TrendingUp, ChevronDown } from 'lucide-react'
+import { Helmet } from 'react-helmet-async'
+import { ChevronDown, Eye } from 'lucide-react'
 import { Link } from 'react-router-dom'
-import { matchesApi, teamsApi, predictionsApi } from '../services/api'
+import { matchesApi, predictionsApi, statsApi } from '../services/api'
 import MatchCard from '../components/MatchCard'
-import FormChart from '../components/FormChart'
+import ShareButtons from '../components/ShareButtons'
 
 export default function Home() {
   const detailsRef = useRef<HTMLDivElement>(null)
@@ -14,23 +15,17 @@ export default function Home() {
     queryFn: () => matchesApi.getUpcoming(6),
   })
 
-  const { data: topTeams } = useQuery({
-    queryKey: ['topTeams'],
-    queryFn: () => teamsApi.getTopTeams(10),
-  })
-
   const { data: simulation } = useQuery({
     queryKey: ['simulation'],
     queryFn: () => predictionsApi.simulateTournament(500),
     staleTime: 1000 * 60 * 30,
   })
 
-  const statsCards = [
-    { icon: Users, label: 'Équipes qualifiées', value: '48', color: 'bg-blue-500' },
-    { icon: Calendar, label: 'Matchs', value: '104', color: 'bg-green-500' },
-    { icon: Trophy, label: 'Nations hôtes', value: '3', color: 'bg-yellow-500' },
-    { icon: TrendingUp, label: 'Groupes', value: '12', color: 'bg-purple-500' },
-  ]
+  const { data: visitors } = useQuery({
+    queryKey: ['visitors'],
+    queryFn: () => statsApi.getVisitors(),
+    refetchInterval: 30_000,
+  })
 
   const scrollToDetails = () => {
     detailsRef.current?.scrollIntoView({ behavior: 'smooth' })
@@ -38,6 +33,11 @@ export default function Home() {
 
   return (
     <div className="space-y-8">
+      <Helmet>
+        <title>FIFA World Cup 2026 — Prédictions IA, Groupes & Tableau éliminatoire</title>
+        <meta name="description" content="Prédictions par intelligence artificielle pour la Coupe du Monde 2026 (USA, Mexique, Canada). Simulateur Monte Carlo, classements FIFA en direct et tableau éliminatoire interactif." />
+      </Helmet>
+
       {/* Hero Section — pleine hauteur, cliquable */}
       <div
         onClick={scrollToDetails}
@@ -55,6 +55,23 @@ export default function Home() {
           <h1 className="text-5xl md:text-7xl font-bold mb-4 drop-shadow-lg">
             FIFA World Cup 2026
           </h1>
+
+          {/* Bannière Adrenalyn */}
+          <a
+            href="https://wc2026-doubles.vercel.app/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-3 mb-5 px-5 py-2.5 rounded-full border border-yellow-400/60 bg-black/40 backdrop-blur-sm hover:bg-black/60 transition-all animate-pulse"
+          >
+            <span className="text-2xl">🃏</span>
+            <div className="overflow-hidden w-56 text-left">
+              <div className="text-sm font-bold text-yellow-300 whitespace-nowrap animate-ticker">
+                Gestion des cartes Adrenalyn 2026 — wc2026-doubles.vercel.app
+              </div>
+            </div>
+            <span className="text-yellow-400 text-xs font-semibold whitespace-nowrap">Voir →</span>
+          </a>
+
           <p className="text-2xl text-gray-200 mb-4 drop-shadow">
             USA · Mexico · Canada
           </p>
@@ -70,17 +87,26 @@ export default function Home() {
 
       {/* Contenu détaillé */}
       <div ref={detailsRef} className="space-y-8 scroll-mt-4">
-        {/* Stats Cards */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-          {statsCards.map(({ icon: Icon, label, value, color }) => (
-            <div key={label} className="card text-center">
-              <div className={`w-12 h-12 ${color} rounded-full flex items-center justify-center mx-auto mb-3`}>
-                <Icon className="w-6 h-6 text-white" />
-              </div>
-              <div className="text-2xl font-bold">{value}</div>
-              <div className="text-sm text-gray-400">{label}</div>
-            </div>
-          ))}
+        {/* Live visitor counter */}
+        <div className="flex flex-wrap items-center justify-center gap-6 bg-gray-800/70 border border-gray-700 rounded-xl px-5 py-3 text-sm">
+          <div className="flex items-center gap-2 text-gray-300">
+            <Eye className="w-4 h-4 text-gray-400" />
+            <span className="font-bold text-white">
+              {visitors?.data?.total_visits?.toLocaleString('fr-FR') ?? '—'}
+            </span>
+            <span>visites totales</span>
+          </div>
+          <div className="w-px h-4 bg-gray-600 hidden sm:block" />
+          <div className="flex items-center gap-2 text-gray-300">
+            <span className="relative flex h-2.5 w-2.5">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75" />
+              <span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-green-500" />
+            </span>
+            <span className="font-bold text-green-400">
+              {visitors?.data?.active_now ?? '—'}
+            </span>
+            <span>en ligne maintenant</span>
+          </div>
         </div>
 
         {/* Main Content Grid */}
@@ -144,19 +170,6 @@ export default function Home() {
           </div>
         </div>
 
-        {/* Top Teams */}
-        <div className="card">
-          <h2 className="text-2xl font-bold mb-6">Meilleures équipes classées</h2>
-          {topTeams?.data ? (
-            <FormChart
-              data={topTeams.data.map((t: any) => ({ team: t.name, value: t.elo_rating }))}
-              title="ELO Ratings"
-            />
-          ) : (
-            <div className="h-64 flex items-center justify-center text-gray-400">Chargement des équipes...</div>
-          )}
-        </div>
-
         {/* Quick Links */}
         <div className="grid md:grid-cols-3 gap-4">
           <Link to="/predictions" className="card hover:ring-2 hover:ring-blue-500 transition-all">
@@ -181,57 +194,20 @@ export default function Home() {
           {/* Photo officielle des 3 mascottes */}
           <div className="flex justify-center mb-8">
             <img
-              src="https://upload.wikimedia.org/wikipedia/en/thumb/9/94/Maple-Zayu-Clutch_%28mascot%29.jpeg/800px-Maple-Zayu-Clutch_%28mascot%29.jpeg"
+              src="/mascottes.jpg"
               alt="Maple, Zayu et Clutch — Mascottes FIFA World Cup 2026"
               className="rounded-2xl max-h-72 object-contain shadow-xl"
             />
           </div>
 
-          {/* Fiches individuelles */}
-          <div className="grid md:grid-cols-3 gap-4">
-            {[
-              {
-                name: 'Maple',
-                animal: 'Orignal (Moose)',
-                country: '🇨🇦 Canada',
-                role: 'Gardien de but',
-                desc: 'Créatif et résilient, il incarne les valeurs canadiennes avec sa tenue rouge.',
-                color: 'border-red-600',
-                emoji: '🦌',
-              },
-              {
-                name: 'Zayu',
-                animal: 'Jaguar',
-                country: '🇲🇽 Mexique',
-                role: 'Attaquant · N°9',
-                desc: 'Symbole du pouvoir mésoaméricain, agile et fougueux en vert mexicain.',
-                color: 'border-green-600',
-                emoji: '🐆',
-              },
-              {
-                name: 'Clutch',
-                animal: 'Aigle chauve',
-                country: '🇺🇸 États-Unis',
-                role: 'Milieu de terrain',
-                desc: 'Intrépide et optimiste, il inspire le courage et l\'unité en bleu américain.',
-                color: 'border-blue-600',
-                emoji: '🦅',
-              },
-            ].map((m) => (
-              <div key={m.name} className={`bg-gray-700/50 rounded-xl p-4 border-l-4 ${m.color} flex flex-col gap-2`}>
-                <div className="flex items-center gap-3">
-                  <span className="text-4xl">{m.emoji}</span>
-                  <div>
-                    <h3 className="text-xl font-bold">{m.name}</h3>
-                    <p className="text-sm text-gray-300">{m.country} · {m.animal}</p>
-                  </div>
-                </div>
-                <span className="text-xs font-medium bg-gray-600 rounded-full px-2 py-0.5 w-fit">{m.role}</span>
-                <p className="text-xs text-gray-400">{m.desc}</p>
-              </div>
-            ))}
-          </div>
         </div>
+
+        {/* Share buttons */}
+        <div className="card text-center">
+          <p className="text-gray-400 text-sm mb-4">Tu aimes le site ? Partage-le ⚽</p>
+          <ShareButtons />
+        </div>
+
       </div>
     </div>
   )
