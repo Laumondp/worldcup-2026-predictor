@@ -1,8 +1,9 @@
 import { Outlet, Link, useLocation } from 'react-router-dom'
-import { Trophy, BarChart3, Grid3X3, GitBranch, RefreshCw, CheckCircle, XCircle, Calendar, Award } from 'lucide-react'
-import { useState } from 'react'
-import { useQueryClient } from '@tanstack/react-query'
-import { adminApi } from '../services/api'
+import { Trophy, BarChart3, Grid3X3, GitBranch, RefreshCw, CheckCircle, XCircle, Calendar, Award, Eye } from 'lucide-react'
+import { useState, useRef, useEffect } from 'react'
+import { useQuery, useQueryClient } from '@tanstack/react-query'
+import { adminApi, statsApi } from '../services/api'
+import ShareButtons from './ShareButtons'
 
 const navItems = [
   { path: '/', label: 'Accueil', icon: Trophy },
@@ -20,6 +21,40 @@ export default function Layout() {
   const queryClient = useQueryClient()
   const [refreshState, setRefreshState] = useState<RefreshState>('idle')
   const [refreshInfo, setRefreshInfo] = useState<string>('')
+
+  const visitRecorded = useRef(false)
+  const sessionVisitId = useRef<string | null>(null)
+
+  const { data: visitors, refetch: refetchVisitors } = useQuery({
+    queryKey: ['visitors'],
+    queryFn: () => statsApi.getVisitors(),
+    refetchInterval: 10_000,
+  })
+
+  // Enregistre la visite une seule fois par session (ID stable dans sessionStorage)
+  useEffect(() => {
+    if (visitRecorded.current) return
+    visitRecorded.current = true
+    let id = sessionStorage.getItem('wc_visit_id')
+    if (!id) {
+      id = Date.now() + ':' + Math.random().toString(36).slice(2)
+      sessionStorage.setItem('wc_visit_id', id)
+    }
+    sessionVisitId.current = id
+    statsApi.recordVisit(id, true)
+      .then(() => refetchVisitors())
+      .catch(() => {})
+  }, [])
+
+  // Heartbeat toutes les 90s pour maintenir le compteur "en ligne" actif
+  useEffect(() => {
+    const interval = setInterval(() => {
+      if (sessionVisitId.current) {
+        statsApi.recordVisit(sessionVisitId.current, false).catch(() => {})
+      }
+    }, 90_000)
+    return () => clearInterval(interval)
+  }, [])
 
   const handleRefresh = async () => {
     setRefreshState('loading')
@@ -56,6 +91,25 @@ export default function Layout() {
             </Link>
 
             <nav className="hidden md:flex items-center gap-1 whitespace-nowrap">
+              {/* Visitor counter */}
+              <div
+                title={`${visitors?.data?.total_visits?.toLocaleString('fr-FR') ?? '—'} visites au total · ${visitors?.data?.active_now ?? '—'} en ligne maintenant`}
+                className="flex items-center gap-1.5 px-3 py-1.5 mr-1 rounded-lg bg-gray-800/60 border border-gray-700 text-xs text-gray-400 cursor-default"
+              >
+                <Eye className="w-3.5 h-3.5" />
+                <span className="font-semibold text-white" title="Visites totales (cumulées)">
+                  {visitors?.data?.total_visits?.toLocaleString('fr-FR') ?? '—'}
+                </span>
+                <span className="w-px h-3 bg-gray-600 mx-0.5" />
+                <span className="relative flex h-2 w-2">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75" />
+                  <span className="relative inline-flex h-2 w-2 rounded-full bg-green-500" />
+                </span>
+                <span className="font-semibold text-green-400" title="En ligne ces 2 dernières minutes">
+                  {visitors?.data?.active_now ?? '—'}
+                </span>
+              </div>
+
               {navItems.map(({ path, label, icon: Icon }) => (
                 <Link
                   key={path}
@@ -107,6 +161,23 @@ export default function Layout() {
                     </span>
                   </div>
                 )}
+              </div>
+
+              {/* Share buttons — compact icons only */}
+              <div className="ml-2 pl-2 border-l border-gray-700">
+                <ShareButtons compact />
+              </div>
+
+              {/* Lien doubles */}
+              <div className="ml-2 pl-2 border-l border-gray-700">
+                <a
+                  href="https://wc2026-doubles.vercel.app"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm font-medium bg-blue-600 text-white hover:bg-blue-500 transition-colors whitespace-nowrap"
+                >
+                  🌐 Doubles
+                </a>
               </div>
             </nav>
           </div>
