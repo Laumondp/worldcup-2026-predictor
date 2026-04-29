@@ -56,18 +56,6 @@ export default function Home() {
             FIFA World Cup 2026
           </h1>
 
-          {/* Bannière Adrenalyn */}
-          <a
-            href="https://wc2026-doubles.vercel.app/"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center gap-3 mb-5 px-5 py-3 rounded-full border-2 border-yellow-400 bg-black/50 backdrop-blur-sm hover:bg-yellow-400/20 transition-all animate-pulse shadow-lg shadow-yellow-400/20"
-          >
-            <span className="text-2xl">🃏</span>
-            <span className="text-sm font-bold text-yellow-300">Gestion des cartes Adrenalyn 2026</span>
-            <span className="text-yellow-400 font-bold">→</span>
-          </a>
-
           <p className="text-2xl text-gray-200 mb-4 drop-shadow">
             USA · Mexico · Canada
           </p>
@@ -203,6 +191,18 @@ export default function Home() {
           <p className="text-gray-400 text-sm mb-4">Tu aimes le site ? Partage-le ⚽</p>
           <ShareButtons />
         </div>
+
+        {/* Bannière Adrenalyn */}
+        <a
+          href="https://wc2026-doubles.vercel.app/"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="flex items-center justify-center gap-3 w-full py-4 rounded-2xl border-2 border-yellow-400 bg-yellow-400/10 hover:bg-yellow-400/20 transition-all animate-pulse"
+        >
+          <span className="text-3xl">🃏</span>
+          <span className="text-lg font-bold text-yellow-300">Gestion des cartes Adrenalyn 2026</span>
+          <span className="text-yellow-400 text-xl font-bold">→</span>
+        </a>
 
       </div>
     </div>
