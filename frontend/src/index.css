@@ -4,6 +4,11 @@
 
 body {
   font-family: 'Inter', sans-serif;
+  background-color: #f9fafb;
+  color: #111827;
+}
+
+html.dark body {
   background-color: #0f0f1a;
   color: #ffffff;
 }
@@ -28,7 +33,7 @@ body {
 
 @layer components {
   .card {
-    @apply bg-gray-800 rounded-xl p-6 shadow-lg;
+    @apply bg-white rounded-xl p-6 shadow-lg dark:bg-gray-800;
   }
 
   .btn-primary {
@@ -36,10 +41,10 @@ body {
   }
 
   .btn-secondary {
-    @apply bg-gray-700 hover:bg-gray-600 text-white font-semibold py-2 px-4 rounded-lg transition-colors;
+    @apply bg-gray-100 hover:bg-gray-200 text-gray-700 font-semibold py-2 px-4 rounded-lg transition-colors dark:bg-gray-700 dark:hover:bg-gray-600 dark:text-white;
   }
 
   .input {
-    @apply bg-gray-700 border border-gray-600 rounded-lg px-4 py-2 text-white focus:outline-none focus:ring-2 focus:ring-blue-500;
+    @apply bg-gray-100 border border-gray-300 rounded-lg px-4 py-2 text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white;
   }
 }

@@ -23,14 +23,14 @@ type Filter = 'ALL' | 'live' | 'scheduled' | 'finished'
 function StatusBadge({ status }: { status: Fixture['status'] }) {
   if (status === 'live')
     return (
-      <span className="flex items-center gap-1 text-xs font-bold text-green-400 animate-pulse">
+      <span className="flex items-center gap-1 text-xs font-bold text-green-600 animate-pulse dark:text-green-400">
         <Wifi className="w-3 h-3" /> EN DIRECT
       </span>
     )
   if (status === 'finished')
-    return <span className="text-xs text-gray-500">Terminé</span>
+    return <span className="text-xs text-gray-400 dark:text-gray-500">Terminé</span>
   return (
-    <span className="flex items-center gap-1 text-xs text-blue-400">
+    <span className="flex items-center gap-1 text-xs text-blue-600 dark:text-blue-400">
       <Clock className="w-3 h-3" /> À venir
     </span>
   )
@@ -39,9 +39,9 @@ function StatusBadge({ status }: { status: Fixture['status'] }) {
 function FixtureCard({ fix }: { fix: Fixture }) {
   const hasScore = fix.home_score !== null && fix.away_score !== null
   return (
-    <div className={`card flex flex-col gap-2 border ${fix.status === 'live' ? 'border-green-600 bg-green-900/20' : 'border-gray-700'}`}>
+    <div className={`card flex flex-col gap-2 border ${fix.status === 'live' ? 'border-green-500 bg-green-50 dark:border-green-600 dark:bg-green-900/20' : 'border-gray-200 dark:border-gray-700'}`}>
       <div className="flex items-center justify-between">
-        <span className="text-xs text-gray-400 uppercase tracking-wide">
+        <span className="text-xs text-gray-500 uppercase tracking-wide dark:text-gray-400">
           {fix.group ? `Groupe ${fix.group}` : fix.stage}
         </span>
         <StatusBadge status={fix.status} />
@@ -52,12 +52,12 @@ function FixtureCard({ fix }: { fix: Fixture }) {
         <div className="text-center min-w-[60px]">
           {hasScore
             ? <span className="text-xl font-bold tabular-nums">{fix.home_score} – {fix.away_score}</span>
-            : <span className="text-gray-500 text-sm">vs</span>}
+            : <span className="text-gray-400 text-sm dark:text-gray-500">vs</span>}
         </div>
         <span className="flex-1 font-semibold text-sm flex items-center gap-2"><FlagImg code={fix.away_team || ''} size={24} />{fix.away_team || '?'}</span>
       </div>
 
-      <div className="text-xs text-gray-500 text-center">
+      <div className="text-xs text-gray-400 text-center dark:text-gray-500">
         {fix.date}{fix.city && ` · ${fix.city}`}
       </div>
     </div>
@@ -92,10 +92,10 @@ export default function Fixtures() {
     <div className="space-y-6">
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
         <div className="flex items-center gap-3">
-          <Calendar className="w-8 h-8 text-blue-400" />
+          <Calendar className="w-8 h-8 text-blue-500 dark:text-blue-400" />
           <div>
             <h1 className="text-3xl font-bold">Calendrier &amp; Résultats</h1>
-            <p className="text-gray-400 text-sm flex items-center gap-2">
+            <p className="text-gray-500 text-sm flex items-center gap-2 dark:text-gray-400">
               {isFetching && <RefreshCw className="w-3 h-3 animate-spin" />}
               Source officielle FIFA · Actualisation auto toutes les 2 min
               {lastUpdate && <span>· Mis à jour à {lastUpdate}</span>}
@@ -110,7 +110,7 @@ export default function Fixtures() {
             key={s}
             onClick={() => setActiveFilter(s)}
             className={`px-4 py-1.5 rounded-full text-sm font-medium transition-colors ${
-              activeFilter === s ? 'bg-blue-600 text-white' : 'bg-gray-800 text-gray-300 hover:bg-gray-700'
+              activeFilter === s ? 'bg-blue-600 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700'
             }`}
           >
             {s === 'ALL' ? 'Tous' : s === 'live' ? 'En direct' : s === 'scheduled' ? 'À venir' : 'Terminés'}
@@ -120,14 +120,14 @@ export default function Fixtures() {
       </div>
 
       {isLoading && (
-        <div className="text-center py-16 text-gray-400">
+        <div className="text-center py-16 text-gray-500 dark:text-gray-400">
           <RefreshCw className="w-8 h-8 animate-spin mx-auto mb-3" />
           Chargement depuis FIFA…
         </div>
       )}
 
       {!isLoading && filtered.length === 0 && (
-        <div className="card text-center text-gray-400 py-10">Aucun match trouvé.</div>
+        <div className="card text-center text-gray-500 py-10 dark:text-gray-400">Aucun match trouvé.</div>
       )}
 
       {filtered.length > 0 && (

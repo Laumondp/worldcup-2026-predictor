@@ -12,12 +12,12 @@ export default function Bracket() {
   const { data: simulation, refetch: refetchSimulation, isFetching } = useQuery({
     queryKey: ['tournamentSimulation'],
     queryFn: () => predictionsApi.simulateTournament(1000),
-    staleTime: 1000 * 60 * 10, // 10 minutes
+    staleTime: 1000 * 60 * 10,
   })
 
   if (isLoading) {
     return (
-      <div className="card text-center text-gray-400">
+      <div className="card text-center text-gray-500 dark:text-gray-400">
         Chargement du tableau...
       </div>
     )
@@ -55,7 +55,7 @@ export default function Bracket() {
 
       {/* Tournament Prediction */}
       {simulation?.data && (
-        <div className="card bg-gradient-to-r from-yellow-900/30 to-orange-900/30">
+        <div className="card bg-gradient-to-r from-yellow-50 to-orange-50 dark:from-yellow-900/30 dark:to-orange-900/30">
           <div className="flex items-center gap-3 mb-4">
             <Trophy className="w-8 h-8 text-yellow-500" />
             <h2 className="text-2xl font-bold">Prédiction du tournoi</h2>
@@ -64,31 +64,31 @@ export default function Bracket() {
           <div className="grid md:grid-cols-4 gap-6">
             {/* Winner */}
             <div className="text-center">
-              <div className="text-sm text-gray-400 mb-2">Vainqueur prédit</div>
-              <div className="text-3xl font-bold text-yellow-400">
+              <div className="text-sm text-gray-500 mb-2 dark:text-gray-400">Vainqueur prédit</div>
+              <div className="text-3xl font-bold text-yellow-500 dark:text-yellow-400">
                 {simulation.data.winner}
               </div>
-              <div className="text-sm text-gray-400 mt-1">
+              <div className="text-sm text-gray-500 mt-1 dark:text-gray-400">
                 {((simulation.data.win_probabilities[simulation.data.winner] || 0) * 100).toFixed(1)}% de chances
               </div>
             </div>
 
             {/* Runner-up */}
             <div className="text-center">
-              <div className="text-sm text-gray-400 mb-2">Finaliste</div>
-              <div className="text-2xl font-bold text-gray-300">
+              <div className="text-sm text-gray-500 mb-2 dark:text-gray-400">Finaliste</div>
+              <div className="text-2xl font-bold text-gray-700 dark:text-gray-300">
                 {simulation.data.runner_up}
               </div>
             </div>
 
             {/* Semi-finalists */}
             <div className="text-center md:col-span-2">
-              <div className="text-sm text-gray-400 mb-2">Demi-finalistes</div>
+              <div className="text-sm text-gray-500 mb-2 dark:text-gray-400">Demi-finalistes</div>
               <div className="flex flex-wrap justify-center gap-2">
                 {simulation.data.semi_finalists.map((team) => (
                   <span
                     key={team}
-                    className="bg-gray-700 px-3 py-1 rounded-full text-sm"
+                    className="bg-gray-200 px-3 py-1 rounded-full text-sm dark:bg-gray-700"
                   >
                     {team}
                   </span>
@@ -97,7 +97,7 @@ export default function Bracket() {
             </div>
           </div>
 
-          <div className="mt-4 text-xs text-gray-500 text-center">
+          <div className="mt-4 text-xs text-gray-400 text-center dark:text-gray-500">
             Basé sur {simulation.data.simulations_run.toLocaleString()} simulations Monte Carlo
           </div>
         </div>
@@ -112,9 +112,9 @@ export default function Bracket() {
               .slice(0, 16)
               .map(([team, prob], index) => (
                 <div key={team} className="flex items-center gap-3">
-                  <span className="w-6 text-gray-400 text-sm">{index + 1}.</span>
+                  <span className="w-6 text-gray-500 text-sm dark:text-gray-400">{index + 1}.</span>
                   <span className="flex-1 font-medium">{team}</span>
-                  <div className="w-32 h-2 bg-gray-700 rounded-full overflow-hidden">
+                  <div className="w-32 h-2 bg-gray-200 rounded-full overflow-hidden dark:bg-gray-700">
                     <div
                       className="h-full rounded-full transition-all"
                       style={{
@@ -123,7 +123,7 @@ export default function Bracket() {
                       }}
                     />
                   </div>
-                  <span className="w-16 text-right text-sm text-gray-400">
+                  <span className="w-16 text-right text-sm text-gray-500 dark:text-gray-400">
                     {((prob as number) * 100).toFixed(1)}%
                   </span>
                 </div>
@@ -141,7 +141,7 @@ export default function Bracket() {
             {stages.map((stage) => (
               <div
                 key={stage}
-                className="text-center font-semibold text-gray-400"
+                className="text-center font-semibold text-gray-500 dark:text-gray-400"
               >
                 {stageLabels[stage] || stage}
               </div>
@@ -157,7 +157,7 @@ export default function Bracket() {
                     stageMatches.map((match: any) => (
                       <div
                         key={match.id}
-                        className={`bg-gray-700/50 rounded-lg p-3 text-sm ${
+                        className={`bg-gray-100 rounded-lg p-3 text-sm dark:bg-gray-700/50 ${
                           stage === 'Final' ? 'border-2 border-yellow-500' : ''
                         }`}
                       >
@@ -165,20 +165,20 @@ export default function Bracket() {
                           <span className="flex items-center gap-1"><FlagImg code={match.home_team} size={20} />{match.home_team}</span>
                           {match.played && <span>{match.home_score}</span>}
                         </div>
-                        <div className="border-t border-gray-600 my-1" />
+                        <div className="border-t border-gray-200 my-1 dark:border-gray-600" />
                         <div className={`flex justify-between ${match.played && match.away_score > match.home_score ? 'font-bold' : ''}`}>
                           <span className="flex items-center gap-1"><FlagImg code={match.away_team} size={20} />{match.away_team}</span>
                           {match.played && <span>{match.away_score}</span>}
                         </div>
                         {match.predictions && !match.played && (
-                          <div className="mt-2 text-xs text-gray-400 text-center">
+                          <div className="mt-2 text-xs text-gray-500 text-center dark:text-gray-400">
                             {(match.predictions.home_win * 100).toFixed(0)}% - {(match.predictions.draw * 100).toFixed(0)}% - {(match.predictions.away_win * 100).toFixed(0)}%
                           </div>
                         )}
                       </div>
                     ))
                   ) : (
-                    <div className="bg-gray-700/30 rounded-lg p-4 text-center text-gray-500 text-sm">
+                    <div className="bg-gray-100/60 rounded-lg p-4 text-center text-gray-400 text-sm dark:bg-gray-700/30 dark:text-gray-500">
                       À définir
                     </div>
                   )}
@@ -190,9 +190,9 @@ export default function Bracket() {
       </div>
 
       {/* Knockout Format Info */}
-      <div className="card bg-blue-900/30">
+      <div className="card bg-blue-50 dark:bg-blue-900/30">
         <h3 className="text-lg font-bold mb-3">Format des phases éliminatoires</h3>
-        <ul className="space-y-2 text-gray-300">
+        <ul className="space-y-2 text-gray-700 dark:text-gray-300">
           <li>- 32es de finale : 32 équipes (24 premiers/2es de groupe + 8 meilleurs 3es)</li>
           <li>- 16es de finale : 16 équipes</li>
           <li>- Quarts de finale : 8 équipes</li>

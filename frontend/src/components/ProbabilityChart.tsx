@@ -1,4 +1,5 @@
 import { PieChart, Pie, Cell, ResponsiveContainer, Legend, Tooltip } from 'recharts'
+import { useTheme } from '../context/ThemeContext'
 
 interface ProbabilityChartProps {
   homeWin: number
@@ -17,11 +18,16 @@ export default function ProbabilityChart({
   homeTeam,
   awayTeam,
 }: ProbabilityChartProps) {
+  const { theme } = useTheme()
   const data = [
     { name: homeTeam, value: homeWin * 100 },
     { name: 'Draw', value: draw * 100 },
     { name: awayTeam, value: awayWin * 100 },
   ]
+
+  const tooltipStyle = theme === 'dark'
+    ? { backgroundColor: '#1F2937', border: 'none', color: '#fff' }
+    : { backgroundColor: '#fff', border: '1px solid #e5e7eb', color: '#111827' }
 
   return (
     <div className="h-64">
@@ -43,7 +49,7 @@ export default function ProbabilityChart({
           </Pie>
           <Tooltip
             formatter={(value: number) => `${value.toFixed(1)}%`}
-            contentStyle={{ backgroundColor: '#1F2937', border: 'none' }}
+            contentStyle={tooltipStyle}
           />
           <Legend />
         </PieChart>

@@ -1,9 +1,10 @@
 import { Outlet, Link, useLocation } from 'react-router-dom'
-import { Trophy, BarChart3, Grid3X3, GitBranch, RefreshCw, CheckCircle, XCircle, Calendar, Award, Eye } from 'lucide-react'
+import { Trophy, BarChart3, Grid3X3, GitBranch, RefreshCw, CheckCircle, XCircle, Calendar, Award, Eye, Sun, Moon } from 'lucide-react'
 import { useState, useRef, useEffect } from 'react'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { adminApi, statsApi } from '../services/api'
 import ShareButtons from './ShareButtons'
+import { useTheme } from '../context/ThemeContext'
 
 const navItems = [
   { path: '/', label: 'Accueil', icon: Trophy },
@@ -21,6 +22,7 @@ export default function Layout() {
   const queryClient = useQueryClient()
   const [refreshState, setRefreshState] = useState<RefreshState>('idle')
   const [refreshInfo, setRefreshInfo] = useState<string>('')
+  const { theme, toggleTheme } = useTheme()
 
   const visitRecorded = useRef(false)
   const sessionVisitId = useRef<string | null>(null)
@@ -66,7 +68,6 @@ export default function Layout() {
         setRefreshState('success')
         const rankInfo = d.rankings_date ? ` · Classement FIFA ${d.rankings_date}` : ''
         setRefreshInfo(`${d.matches_added} matchs · ${d.played} joués · ${d.upcoming} à venir${rankInfo}`)
-        // Invalidate all queries so UI reflects new stats
         await queryClient.invalidateQueries()
       } else {
         setRefreshState('error')
@@ -81,28 +82,29 @@ export default function Layout() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-900 to-blue-900">
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-blue-50 dark:from-gray-900 dark:via-gray-900 dark:to-blue-900">
       {/* Header */}
-      <header className="border-b border-gray-700 bg-gray-900/80 backdrop-blur-sm sticky top-0 z-50">
+      <header className="border-b border-gray-200 bg-white/90 backdrop-blur-sm sticky top-0 z-50 dark:border-gray-700 dark:bg-gray-900/80">
         <div className="container mx-auto px-4">
           <div className="flex items-center justify-between h-16">
 
-            <nav className="hidden md:flex items-center gap-1 whitespace-nowrap">
+            {/* Left nav */}
+            <nav className="hidden md:flex items-center gap-1 whitespace-nowrap overflow-x-auto">
               {/* Visitor counter */}
               <div
                 title={`${visitors?.data?.total_visits?.toLocaleString('fr-FR') ?? '—'} visites au total · ${visitors?.data?.active_now ?? '—'} en ligne maintenant`}
-                className="flex items-center gap-1.5 px-3 py-1.5 mr-1 rounded-lg bg-gray-800/60 border border-gray-700 text-xs text-gray-400 cursor-default"
+                className="flex items-center gap-1.5 px-3 py-1.5 mr-1 rounded-lg bg-gray-100/80 border border-gray-200 text-xs text-gray-600 cursor-default dark:bg-gray-800/60 dark:border-gray-700 dark:text-gray-400"
               >
                 <Eye className="w-3.5 h-3.5" />
-                <span className="font-semibold text-white" title="Visites totales (cumulées)">
+                <span className="font-semibold text-gray-900 dark:text-white" title="Visites totales (cumulées)">
                   {visitors?.data?.total_visits?.toLocaleString('fr-FR') ?? '—'}
                 </span>
-                <span className="w-px h-3 bg-gray-600 mx-0.5" />
+                <span className="w-px h-3 bg-gray-300 mx-0.5 dark:bg-gray-600" />
                 <span className="relative flex h-2 w-2">
                   <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75" />
                   <span className="relative inline-flex h-2 w-2 rounded-full bg-green-500" />
                 </span>
-                <span className="font-semibold text-green-400" title="En ligne ces 2 dernières minutes">
+                <span className="font-semibold text-green-600 dark:text-green-400" title="En ligne ces 2 dernières minutes">
                   {visitors?.data?.active_now ?? '—'}
                 </span>
               </div>
@@ -114,7 +116,7 @@ export default function Layout() {
                   className={`flex items-center gap-1.5 px-3 py-2 rounded-lg transition-colors ${
                     location.pathname === path
                       ? 'bg-blue-600 text-white'
-                      : 'text-gray-300 hover:bg-gray-800 hover:text-white'
+                      : 'text-gray-600 hover:bg-gray-100 hover:text-gray-900 dark:text-gray-300 dark:hover:bg-gray-800 dark:hover:text-white'
                   }`}
                 >
                   <Icon className="w-4 h-4 shrink-0" />
@@ -130,12 +132,12 @@ export default function Layout() {
                   title="Actualiser les statistiques (matchs amicaux & tournois récents)"
                   className={`flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm font-medium transition-all whitespace-nowrap ${
                     refreshState === 'loading'
-                      ? 'bg-blue-900 text-blue-300 cursor-wait'
+                      ? 'bg-blue-100 text-blue-700 cursor-wait dark:bg-blue-900 dark:text-blue-300'
                       : refreshState === 'success'
-                      ? 'bg-green-900 text-green-300'
+                      ? 'bg-green-100 text-green-700 dark:bg-green-900 dark:text-green-300'
                       : refreshState === 'error'
-                      ? 'bg-red-900 text-red-300'
-                      : 'bg-gray-800 text-gray-300 hover:bg-gray-700 hover:text-white'
+                      ? 'bg-red-100 text-red-700 dark:bg-red-900 dark:text-red-300'
+                      : 'bg-gray-100 text-gray-600 hover:bg-gray-200 hover:text-gray-900 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700 dark:hover:text-white'
                   }`}
                 >
                   {refreshState === 'loading' && <RefreshCw className="w-4 h-4 animate-spin shrink-0" />}
@@ -152,39 +154,54 @@ export default function Layout() {
 
                 {/* Scrolling ticker for refresh result */}
                 {refreshInfo && (
-                  <div className={`overflow-hidden w-40 text-xs ${refreshState === 'error' ? 'text-red-400' : 'text-green-400'}`}>
+                  <div className={`overflow-hidden w-40 text-xs ${refreshState === 'error' ? 'text-red-500 dark:text-red-400' : 'text-green-600 dark:text-green-400'}`}>
                     <span className="inline-block animate-ticker whitespace-nowrap">
                       {refreshInfo}
                     </span>
                   </div>
                 )}
               </div>
-
-              {/* Share buttons — compact icons only */}
-              <div className="ml-2 pl-2 border-l border-gray-700">
-                <ShareButtons compact />
-              </div>
-
             </nav>
+
+            {/* Right side — share + theme toggle (always visible on desktop) */}
+            <div className="hidden md:flex items-center gap-2 pl-3 border-l border-gray-200 dark:border-gray-700">
+              <ShareButtons compact />
+              <button
+                onClick={toggleTheme}
+                title={theme === 'dark' ? 'Mode clair' : 'Mode sombre'}
+                className="flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm font-medium transition-colors text-gray-600 hover:bg-gray-100 hover:text-gray-900 dark:text-gray-300 dark:hover:bg-gray-800 dark:hover:text-white"
+              >
+                {theme === 'dark' ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
+                <span>{theme === 'dark' ? 'Clair' : 'Sombre'}</span>
+              </button>
+            </div>
           </div>
         </div>
       </header>
 
       {/* Mobile nav */}
-      <nav className="md:hidden fixed bottom-0 left-0 right-0 bg-gray-900 border-t border-gray-700 z-50">
+      <nav className="md:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 z-50 dark:bg-gray-900 dark:border-gray-700">
         <div className="flex justify-around py-2">
-          {navItems.slice(0, 5).map(({ path, label, icon: Icon }) => (
+          {navItems.slice(0, 4).map(({ path, label, icon: Icon }) => (
             <Link
               key={path}
               to={path}
               className={`flex flex-col items-center p-2 ${
-                location.pathname === path ? 'text-blue-400' : 'text-gray-400'
+                location.pathname === path ? 'text-blue-600 dark:text-blue-400' : 'text-gray-500 dark:text-gray-400'
               }`}
             >
               <Icon className="w-5 h-5" />
               <span className="text-xs mt-1">{label}</span>
             </Link>
           ))}
+          {/* Theme toggle mobile */}
+          <button
+            onClick={toggleTheme}
+            className="flex flex-col items-center p-2 text-gray-500 dark:text-gray-400"
+          >
+            {theme === 'dark' ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
+            <span className="text-xs mt-1">{theme === 'dark' ? 'Clair' : 'Sombre'}</span>
+          </button>
         </div>
       </nav>
 
@@ -194,9 +211,19 @@ export default function Layout() {
       </main>
 
       {/* Footer */}
-      <footer className="hidden md:block border-t border-gray-700 py-6 text-center text-gray-400">
+      <footer className="border-t border-gray-200 py-6 text-center text-gray-500 dark:border-gray-700 dark:text-gray-400 pb-24 md:pb-6">
         <p>World Cup 2026 Predictor - Powered by Machine Learning</p>
-        <p className="text-sm mt-1 text-gray-500">&copy; 2026 LAUMOND Philippe — Tous droits réservés</p>
+        <p className="text-sm mt-1 text-gray-400 dark:text-gray-500">&copy; 2026 LAUMOND Philippe — Tous droits réservés</p>
+        <div className="mt-4 flex justify-center">
+          <button
+            onClick={toggleTheme}
+            title={theme === 'dark' ? 'Mode clair' : 'Mode sombre'}
+            className="flex items-center gap-2 px-4 py-2 rounded-full border border-gray-300 bg-gray-100 text-gray-700 hover:bg-gray-200 transition-colors text-sm font-medium dark:border-gray-600 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700"
+          >
+            {theme === 'dark' ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
+            {theme === 'dark' ? 'Passer en mode clair' : 'Passer en mode sombre'}
+          </button>
+        </div>
       </footer>
     </div>
   )

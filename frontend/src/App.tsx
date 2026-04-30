@@ -1,4 +1,5 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
+import { ThemeProvider } from './context/ThemeContext'
 import Layout from './components/Layout'
 import Home from './pages/Home'
 import Predictions from './pages/Predictions'
@@ -11,20 +12,22 @@ import Rankings from './pages/Rankings'
 
 function App() {
   return (
-    <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<Layout />}>
-          <Route index element={<Home />} />
-          <Route path="predictions" element={<Predictions />} />
-          <Route path="teams" element={<Teams />} />
-          <Route path="groups" element={<Groups />} />
-          <Route path="bracket" element={<Bracket />} />
-          <Route path="history" element={<History />} />
-          <Route path="fixtures" element={<Fixtures />} />
-          <Route path="rankings" element={<Rankings />} />
-        </Route>
-      </Routes>
-    </BrowserRouter>
+    <ThemeProvider>
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<Layout />}>
+            <Route index element={<Home />} />
+            <Route path="predictions" element={<Predictions />} />
+            <Route path="teams" element={<Teams />} />
+            <Route path="groups" element={<Groups />} />
+            <Route path="bracket" element={<Bracket />} />
+            <Route path="history" element={<History />} />
+            <Route path="fixtures" element={<Fixtures />} />
+            <Route path="rankings" element={<Rankings />} />
+          </Route>
+        </Routes>
+      </BrowserRouter>
+    </ThemeProvider>
   )
 }
 

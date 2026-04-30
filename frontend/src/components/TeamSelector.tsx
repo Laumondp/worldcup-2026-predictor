@@ -22,8 +22,8 @@ export default function TeamSelector({
   if (isLoading) {
     return (
       <div className="space-y-2">
-        <label className="block text-sm font-medium text-gray-400">{label}</label>
-        <div className="input w-full animate-pulse bg-gray-600">Chargement...</div>
+        <label className="block text-sm font-medium text-gray-600 dark:text-gray-400">{label}</label>
+        <div className="input w-full animate-pulse bg-gray-200 dark:bg-gray-600">Chargement...</div>
       </div>
     )
   }
@@ -32,7 +32,7 @@ export default function TeamSelector({
 
   return (
     <div className="space-y-2">
-      <label className="block text-sm font-medium text-gray-400">{label}</label>
+      <label className="block text-sm font-medium text-gray-600 dark:text-gray-400">{label}</label>
       <select
         value={value}
         onChange={(e) => onChange(e.target.value)}

@@ -46,7 +46,7 @@ export default function MatchCard({
 
   return (
     <div className="card hover:ring-2 hover:ring-blue-500 transition-all">
-      <div className="text-sm text-gray-400 mb-3 flex justify-between">
+      <div className="text-sm text-gray-500 mb-3 flex justify-between dark:text-gray-400">
         <span>{stage}</span>
         <span>{formattedDate}</span>
       </div>
@@ -55,30 +55,30 @@ export default function MatchCard({
         {/* Home Team */}
         <div className="flex-1 text-center">
           <div className="flex justify-center mb-2"><FlagImg code={homeCode} size={48} /></div>
-          <div className="text-sm text-gray-300">{homeTeam}</div>
+          <div className="text-sm text-gray-700 dark:text-gray-300">{homeTeam}</div>
         </div>
 
         {/* Score or VS */}
         <div className="px-6">
           {played ? (
             <div className="text-3xl font-bold">
-              <span className={homeScore! > awayScore! ? 'text-green-400' : ''}>
+              <span className={homeScore! > awayScore! ? 'text-green-500 dark:text-green-400' : ''}>
                 {homeScore}
               </span>
-              <span className="text-gray-500 mx-2">-</span>
-              <span className={awayScore! > homeScore! ? 'text-green-400' : ''}>
+              <span className="text-gray-400 mx-2 dark:text-gray-500">-</span>
+              <span className={awayScore! > homeScore! ? 'text-green-500 dark:text-green-400' : ''}>
                 {awayScore}
               </span>
             </div>
           ) : (
-            <span className="text-2xl text-gray-500 font-bold">VS</span>
+            <span className="text-2xl text-gray-400 font-bold dark:text-gray-500">VS</span>
           )}
         </div>
 
         {/* Away Team */}
         <div className="flex-1 text-center">
           <div className="flex justify-center mb-2"><FlagImg code={awayCode} size={48} /></div>
-          <div className="text-sm text-gray-300">{awayTeam}</div>
+          <div className="text-sm text-gray-700 dark:text-gray-300">{awayTeam}</div>
         </div>
       </div>
 
@@ -95,9 +95,9 @@ export default function MatchCard({
           {showPrediction && (
             <div className="mt-4">
               {isLoading ? (
-                <div className="text-center text-gray-400">Chargement...</div>
+                <div className="text-center text-gray-500 dark:text-gray-400">Chargement...</div>
               ) : isError ? (
-                <div className="text-center text-red-400 text-sm py-2">Prédiction indisponible pour ce match</div>
+                <div className="text-center text-red-500 dark:text-red-400 text-sm py-2">Prédiction indisponible pour ce match</div>
               ) : prediction ? (
                 <div>
                   <ProbabilityChart
@@ -108,11 +108,11 @@ export default function MatchCard({
                     awayTeam={awayTeam}
                   />
                   <div className="text-center mt-4">
-                    <div className="text-sm text-gray-400 mb-1">Score prédit</div>
+                    <div className="text-sm text-gray-500 mb-1 dark:text-gray-400">Score prédit</div>
                     <div className="text-xl font-bold">
                       {prediction.data.predicted_home_score.toFixed(1)} - {prediction.data.predicted_away_score.toFixed(1)}
                     </div>
-                    <div className="text-sm text-gray-400 mt-2">
+                    <div className="text-sm text-gray-500 mt-2 dark:text-gray-400">
                       Confiance : {(prediction.data.confidence * 100).toFixed(1)}%
                     </div>
                   </div>

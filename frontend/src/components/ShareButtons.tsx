@@ -21,21 +21,21 @@ const buttons = [
     key: 'x',
     icon: XIcon,
     label: 'X / Twitter',
-    color: 'hover:bg-black',
+    color: 'hover:bg-black hover:text-white',
     href: (url: string, text: string) => `https://twitter.com/intent/tweet?url=${url}&text=${text}`,
   },
   {
     key: 'fb',
     icon: FacebookIcon,
     label: 'Facebook',
-    color: 'hover:bg-[#1877f2]',
+    color: 'hover:bg-[#1877f2] hover:text-white',
     href: (url: string) => `https://www.facebook.com/sharer/sharer.php?u=${url}`,
   },
   {
     key: 'wa',
     icon: WhatsAppIcon,
     label: 'WhatsApp',
-    color: 'hover:bg-[#25d366]',
+    color: 'hover:bg-[#25d366] hover:text-white',
     href: (url: string, text: string) => `https://wa.me/?text=${text}%20${url}`,
   },
 ]
@@ -53,7 +53,7 @@ export default function ShareButtons({ compact = false }: { compact?: boolean })
           target="_blank"
           rel="noopener noreferrer"
           title={label}
-          className={`flex items-center justify-center gap-1.5 rounded-lg bg-gray-800 ${color} text-gray-300 hover:text-white transition-colors text-xs font-semibold ${compact ? 'px-2 py-1.5' : 'px-4 py-2'}`}
+          className={`flex items-center justify-center gap-1.5 rounded-lg bg-gray-100 text-gray-600 transition-colors text-xs font-semibold ${color} ${compact ? 'px-2 py-1.5' : 'px-4 py-2'} dark:bg-gray-800 dark:text-gray-300`}
         >
           <Icon />
           {!compact && <span>{label}</span>}

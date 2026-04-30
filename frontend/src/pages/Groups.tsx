@@ -21,7 +21,7 @@ export default function Groups() {
 
   if (isLoading) {
     return (
-      <div className="card text-center text-gray-400">
+      <div className="card text-center text-gray-500 dark:text-gray-400">
         Chargement des classements...
       </div>
     )
@@ -31,7 +31,7 @@ export default function Groups() {
     <div className="space-y-6">
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <h1 className="text-3xl font-bold">Phase de groupes</h1>
-        <div className="text-gray-400">12 groupes de 4 équipes</div>
+        <div className="text-gray-500 dark:text-gray-400">12 groupes de 4 équipes</div>
       </div>
 
       {/* Group Tabs */}
@@ -43,7 +43,7 @@ export default function Groups() {
             className={`px-4 py-2 rounded-lg font-semibold transition-colors ${
               selectedGroup === letter
                 ? 'bg-blue-600 text-white'
-                : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
+                : 'bg-gray-100 text-gray-700 hover:bg-gray-200 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600'
             }`}
           >
             Groupe {letter}
@@ -63,7 +63,7 @@ export default function Groups() {
               <div className="overflow-x-auto">
                 <table className="w-full text-xs">
                   <thead>
-                    <tr className="text-gray-400 border-b border-gray-700">
+                    <tr className="text-gray-500 border-b border-gray-200 dark:text-gray-400 dark:border-gray-700">
                       <th className="text-left py-1 pr-1">Équipe</th>
                       <th className="text-center py-1 px-1">J</th>
                       <th className="text-center py-1 px-1">V</th>
@@ -77,8 +77,8 @@ export default function Groups() {
                     {group.teams.map((team, index) => (
                       <tr
                         key={team.name}
-                        className={`border-b border-gray-700/50 ${
-                          index < 2 ? 'bg-green-900/20' : ''
+                        className={`border-b border-gray-100 dark:border-gray-700/50 ${
+                          index < 2 ? 'bg-green-50 dark:bg-green-900/20' : ''
                         }`}
                       >
                         <td className="py-1 pr-1">
@@ -88,11 +88,11 @@ export default function Groups() {
                           </span>
                         </td>
                         <td className="text-center py-1 px-1">{team.played}</td>
-                        <td className="text-center py-1 px-1 text-green-400">{team.wins}</td>
-                        <td className="text-center py-1 px-1 text-yellow-400">{team.draws}</td>
-                        <td className="text-center py-1 px-1 text-red-400">{team.losses}</td>
+                        <td className="text-center py-1 px-1 text-green-600 dark:text-green-400">{team.wins}</td>
+                        <td className="text-center py-1 px-1 text-yellow-600 dark:text-yellow-400">{team.draws}</td>
+                        <td className="text-center py-1 px-1 text-red-600 dark:text-red-400">{team.losses}</td>
                         <td className="text-center py-1 px-1">
-                          <span className={team.goal_difference >= 0 ? 'text-green-400' : 'text-red-400'}>
+                          <span className={team.goal_difference >= 0 ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400'}>
                             {team.goal_difference >= 0 ? '+' : ''}{team.goal_difference}
                           </span>
                         </td>
@@ -102,7 +102,7 @@ export default function Groups() {
                   </tbody>
                 </table>
               </div>
-              <div className="mt-2 text-[10px] text-gray-400 text-center">
+              <div className="mt-2 text-[10px] text-gray-500 text-center dark:text-gray-400">
                 Les 2 premiers qualifiés · 8 meilleurs 3es
               </div>
             </div>
@@ -117,7 +117,7 @@ export default function Groups() {
             {groupMatches.data.map((match: any) => (
               <div
                 key={match.id}
-                className="flex items-center justify-between bg-gray-700/50 rounded-lg p-4"
+                className="flex items-center justify-between bg-gray-100 rounded-lg p-4 dark:bg-gray-700/50"
               >
                 <div className="flex-1 text-right">
                   <span className="font-medium">{match.home_team}</span>
@@ -141,9 +141,9 @@ export default function Groups() {
       )}
 
       {/* Group Stage Info */}
-      <div className="card bg-blue-900/30">
+      <div className="card bg-blue-50 dark:bg-blue-900/30">
         <h3 className="text-lg font-bold mb-3">Format de la Coupe du Monde 2026</h3>
-        <ul className="space-y-2 text-gray-300">
+        <ul className="space-y-2 text-gray-700 dark:text-gray-300">
           <li>- 48 équipes réparties en 12 groupes de 4</li>
           <li>- Chaque équipe dispute 3 matchs de phase de groupes</li>
           <li>- Les 2 premiers de chaque groupe avancent (24 équipes)</li>
