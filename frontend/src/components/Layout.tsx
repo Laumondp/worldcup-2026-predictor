@@ -178,10 +178,9 @@ export default function Layout() {
               <button
                 onClick={toggleTheme}
                 title={theme === 'dark' ? 'Mode clair' : 'Mode sombre'}
-                className="flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm font-medium transition-colors text-gray-600 hover:bg-gray-100 hover:text-gray-900 dark:text-gray-300 dark:hover:bg-gray-800 dark:hover:text-white"
+                className="flex items-center px-2 py-2 rounded-lg transition-colors text-gray-600 hover:bg-gray-100 hover:text-gray-900 dark:text-gray-300 dark:hover:bg-gray-800 dark:hover:text-white"
               >
                 {theme === 'dark' ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
-                <span>{theme === 'dark' ? 'Clair' : 'Sombre'}</span>
               </button>
             </div>
           </div>
@@ -209,7 +208,6 @@ export default function Layout() {
             className="flex flex-col items-center p-2 text-gray-500 dark:text-gray-400"
           >
             {theme === 'dark' ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
-            <span className="text-xs mt-1">{theme === 'dark' ? 'Clair' : 'Sombre'}</span>
           </button>
         </div>
       </nav>
@@ -236,10 +234,9 @@ export default function Layout() {
           <button
             onClick={toggleTheme}
             title={theme === 'dark' ? 'Mode clair' : 'Mode sombre'}
-            className="flex items-center gap-2 px-4 py-2 rounded-full border border-gray-300 bg-gray-100 text-gray-700 hover:bg-gray-200 transition-colors text-sm font-medium dark:border-gray-600 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700"
+            className="flex items-center px-3 py-2 rounded-full border border-gray-300 bg-gray-100 text-gray-700 hover:bg-gray-200 transition-colors dark:border-gray-600 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700"
           >
             {theme === 'dark' ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
-            {theme === 'dark' ? 'Passer en mode clair' : 'Passer en mode sombre'}
           </button>
         </div>
       </footer>
