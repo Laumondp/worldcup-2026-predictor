@@ -1,5 +1,5 @@
 import { Outlet, Link, useLocation } from 'react-router-dom'
-import { Trophy, BarChart3, Grid3X3, GitBranch, RefreshCw, CheckCircle, XCircle, Calendar, Award, Eye, Sun, Moon } from 'lucide-react'
+import { Trophy, BarChart3, Grid3X3, GitBranch, RefreshCw, CheckCircle, XCircle, Calendar, Award, Eye, Sun, Moon, ExternalLink } from 'lucide-react'
 import { useState, useRef, useEffect } from 'react'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { adminApi, statsApi } from '../services/api'
@@ -165,6 +165,16 @@ export default function Layout() {
 
             {/* Right side — share + theme toggle (always visible on desktop) */}
             <div className="hidden md:flex items-center gap-2 pl-3 border-l border-gray-200 dark:border-gray-700">
+              <a
+                href="https://cm2026-deploy.vercel.app"
+                target="_blank"
+                rel="noopener noreferrer"
+                title="Ouvrir l'application de pronostics"
+                className="flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm font-medium transition-colors text-blue-600 hover:bg-blue-50 hover:text-blue-700 dark:text-blue-400 dark:hover:bg-blue-900/30 dark:hover:text-blue-300"
+              >
+                <ExternalLink className="w-4 h-4 shrink-0" />
+                <span>Pronostics</span>
+              </a>
               <ShareButtons compact />
               <button
                 onClick={toggleTheme}
@@ -214,6 +224,15 @@ export default function Layout() {
       <footer className="border-t border-gray-200 py-6 text-center text-gray-500 dark:border-gray-700 dark:text-gray-400 pb-24 md:pb-6">
         <p>World Cup 2026 Predictor - Powered by Machine Learning</p>
         <p className="text-sm mt-1 text-gray-400 dark:text-gray-500">&copy; 2026 LAUMOND Philippe — Tous droits réservés</p>
+        <a
+          href="https://cm2026-deploy.vercel.app"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="inline-flex items-center gap-1.5 mt-2 text-sm text-blue-500 hover:text-blue-600 dark:text-blue-400 dark:hover:text-blue-300 transition-colors"
+        >
+          <ExternalLink className="w-3.5 h-3.5" />
+          Pronostics CM 2026
+        </a>
         <div className="mt-4 flex justify-center">
           <button
             onClick={toggleTheme}
