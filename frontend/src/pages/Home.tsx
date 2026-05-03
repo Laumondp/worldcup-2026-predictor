@@ -157,13 +157,13 @@ export default function Home() {
                   </div>
                   <div className="space-y-3">
                     {Object.entries(simulation.data.win_probabilities).slice(0, 5).map(([team, prob]) => (
-                      <div key={team} className="flex items-center justify-between">
-                        <span>{team}</span>
-                        <div className="flex items-center gap-2">
-                          <div className="w-24 h-2 bg-gray-200 rounded-full overflow-hidden dark:bg-gray-700">
+                      <div key={team} className="flex items-center gap-2 min-w-0">
+                        <span className="flex-1 min-w-0 truncate text-sm">{team}</span>
+                        <div className="flex items-center gap-1.5 shrink-0">
+                          <div className="w-16 sm:w-24 h-2 bg-gray-200 rounded-full overflow-hidden dark:bg-gray-700">
                             <div className="h-full bg-blue-500 rounded-full" style={{ width: `${(prob as number) * 100}%` }} />
                           </div>
-                          <span className="text-sm text-gray-500 w-12 text-right dark:text-gray-400">{((prob as number) * 100).toFixed(1)}%</span>
+                          <span className="text-sm text-gray-500 w-10 text-right tabular-nums dark:text-gray-400">{((prob as number) * 100).toFixed(1)}%</span>
                         </div>
                       </div>
                     ))}
