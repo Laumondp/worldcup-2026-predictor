@@ -1,7 +1,7 @@
 import { useRef } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import { Helmet } from 'react-helmet-async'
-import { ChevronDown, Eye } from 'lucide-react'
+import { ChevronDown } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import { matchesApi, predictionsApi, statsApi } from '../services/api'
 import MatchCard from '../components/MatchCard'
@@ -19,12 +19,6 @@ export default function Home() {
     queryKey: ['simulation'],
     queryFn: () => predictionsApi.simulateTournament(500),
     staleTime: 1000 * 60 * 30,
-  })
-
-  const { data: visitors } = useQuery({
-    queryKey: ['visitors'],
-    queryFn: () => statsApi.getVisitors(),
-    refetchInterval: 30_000,
   })
 
   const scrollToDetails = () => {
@@ -96,28 +90,6 @@ export default function Home() {
 
       {/* Contenu détaillé */}
       <div ref={detailsRef} className="space-y-8 scroll-mt-4">
-        {/* Live visitor counter */}
-        <div className="flex flex-wrap items-center justify-center gap-6 bg-gray-100 border border-gray-200 rounded-xl px-5 py-3 text-sm dark:bg-gray-800/70 dark:border-gray-700">
-          <div className="flex items-center gap-2 text-gray-700 dark:text-gray-300">
-            <Eye className="w-4 h-4 text-gray-500 dark:text-gray-400" />
-            <span className="font-bold text-gray-900 dark:text-white">
-              {visitors?.data?.total_visits?.toLocaleString('fr-FR') ?? '—'}
-            </span>
-            <span>visites totales</span>
-          </div>
-          <div className="w-px h-4 bg-gray-300 hidden sm:block dark:bg-gray-600" />
-          <div className="flex items-center gap-2 text-gray-700 dark:text-gray-300">
-            <span className="relative flex h-2.5 w-2.5">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75" />
-              <span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-green-500" />
-            </span>
-            <span className="font-bold text-green-600 dark:text-green-400">
-              {visitors?.data?.active_now ?? '—'}
-            </span>
-            <span>en ligne maintenant</span>
-          </div>
-        </div>
-
         {/* Main Content Grid */}
         <div className="grid md:grid-cols-3 gap-8">
           {/* Upcoming Matches */}
