@@ -129,7 +129,7 @@ export default function Layout() {
                 <button
                   onClick={handleRefresh}
                   disabled={refreshState === 'loading'}
-                  title="Actualiser les statistiques (matchs amicaux & tournois récents)"
+                  title={refreshInfo || 'Actualiser les statistiques (matchs amicaux & tournois récents)'}
                   className={`flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm font-medium transition-all whitespace-nowrap ${
                     refreshState === 'loading'
                       ? 'bg-blue-100 text-blue-700 cursor-wait dark:bg-blue-900 dark:text-blue-300'
@@ -152,14 +152,6 @@ export default function Layout() {
                   </span>
                 </button>
 
-                {/* Scrolling ticker for refresh result */}
-                {refreshInfo && (
-                  <div className={`overflow-hidden w-40 text-xs ${refreshState === 'error' ? 'text-red-500 dark:text-red-400' : 'text-green-600 dark:text-green-400'}`}>
-                    <span className="inline-block animate-ticker whitespace-nowrap">
-                      {refreshInfo}
-                    </span>
-                  </div>
-                )}
               </div>
             </nav>
 
