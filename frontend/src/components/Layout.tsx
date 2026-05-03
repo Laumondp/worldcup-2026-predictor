@@ -169,11 +169,12 @@ export default function Layout() {
                 href="https://cm2026-deploy.vercel.app"
                 target="_blank"
                 rel="noopener noreferrer"
-                title="Ouvrir l'application de pronostics"
-                className="flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm font-medium transition-colors text-blue-600 hover:bg-blue-50 hover:text-blue-700 dark:text-blue-400 dark:hover:bg-blue-900/30 dark:hover:text-blue-300"
+                title="Ouvrir l'application de pronostics Valeo"
+                className="flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm font-bold transition-all hover:opacity-80"
+                style={{ color: '#003B77', background: 'linear-gradient(135deg, #e8f0f9 0%, #cfe0f5 100%)', border: '1.5px solid #003B77' }}
               >
                 <ExternalLink className="w-4 h-4 shrink-0" />
-                <span>Pronostics</span>
+                <span>Valeo</span>
               </a>
               <ShareButtons compact />
               <button
@@ -228,10 +229,11 @@ export default function Layout() {
           href="https://cm2026-deploy.vercel.app"
           target="_blank"
           rel="noopener noreferrer"
-          className="inline-flex items-center gap-1.5 mt-2 text-sm text-blue-500 hover:text-blue-600 dark:text-blue-400 dark:hover:text-blue-300 transition-colors"
+          className="inline-flex items-center gap-1.5 mt-2 text-sm font-semibold transition-colors hover:opacity-75"
+          style={{ color: '#003B77' }}
         >
           <ExternalLink className="w-3.5 h-3.5" />
-          Pronostics CM 2026
+          Valeo — Pronostics CM 2026
         </a>
         <div className="mt-4 flex justify-center">
           <button
