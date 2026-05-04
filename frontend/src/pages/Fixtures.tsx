@@ -112,6 +112,7 @@ function KnockoutStages({ fixtures, groupsComplete }: { fixtures: Fixture[]; gro
     ;(byStage[key] ??= []).push(fix)
   }
   const stages = Object.entries(byStage).sort(([a], [b]) => stageRank(a) - stageRank(b))
+  if (stages.length === 0) return null
 
   return (
     <div className="space-y-8">
@@ -153,8 +154,10 @@ export default function Fixtures() {
   })
 
   const all: Fixture[] = data?.data?.fixtures ?? []
-  const groupMatches = all.filter(f => !!f.group)
-  const knockoutMatches = all.filter(f => !f.group)
+  // A group match has a GroupName like "Groupe A"…"Groupe L" — robust against FIFA putting stage names in GroupName for KO rounds
+  const isGroupMatch = (f: Fixture) => /groupe\s+[a-l]/i.test(f.group || '')
+  const groupMatches = all.filter(isGroupMatch)
+  const knockoutMatches = all.filter(f => !isGroupMatch(f))
 
   // Groups are complete when all group matches are finished
   const groupsComplete = groupMatches.length > 0 && groupMatches.every(f => f.status === 'finished')

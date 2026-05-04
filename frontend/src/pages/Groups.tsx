@@ -163,8 +163,9 @@ export default function Groups() {
   })
 
   const allFixtures: KOFixture[] = fixturesData?.data?.fixtures ?? []
-  const groupFixtures = allFixtures.filter(f => !!f.group)
-  const knockoutFixtures = allFixtures.filter(f => !f.group)
+  const isGroupFixture = (f: KOFixture) => /groupe\s+[a-l]/i.test(f.group || '')
+  const groupFixtures = allFixtures.filter(isGroupFixture)
+  const knockoutFixtures = allFixtures.filter(f => !isGroupFixture(f))
 
   const groupsComplete = groupFixtures.length > 0 && groupFixtures.every(f => f.status === 'finished')
 
