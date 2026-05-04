@@ -326,7 +326,7 @@ async function fetchFifaFixtures() {
     try { const d = new Date(date); date = d.toLocaleDateString('fr-FR',{day:'2-digit',month:'2-digit',year:'numeric'})+' '+d.toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'}); } catch {}
     const stadium = m.Stadium||{};
     const statusMap = {0:'scheduled',1:'scheduled',3:'live',4:'finished',99:'finished'};
-    return { id:String(m.IdMatch||''), date, home_team:desc(m.Home?.TeamName), away_team:desc(m.Away?.TeamName), home_score:score(m.Home), away_score:score(m.Away), stage:desc(m.StageName), group:desc(m.GroupName), venue:desc(stadium.Name)||stadium.Name||'', city:desc(stadium.CityName)||stadium.CityName||'', status:statusMap[m.MatchStatus??0]||'scheduled' };
+    return { id:String(m.IdMatch||''), date, home_team:desc(m.Home?.TeamName)||desc(m.Home?.PlaceholderName)||'', away_team:desc(m.Away?.TeamName)||desc(m.Away?.PlaceholderName)||'', home_score:score(m.Home), away_score:score(m.Away), stage:desc(m.StageName), group:desc(m.GroupName), venue:desc(stadium.Name)||stadium.Name||'', city:desc(stadium.CityName)||stadium.CityName||'', status:statusMap[m.MatchStatus??0]||'scheduled' };
   });
 }
 

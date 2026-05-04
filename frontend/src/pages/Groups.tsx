@@ -3,7 +3,7 @@ import { useQuery } from '@tanstack/react-query'
 import { Trophy, ChevronDown, ChevronUp, Wifi, Clock } from 'lucide-react'
 import axios from 'axios'
 import { matchesApi, GroupStanding } from '../services/api'
-import { FlagImg } from '../utils/flags'
+import { FlagImg, flagUrl } from '../utils/flags'
 
 const groupLetters = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L']
 
@@ -75,7 +75,9 @@ function KOCard({ fix }: { fix: KOFixture }) {
       <div className="flex items-center justify-between gap-2">
         <span className="flex-1 text-right font-semibold text-sm flex items-center justify-end gap-2">
           {fix.home_team
-            ? <>{fix.home_team}<FlagImg code={fix.home_team} size={24} /></>
+            ? flagUrl(fix.home_team)
+              ? <>{fix.home_team}<FlagImg code={fix.home_team} size={24} /></>
+              : <span className="text-gray-500 text-xs italic">{fix.home_team}</span>
             : <span className="text-gray-400 text-xs italic">À déterminer</span>
           }
         </span>
@@ -87,7 +89,9 @@ function KOCard({ fix }: { fix: KOFixture }) {
         </div>
         <span className="flex-1 font-semibold text-sm flex items-center gap-2">
           {fix.away_team
-            ? <><FlagImg code={fix.away_team} size={24} />{fix.away_team}</>
+            ? flagUrl(fix.away_team)
+              ? <><FlagImg code={fix.away_team} size={24} />{fix.away_team}</>
+              : <span className="text-gray-500 text-xs italic">{fix.away_team}</span>
             : <span className="text-gray-400 text-xs italic">À déterminer</span>
           }
         </span>
