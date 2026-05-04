@@ -317,6 +317,27 @@ async function fetchFifaRankings() {
   return null;
 }
 
+// Static bracket labels for R32 matches (FIFA doesn't provide PlaceholderName for KO rounds)
+// Mapping derived from official FIFA WC2026 schedule, ordered chronologically
+const R32_BRACKET = {
+  '400021518': { home: '2e Gr. A',          away: '2e Gr. B'         },
+  '400021516': { home: '1er Gr. C',         away: '2e Gr. F'         },
+  '400021513': { home: '1er Gr. E',         away: '3e Gr. A/B/C/D/F' },
+  '400021522': { home: '1er Gr. F',         away: '2e Gr. C'         },
+  '400021514': { home: '2e Gr. E',          away: '2e Gr. I'         },
+  '400021523': { home: '1er Gr. I',         away: '3e Gr. C/D/F/G/H' },
+  '400021520': { home: '1er Gr. A',         away: '3e Gr. C/E/F/H/I' },
+  '400021512': { home: '1er Gr. L',         away: '3e Gr. E/H/I/J/K' },
+  '400021525': { home: '1er Gr. G',         away: '3e Gr. A/E/H/I/J' },
+  '400021524': { home: '1er Gr. D',         away: '3e Gr. B/E/F/I/J' },
+  '400021519': { home: '1er Gr. H',         away: '2e Gr. J'         },
+  '400021526': { home: '2e Gr. K',          away: '2e Gr. L'         },
+  '400021527': { home: '1er Gr. B',         away: '3e Gr. E/F/G/I/J' },
+  '400021515': { home: '2e Gr. D',          away: '2e Gr. G'         },
+  '400021521': { home: '1er Gr. J',         away: '2e Gr. H'         },
+  '400021517': { home: '1er Gr. K',         away: '3e Gr. D/E/I/J/L' },
+};
+
 async function fetchFifaFixtures() {
   const r = await fetch('https://api.fifa.com/api/v3/calendar/matches?idCompetition=17&idSeason=285023&count=500&language=fr-FR', { headers: FIFA_HEADERS });
   const data = await r.json();
@@ -326,7 +347,11 @@ async function fetchFifaFixtures() {
     try { const d = new Date(date); date = d.toLocaleDateString('fr-FR',{day:'2-digit',month:'2-digit',year:'numeric'})+' '+d.toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'}); } catch {}
     const stadium = m.Stadium||{};
     const statusMap = {0:'scheduled',1:'scheduled',3:'live',4:'finished',99:'finished'};
-    return { id:String(m.IdMatch||''), date, home_team:desc(m.Home?.TeamName)||desc(m.Home?.PlaceholderName)||'', away_team:desc(m.Away?.TeamName)||desc(m.Away?.PlaceholderName)||'', home_score:score(m.Home), away_score:score(m.Away), stage:desc(m.StageName), group:desc(m.GroupName), venue:desc(stadium.Name)||stadium.Name||'', city:desc(stadium.CityName)||stadium.CityName||'', status:statusMap[m.MatchStatus??0]||'scheduled' };
+    const id = String(m.IdMatch||'');
+    const bracket = R32_BRACKET[id] || {};
+    const homeTeam = desc(m.Home?.TeamName) || bracket.home || '';
+    const awayTeam = desc(m.Away?.TeamName) || bracket.away || '';
+    return { id, date, home_team: homeTeam, away_team: awayTeam, home_score:score(m.Home), away_score:score(m.Away), stage:desc(m.StageName), group:desc(m.GroupName), venue:desc(stadium.Name)||stadium.Name||'', city:desc(stadium.CityName)||stadium.CityName||'', status:statusMap[m.MatchStatus??0]||'scheduled' };
   });
 }
 
