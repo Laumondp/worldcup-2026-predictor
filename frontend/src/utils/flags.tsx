@@ -93,8 +93,8 @@ function getIso(codeOrName: string): string {
   if (FIFA_TO_ISO[upper.slice(0, 3)]) return FIFA_TO_ISO[upper.slice(0, 3)]
   const norm = normalize(codeOrName)
   if (NAME_TO_CODE[norm]) return NAME_TO_CODE[norm]
-  // Try all keys normalized
-  const found = Object.keys(NAME_TO_CODE).find(k => normalize(k) === norm || norm.includes(normalize(k)) || normalize(k).includes(norm))
+  // Try all keys normalized (no substring match — would false-positive on bracket labels like "V. 8e Mexico")
+  const found = Object.keys(NAME_TO_CODE).find(k => normalize(k) === norm)
   return found ? NAME_TO_CODE[found] : ''
 }
 
