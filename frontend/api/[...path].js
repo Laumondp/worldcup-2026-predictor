@@ -11,54 +11,66 @@ function getRedis() {
 }
 
 const TEAMS = [
-  { name:"USA",          code:"USA", confederation:"CONCACAF", group:"A", fifa_ranking:13, elo:1780 },
-  { name:"France",       code:"FRA", confederation:"UEFA",     group:"A", fifa_ranking:2,  elo:1950 },
-  { name:"Poland",       code:"POL", confederation:"UEFA",     group:"A", fifa_ranking:24, elo:1660 },
-  { name:"Morocco",      code:"MAR", confederation:"CAF",      group:"A", fifa_ranking:14, elo:1760 },
-  { name:"Mexico",       code:"MEX", confederation:"CONCACAF", group:"B", fifa_ranking:16, elo:1740 },
-  { name:"Spain",        code:"ESP", confederation:"UEFA",     group:"B", fifa_ranking:3,  elo:1940 },
-  { name:"Serbia",       code:"SRB", confederation:"UEFA",     group:"B", fifa_ranking:27, elo:1630 },
-  { name:"Senegal",      code:"SEN", confederation:"CAF",      group:"B", fifa_ranking:18, elo:1720 },
-  { name:"Canada",       code:"CAN", confederation:"CONCACAF", group:"C", fifa_ranking:40, elo:1560 },
-  { name:"England",      code:"ENG", confederation:"UEFA",     group:"C", fifa_ranking:4,  elo:1920 },
-  { name:"Ukraine",      code:"UKR", confederation:"UEFA",     group:"C", fifa_ranking:22, elo:1670 },
-  { name:"Nigeria",      code:"NGA", confederation:"CAF",      group:"C", fifa_ranking:35, elo:1590 },
-  { name:"Argentina",    code:"ARG", confederation:"CONMEBOL", group:"D", fifa_ranking:1,  elo:2000 },
-  { name:"Germany",      code:"GER", confederation:"UEFA",     group:"D", fifa_ranking:11, elo:1800 },
-  { name:"Turkey",       code:"TUR", confederation:"UEFA",     group:"D", fifa_ranking:29, elo:1620 },
-  { name:"Cameroon",     code:"CMR", confederation:"CAF",      group:"D", fifa_ranking:34, elo:1580 },
-  { name:"Brazil",       code:"BRA", confederation:"CONMEBOL", group:"E", fifa_ranking:5,  elo:1900 },
-  { name:"Portugal",     code:"POR", confederation:"UEFA",     group:"E", fifa_ranking:6,  elo:1880 },
-  { name:"Japan",        code:"JPN", confederation:"AFC",      group:"E", fifa_ranking:17, elo:1730 },
-  { name:"Egypt",        code:"EGY", confederation:"CAF",      group:"E", fifa_ranking:37, elo:1570 },
-  { name:"Colombia",     code:"COL", confederation:"CONMEBOL", group:"F", fifa_ranking:9,  elo:1830 },
-  { name:"Netherlands",  code:"NED", confederation:"UEFA",     group:"F", fifa_ranking:7,  elo:1870 },
-  { name:"South Korea",  code:"KOR", confederation:"AFC",      group:"F", fifa_ranking:25, elo:1650 },
-  { name:"Algeria",      code:"ALG", confederation:"CAF",      group:"F", fifa_ranking:36, elo:1575 },
-  { name:"Uruguay",      code:"URU", confederation:"CONMEBOL", group:"G", fifa_ranking:12, elo:1790 },
-  { name:"Belgium",      code:"BEL", confederation:"UEFA",     group:"G", fifa_ranking:8,  elo:1850 },
-  { name:"Australia",    code:"AUS", confederation:"AFC",      group:"G", fifa_ranking:23, elo:1660 },
-  { name:"Tunisia",      code:"TUN", confederation:"CAF",      group:"G", fifa_ranking:38, elo:1560 },
-  { name:"Ecuador",      code:"ECU", confederation:"CONMEBOL", group:"H", fifa_ranking:33, elo:1600 },
-  { name:"Italy",        code:"ITA", confederation:"UEFA",     group:"H", fifa_ranking:10, elo:1810 },
-  { name:"Iran",         code:"IRN", confederation:"AFC",      group:"H", fifa_ranking:20, elo:1700 },
-  { name:"Ivory Coast",  code:"CIV", confederation:"CAF",      group:"H", fifa_ranking:48, elo:1520 },
-  { name:"Paraguay",     code:"PAR", confederation:"CONMEBOL", group:"I", fifa_ranking:47, elo:1510 },
-  { name:"Croatia",      code:"CRO", confederation:"UEFA",     group:"I", fifa_ranking:15, elo:1750 },
-  { name:"Saudi Arabia", code:"KSA", confederation:"AFC",      group:"I", fifa_ranking:56, elo:1480 },
-  { name:"Ghana",        code:"GHA", confederation:"CAF",      group:"I", fifa_ranking:60, elo:1460 },
-  { name:"Switzerland",  code:"SUI", confederation:"UEFA",     group:"J", fifa_ranking:19, elo:1710 },
-  { name:"Qatar",        code:"QAT", confederation:"AFC",      group:"J", fifa_ranking:37, elo:1530 },
-  { name:"Costa Rica",   code:"CRC", confederation:"CONCACAF", group:"J", fifa_ranking:49, elo:1510 },
-  { name:"Venezuela",    code:"VEN", confederation:"CONMEBOL", group:"J", fifa_ranking:55, elo:1490 },
-  { name:"Denmark",      code:"DEN", confederation:"UEFA",     group:"K", fifa_ranking:21, elo:1690 },
-  { name:"Iraq",         code:"IRQ", confederation:"AFC",      group:"K", fifa_ranking:63, elo:1440 },
-  { name:"Panama",       code:"PAN", confederation:"CONCACAF", group:"K", fifa_ranking:43, elo:1540 },
-  { name:"Bolivia",      code:"BOL", confederation:"CONMEBOL", group:"K", fifa_ranking:83, elo:1380 },
-  { name:"Austria",      code:"AUT", confederation:"UEFA",     group:"L", fifa_ranking:26, elo:1640 },
-  { name:"UAE",          code:"UAE", confederation:"AFC",      group:"L", fifa_ranking:68, elo:1420 },
-  { name:"Jamaica",      code:"JAM", confederation:"CONCACAF", group:"L", fifa_ranking:47, elo:1500 },
-  { name:"New Zealand",  code:"NZL", confederation:"OFC",      group:"L", fifa_ranking:99, elo:1320 },
+  // GROUPE A
+  { name:"Mexico",             code:"MEX", confederation:"CONCACAF", group:"A", fifa_ranking:16, elo:1740 },
+  { name:"South Africa",       code:"RSA", confederation:"CAF",      group:"A", fifa_ranking:55, elo:1470 },
+  { name:"South Korea",        code:"KOR", confederation:"AFC",      group:"A", fifa_ranking:22, elo:1680 },
+  { name:"Czechia",            code:"CZE", confederation:"UEFA",     group:"A", fifa_ranking:37, elo:1570 },
+  // GROUPE B
+  { name:"Canada",             code:"CAN", confederation:"CONCACAF", group:"B", fifa_ranking:40, elo:1560 },
+  { name:"Switzerland",        code:"SUI", confederation:"UEFA",     group:"B", fifa_ranking:19, elo:1710 },
+  { name:"Qatar",              code:"QAT", confederation:"AFC",      group:"B", fifa_ranking:62, elo:1450 },
+  { name:"Bosnia-Herzegovina", code:"BIH", confederation:"UEFA",     group:"B", fifa_ranking:65, elo:1490 },
+  // GROUPE C
+  { name:"Brazil",             code:"BRA", confederation:"CONMEBOL", group:"C", fifa_ranking:5,  elo:1900 },
+  { name:"Morocco",            code:"MAR", confederation:"CAF",      group:"C", fifa_ranking:14, elo:1760 },
+  { name:"Haiti",              code:"HAI", confederation:"CONCACAF", group:"C", fifa_ranking:90, elo:1340 },
+  { name:"Scotland",           code:"SCO", confederation:"UEFA",     group:"C", fifa_ranking:28, elo:1630 },
+  // GROUPE D
+  { name:"USA",                code:"USA", confederation:"CONCACAF", group:"D", fifa_ranking:13, elo:1780 },
+  { name:"Paraguay",           code:"PAR", confederation:"CONMEBOL", group:"D", fifa_ranking:47, elo:1510 },
+  { name:"Australia",          code:"AUS", confederation:"AFC",      group:"D", fifa_ranking:23, elo:1660 },
+  { name:"Turkey",             code:"TUR", confederation:"UEFA",     group:"D", fifa_ranking:29, elo:1620 },
+  // GROUPE E
+  { name:"Germany",            code:"GER", confederation:"UEFA",     group:"E", fifa_ranking:10, elo:1810 },
+  { name:"Curaçao",            code:"CUW", confederation:"CONCACAF", group:"E", fifa_ranking:81, elo:1370 },
+  { name:"Ivory Coast",        code:"CIV", confederation:"CAF",      group:"E", fifa_ranking:48, elo:1520 },
+  { name:"Ecuador",            code:"ECU", confederation:"CONMEBOL", group:"E", fifa_ranking:33, elo:1600 },
+  // GROUPE F
+  { name:"Netherlands",        code:"NED", confederation:"UEFA",     group:"F", fifa_ranking:7,  elo:1870 },
+  { name:"Japan",              code:"JPN", confederation:"AFC",      group:"F", fifa_ranking:17, elo:1730 },
+  { name:"Tunisia",            code:"TUN", confederation:"CAF",      group:"F", fifa_ranking:38, elo:1560 },
+  { name:"Sweden",             code:"SWE", confederation:"UEFA",     group:"F", fifa_ranking:32, elo:1605 },
+  // GROUPE G
+  { name:"Belgium",            code:"BEL", confederation:"UEFA",     group:"G", fifa_ranking:8,  elo:1850 },
+  { name:"Egypt",              code:"EGY", confederation:"CAF",      group:"G", fifa_ranking:37, elo:1570 },
+  { name:"Iran",               code:"IRN", confederation:"AFC",      group:"G", fifa_ranking:20, elo:1700 },
+  { name:"New Zealand",        code:"NZL", confederation:"OFC",      group:"G", fifa_ranking:99, elo:1320 },
+  // GROUPE H
+  { name:"Spain",              code:"ESP", confederation:"UEFA",     group:"H", fifa_ranking:2,  elo:1940 },
+  { name:"Cape Verde",         code:"CPV", confederation:"CAF",      group:"H", fifa_ranking:62, elo:1450 },
+  { name:"Saudi Arabia",       code:"KSA", confederation:"AFC",      group:"H", fifa_ranking:56, elo:1480 },
+  { name:"Uruguay",            code:"URU", confederation:"CONMEBOL", group:"H", fifa_ranking:12, elo:1790 },
+  // GROUPE I
+  { name:"France",             code:"FRA", confederation:"UEFA",     group:"I", fifa_ranking:1,  elo:1960 },
+  { name:"Senegal",            code:"SEN", confederation:"CAF",      group:"I", fifa_ranking:18, elo:1720 },
+  { name:"Norway",             code:"NOR", confederation:"UEFA",     group:"I", fifa_ranking:33, elo:1595 },
+  { name:"Iraq",               code:"IRQ", confederation:"AFC",      group:"I", fifa_ranking:63, elo:1440 },
+  // GROUPE J
+  { name:"Argentina",          code:"ARG", confederation:"CONMEBOL", group:"J", fifa_ranking:3,  elo:2000 },
+  { name:"Algeria",            code:"ALG", confederation:"CAF",      group:"J", fifa_ranking:36, elo:1575 },
+  { name:"Austria",            code:"AUT", confederation:"UEFA",     group:"J", fifa_ranking:26, elo:1640 },
+  { name:"Jordan",             code:"JOR", confederation:"AFC",      group:"J", fifa_ranking:73, elo:1445 },
+  // GROUPE K
+  { name:"Portugal",           code:"POR", confederation:"UEFA",     group:"K", fifa_ranking:6,  elo:1880 },
+  { name:"Uzbekistan",         code:"UZB", confederation:"AFC",      group:"K", fifa_ranking:71, elo:1450 },
+  { name:"Colombia",           code:"COL", confederation:"CONMEBOL", group:"K", fifa_ranking:9,  elo:1830 },
+  { name:"DR Congo",           code:"COD", confederation:"CAF",      group:"K", fifa_ranking:62, elo:1450 },
+  // GROUPE L
+  { name:"England",            code:"ENG", confederation:"UEFA",     group:"L", fifa_ranking:4,  elo:1920 },
+  { name:"Croatia",            code:"CRO", confederation:"UEFA",     group:"L", fifa_ranking:15, elo:1750 },
+  { name:"Ghana",              code:"GHA", confederation:"CAF",      group:"L", fifa_ranking:60, elo:1460 },
+  { name:"Panama",             code:"PAN", confederation:"CONCACAF", group:"L", fifa_ranking:43, elo:1540 },
 ];
 
 function getTeam(name) {
@@ -90,40 +102,169 @@ function predictMatch(homeElo, awayElo, isKnockout = false) {
   };
 }
 
+// ── MODÈLE DE POISSON ───────────────────────────────────────────────
+// Simule les buts marqués comme variables aléatoires de Poisson
+function poissonPMF(k, lambda) {
+  if (lambda <= 0) return k === 0 ? 1 : 0;
+  let logP = -lambda;
+  for (let i = 1; i <= k; i++) logP += Math.log(lambda / i);
+  return Math.exp(logP);
+}
+
+function predictMatchPoisson(homeElo, awayElo, isKnockout = false) {
+  const diff = homeElo - awayElo + (isKnockout ? 0 : 40);
+  const lH = Math.max(0.2, 1.3 * Math.exp(0.0012 * diff));
+  const lA = Math.max(0.2, 1.3 * Math.exp(-0.0012 * diff));
+  let homeWin = 0, draw = 0, awayWin = 0;
+  for (let h = 0; h <= 8; h++) {
+    const ph = poissonPMF(h, lH);
+    for (let a = 0; a <= 8; a++) {
+      const p = ph * poissonPMF(a, lA);
+      if (h > a) homeWin += p;
+      else if (h === a) draw += p;
+      else awayWin += p;
+    }
+  }
+  if (isKnockout) { homeWin += draw * 0.5; awayWin += draw * 0.5; draw = 0; }
+  return {
+    home_win_probability: +homeWin.toFixed(3),
+    draw_probability: +draw.toFixed(3),
+    away_win_probability: +awayWin.toFixed(3),
+    predicted_home_score: +lH.toFixed(1),
+    predicted_away_score: +lA.toFixed(1),
+  };
+}
+
+// ── MODÈLE ENSEMBLE (ELO 50% + Poisson 50%) ─────────────────────────
+function predictMatchEnsemble(homeElo, awayElo, isKnockout = false) {
+  const e = predictMatch(homeElo, awayElo, isKnockout);
+  const p = predictMatchPoisson(homeElo, awayElo, isKnockout);
+  return {
+    home_win_probability: +((e.home_win_probability + p.home_win_probability) / 2).toFixed(3),
+    draw_probability:     +((e.draw_probability     + p.draw_probability)     / 2).toFixed(3),
+    away_win_probability: +((e.away_win_probability + p.away_win_probability) / 2).toFixed(3),
+    predicted_home_score: +((e.predicted_home_score + p.predicted_home_score) / 2).toFixed(1),
+    predicted_away_score: +((e.predicted_away_score + p.predicted_away_score) / 2).toFixed(1),
+  };
+}
+
+// ── CALCUL ANALYTIQUE EXACT DES GROUPES ─────────────────────────────
+// Énumération des 3^6 = 729 combinaisons de résultats possibles (4 équipes, 6 matchs)
+// Donne les probabilités exactes de qualification sans Monte Carlo
+function computeGroupProbs(groupTeams) {
+  const n = groupTeams.length;
+  const games = [];
+  for (let i = 0; i < n; i++) for (let j = i + 1; j < n; j++) games.push([i, j]);
+  const precomp = games.map(([i, j]) => predictMatchEnsemble(groupTeams[i].elo, groupTeams[j].elo));
+  const pQualify = new Array(n).fill(0);
+  const p1st     = new Array(n).fill(0);
+  const p3rd     = new Array(n).fill(0);
+  const pts = new Array(n).fill(0);
+  const gd  = new Array(n).fill(0);
+
+  function enumerate(gIdx, prob) {
+    if (gIdx === games.length) {
+      const order = [0, 1, 2, 3].sort((a, b) => pts[b] - pts[a] || gd[b] - gd[a]);
+      let s = 0;
+      while (s < n) {
+        let e = s;
+        while (e + 1 < n && pts[order[e + 1]] === pts[order[s]] && gd[order[e + 1]] === gd[order[s]]) e++;
+        const cnt  = e - s + 1;
+        const qpos = Math.max(0, Math.min(e + 1, 2) - s); // nb positions qualificatives dans ce groupe
+        const has1 = s === 0 ? 1 : 0;
+        const has3 = (s <= 2 && e >= 2) ? 1 : 0;
+        for (let k = s; k <= e; k++) {
+          pQualify[order[k]] += prob * qpos / cnt;
+          p1st[order[k]]     += prob * has1 / cnt;
+          p3rd[order[k]]     += prob * has3 / cnt;
+        }
+        s = e + 1;
+      }
+      return;
+    }
+    const [i, j] = games[gIdx];
+    const pr = precomp[gIdx];
+    // Victoire domicile
+    pts[i] += 3; gd[i]++; gd[j]--;
+    enumerate(gIdx + 1, prob * pr.home_win_probability);
+    pts[i] -= 3; gd[i]--; gd[j]++;
+    // Match nul
+    pts[i]++; pts[j]++;
+    enumerate(gIdx + 1, prob * pr.draw_probability);
+    pts[i]--; pts[j]--;
+    // Victoire extérieur
+    pts[j] += 3; gd[j]++; gd[i]--;
+    enumerate(gIdx + 1, prob * pr.away_win_probability);
+    pts[j] -= 3; gd[j]--; gd[i]++;
+  }
+
+  enumerate(0, 1.0);
+  return groupTeams.map((t, i) => ({
+    name: t.name, code: t.code,
+    p_qualify: +Math.min(1, pQualify[i]).toFixed(4),
+    p_1st:     +p1st[i].toFixed(4),
+    p_3rd:     +p3rd[i].toFixed(4),
+  }));
+}
+
+// ── SIMULATION MONTE CARLO (modèle Ensemble, suivi par tour) ────────
 function simulateOnce() {
+  const reached = {};
+  for (const t of TEAMS) reached[t.name] = 0; // 0 = éliminé en phase de groupes
+
   const groups = {};
   for (const t of TEAMS) {
     if (!groups[t.group]) groups[t.group] = [];
-    groups[t.group].push({ ...t, pts: 0, gd: 0 });
+    groups[t.group].push({ ...t, pts: 0, gd: 0, gf: 0 });
   }
+
   for (const teams of Object.values(groups)) {
     for (let i = 0; i < teams.length; i++) {
       for (let j = i + 1; j < teams.length; j++) {
-        const p = predictMatch(teams[i].elo, teams[j].elo);
+        const pr = predictMatchEnsemble(teams[i].elo, teams[j].elo);
         const r = Math.random();
-        if (r < p.home_win_probability) { teams[i].pts += 3; teams[i].gd++; teams[j].gd--; }
-        else if (r < p.home_win_probability + p.draw_probability) { teams[i].pts++; teams[j].pts++; }
-        else { teams[j].pts += 3; teams[j].gd++; teams[i].gd--; }
+        if (r < pr.home_win_probability) {
+          teams[i].pts += 3; teams[i].gd++; teams[j].gd--; teams[i].gf += 2;
+        } else if (r < pr.home_win_probability + pr.draw_probability) {
+          teams[i].pts++; teams[j].pts++; teams[i].gf++; teams[j].gf++;
+        } else {
+          teams[j].pts += 3; teams[j].gd++; teams[i].gd--; teams[j].gf += 2;
+        }
       }
     }
-    teams.sort((a, b) => b.pts - a.pts || b.gd - a.gd);
+    teams.sort((a, b) => b.pts - a.pts || b.gd - a.gd || b.gf - a.gf || Math.random() - 0.5);
   }
-  let qualified = [];
+
+  // Top 2 de chaque groupe + 8 meilleurs 3es
+  const qualified = [];
   const thirds = [];
-  for (const teams of Object.values(groups)) { qualified.push(teams[0], teams[1]); thirds.push(teams[2]); }
-  thirds.sort((a, b) => b.pts - a.pts || b.gd - a.gd);
-  qualified = [...qualified, ...thirds.slice(0, 8)];
-  let remaining = qualified;
-  while (remaining.length > 1) {
-    const next = [];
-    for (let i = 0; i < remaining.length; i += 2) {
-      const a = remaining[i], b = remaining[i+1] || remaining[i];
-      const p = predictMatch(a.elo, b.elo, true);
-      next.push(Math.random() < p.home_win_probability / (p.home_win_probability + p.away_win_probability) ? a : b);
-    }
-    remaining = next;
+  for (const teams of Object.values(groups)) {
+    reached[teams[0].name] = 1; // r32
+    reached[teams[1].name] = 1;
+    qualified.push(teams[0], teams[1]);
+    thirds.push(teams[2]);
   }
-  return remaining[0]?.name || '';
+  thirds.sort((a, b) => b.pts - a.pts || b.gd - a.gd || b.gf - a.gf || Math.random() - 0.5);
+  for (const t of thirds.slice(0, 8)) {
+    reached[t.name] = 1; // r32
+    qualified.push(t);
+  }
+
+  // Tours à élimination : r16=2, qf=3, sf=4, finale=5, champion=6
+  let surviving = qualified;
+  for (let roundIdx = 2; roundIdx <= 6; roundIdx++) {
+    const next = [];
+    for (let i = 0; i < surviving.length; i += 2) {
+      const a = surviving[i], b = surviving[i + 1] || surviving[i];
+      const pr = predictMatchEnsemble(a.elo, b.elo, true);
+      const winner = Math.random() < pr.home_win_probability / (pr.home_win_probability + pr.away_win_probability) ? a : b;
+      reached[winner.name] = roundIdx;
+      next.push(winner);
+    }
+    surviving = next;
+  }
+
+  return { winner: surviving[0]?.name || '', reached };
 }
 
 const FIFA_HEADERS = { 'User-Agent': 'Mozilla/5.0', Accept: 'application/json' };
@@ -215,16 +356,29 @@ const NAME_ALIASES = {
   'argentine':'Argentina','allemagne':'Germany','turquie':'Turkey','cameroun':'Cameroon',
   'bresil':'Brazil','portugal':'Portugal','japon':'Japan','egypte':'Egypt',
   'colombie':'Colombia','paysbas':'Netherlands','coreedusud':'South Korea',
+  'coreedurepublique':'South Korea',
   'algerie':'Algeria','uruguay':'Uruguay','belgique':'Belgium','australie':'Australia',
   'tunisie':'Tunisia','equateur':'Ecuador','italie':'Italy','iran':'Iran',
-  'cotedivoire':'Ivory Coast','paraguay':'Paraguay','croatie':'Croatia',
+  'cotedivoire':'Ivory Coast','coteivoire':'Ivory Coast',
+  'paraguay':'Paraguay','croatie':'Croatia',
   'arabiesaoudite':'Saudi Arabia','ghana':'Ghana','suisse':'Switzerland',
   'qatar':'Qatar','costarica':'Costa Rica','venezuela':'Venezuela',
   'danemark':'Denmark','irak':'Iraq','panama':'Panama','bolivie':'Bolivia',
   'autriche':'Austria','emiratsarabesunis':'UAE','eau':'UAE',
   'jamaique':'Jamaica','nouvellezelande':'New Zealand',
-  'afriquedusud':'South Africa','suede':'Sweden','norvege':'Norway',
+  'afriquedusud':'South Africa','suede':'Sweden',
+  'norvege':'Norway','norvège':'Norway',
   'ecosse':'Scotland','galles':'Wales','chili':'Chile','perou':'Peru','chine':'China',
+  'capvert':'Cape Verde','capverde':'Cape Verde','caboverde':'Cape Verde',
+  'haiti':'Haiti','haïti':'Haiti',
+  'bosnieherzégovine':'Bosnia-Herzegovina','bosnie':'Bosnia-Herzegovina',
+  'bosnieherzegovina':'Bosnia-Herzegovina',
+  'ouzbékistan':'Uzbekistan','ouzbekistan':'Uzbekistan',
+  'curacao':'Curaçao','curao':'Curaçao',
+  'congodr':'DR Congo','rdcongo':'DR Congo','congord':'DR Congo',
+  'democraticrepublicofcongo':'DR Congo',
+  'jordanie':'Jordan',
+  'tchequie':'Czechia','tcheque':'Czechia','republiquetcheque':'Czechia',
   // Variantes FIFA anglaises officielles
   'korearepublic':'South Korea','republicofkorea':'South Korea',
   'unitedstates':'USA','unitedstatesofamerica':'USA',
@@ -232,23 +386,22 @@ const NAME_ALIASES = {
   'iriran':'Iran','islamicrepublicofiran':'Iran',
   'bosniaherzegovina':'Bosnia-Herzegovina',
   'czechia':'Czechia',
+  'capeverde':'Cape Verde',
+  'drcongo':'DR Congo','democraticrepublicofthecongo':'DR Congo',
+  'coted\'ivoire':'Ivory Coast','côted\'ivoire':'Ivory Coast',
 };
 
 // Equipes non qualifiees WC2026 pouvant apparaitre dans les calendriers FIFA
 const EXTRA_TEAMS = [
-  { name:'South Africa',       code:'RSA', confederation:'CAF',      group:null, fifa_ranking:60,  elo:1460 },
-  { name:'Scotland',           code:'SCO', confederation:'UEFA',     group:null, fifa_ranking:28,  elo:1630 },
+  { name:'Italy',              code:'ITA', confederation:'UEFA',     group:null, fifa_ranking:11,  elo:1800 },
+  { name:'Poland',             code:'POL', confederation:'UEFA',     group:null, fifa_ranking:24,  elo:1660 },
+  { name:'Serbia',             code:'SRB', confederation:'UEFA',     group:null, fifa_ranking:27,  elo:1630 },
+  { name:'Ukraine',            code:'UKR', confederation:'UEFA',     group:null, fifa_ranking:22,  elo:1670 },
+  { name:'Denmark',            code:'DEN', confederation:'UEFA',     group:null, fifa_ranking:21,  elo:1690 },
   { name:'Wales',              code:'WAL', confederation:'UEFA',     group:null, fifa_ranking:31,  elo:1610 },
-  { name:'Sweden',             code:'SWE', confederation:'UEFA',     group:null, fifa_ranking:32,  elo:1605 },
-  { name:'Norway',             code:'NOR', confederation:'UEFA',     group:null, fifa_ranking:33,  elo:1595 },
-  { name:'Chile',              code:'CHI', confederation:'CONMEBOL', group:null, fifa_ranking:34,  elo:1580 },
-  { name:'Peru',               code:'PER', confederation:'CONMEBOL', group:null, fifa_ranking:39,  elo:1555 },
-  { name:'China',              code:'CHN', confederation:'AFC',      group:null, fifa_ranking:88,  elo:1360 },
-  { name:'Czechia',            code:'CZE', confederation:'UEFA',     group:null, fifa_ranking:37,  elo:1570 },
-  { name:'Bosnia-Herzegovina', code:'BIH', confederation:'UEFA',     group:null, fifa_ranking:65,  elo:1490 },
+  { name:'Romania',            code:'ROU', confederation:'UEFA',     group:null, fifa_ranking:46,  elo:1520 },
   { name:'Greece',             code:'GRE', confederation:'UEFA',     group:null, fifa_ranking:50,  elo:1510 },
   { name:'Hungary',            code:'HUN', confederation:'UEFA',     group:null, fifa_ranking:44,  elo:1530 },
-  { name:'Romania',            code:'ROU', confederation:'UEFA',     group:null, fifa_ranking:46,  elo:1520 },
   { name:'Slovakia',           code:'SVK', confederation:'UEFA',     group:null, fifa_ranking:48,  elo:1515 },
   { name:'Slovenia',           code:'SVN', confederation:'UEFA',     group:null, fifa_ranking:57,  elo:1485 },
   { name:'Finland',            code:'FIN', confederation:'UEFA',     group:null, fifa_ranking:58,  elo:1480 },
@@ -257,12 +410,16 @@ const EXTRA_TEAMS = [
   { name:'North Macedonia',    code:'MKD', confederation:'UEFA',     group:null, fifa_ranking:67,  elo:1465 },
   { name:'Montenegro',         code:'MNE', confederation:'UEFA',     group:null, fifa_ranking:70,  elo:1455 },
   { name:'Georgia',            code:'GEO', confederation:'UEFA',     group:null, fifa_ranking:74,  elo:1445 },
-  { name:'Uzbekistan',         code:'UZB', confederation:'AFC',      group:null, fifa_ranking:71,  elo:1450 },
-  { name:'Jordan',             code:'JOR', confederation:'AFC',      group:null, fifa_ranking:73,  elo:1445 },
-  { name:'Morocco',            code:'MAR', confederation:'CAF',      group:null, fifa_ranking:14,  elo:1760 },
-  { name:'Egypt',              code:'EGY', confederation:'CAF',      group:null, fifa_ranking:37,  elo:1570 },
-  { name:'Colombia',           code:'COL', confederation:'CONMEBOL', group:null, fifa_ranking:9,   elo:1830 },
+  { name:'Nigeria',            code:'NGA', confederation:'CAF',      group:null, fifa_ranking:35,  elo:1590 },
+  { name:'Cameroon',           code:'CMR', confederation:'CAF',      group:null, fifa_ranking:34,  elo:1580 },
+  { name:'Chile',              code:'CHI', confederation:'CONMEBOL', group:null, fifa_ranking:34,  elo:1580 },
+  { name:'Peru',               code:'PER', confederation:'CONMEBOL', group:null, fifa_ranking:39,  elo:1555 },
+  { name:'Venezuela',          code:'VEN', confederation:'CONMEBOL', group:null, fifa_ranking:55,  elo:1490 },
+  { name:'Bolivia',            code:'BOL', confederation:'CONMEBOL', group:null, fifa_ranking:83,  elo:1380 },
   { name:'Costa Rica',         code:'CRC', confederation:'CONCACAF', group:null, fifa_ranking:49,  elo:1510 },
+  { name:'Jamaica',            code:'JAM', confederation:'CONCACAF', group:null, fifa_ranking:47,  elo:1500 },
+  { name:'UAE',                code:'UAE', confederation:'AFC',      group:null, fifa_ranking:68,  elo:1420 },
+  { name:'China',              code:'CHN', confederation:'AFC',      group:null, fifa_ranking:88,  elo:1360 },
 ];
 
 const ALL_TEAMS = [...TEAMS, ...EXTRA_TEAMS];
@@ -424,13 +581,64 @@ export default async function handler(req, res) {
     return res.json({ ...predictMatch(home.elo, away.elo, is_knockout||false), home_team:home.name, away_team:away.name });
   }
 
-  // POST /api/simulate?n=500 — tournament simulation
+  // POST /api/simulate?n=2000 — simulation Monte Carlo multi-modèles
   if (route === 'simulate' && method === 'POST') {
-    const capped = Math.min(parseInt(q.n)||500, 500);
-    const wins = {};
-    for (let i = 0; i < capped; i++) { const w = simulateOnce(); wins[w] = (wins[w]||0)+1; }
-    const sorted = Object.entries(wins).map(([k,v]) => [k, +(v/capped).toFixed(4)]).sort((a,b) => b[1]-a[1]);
-    return res.json({ winner:sorted[0]?.[0]||'', runner_up:sorted[1]?.[0]||'', semi_finalists:sorted.slice(0,4).map(e=>e[0]), simulations_run:capped, win_probabilities:Object.fromEntries(sorted) });
+    const N = Math.min(parseInt(q.n) || 2000, 2000);
+
+    // Monte Carlo : suivi par tour pour chaque équipe
+    // reached[team][i] = nb de simulations où l'équipe a atteint le tour i (cumulatif)
+    // Tours : 0=groupes, 1=32e, 2=16e, 3=QF, 4=SF, 5=Finale, 6=Champion
+    const reachCounts = {};
+    const winCounts   = {};
+
+    for (let sim = 0; sim < N; sim++) {
+      const { winner, reached } = simulateOnce();
+      winCounts[winner] = (winCounts[winner] || 0) + 1;
+      for (const [team, idx] of Object.entries(reached)) {
+        if (!reachCounts[team]) reachCounts[team] = [0, 0, 0, 0, 0, 0, 0];
+        for (let r = 0; r <= idx; r++) reachCounts[team][r]++;
+      }
+    }
+
+    // Probabilités analytiques exactes (groupes)
+    const analyticalGroups = {};
+    const groupMap = {};
+    for (const t of TEAMS) {
+      if (!groupMap[t.group]) groupMap[t.group] = [];
+      groupMap[t.group].push(t);
+    }
+    for (const [g, teams] of Object.entries(groupMap)) {
+      analyticalGroups[g] = computeGroupProbs(teams);
+    }
+
+    const sorted = Object.entries(winCounts)
+      .map(([k, v]) => [k, +(v / N).toFixed(4)])
+      .sort((a, b) => b[1] - a[1]);
+
+    const win_probabilities = Object.fromEntries(sorted);
+
+    const round_probabilities = {};
+    for (const [team, counts] of Object.entries(reachCounts)) {
+      round_probabilities[team] = {
+        qualify:  +(counts[1] / N).toFixed(4),
+        r16:      +(counts[2] / N).toFixed(4),
+        qf:       +(counts[3] / N).toFixed(4),
+        sf:       +(counts[4] / N).toFixed(4),
+        final:    +(counts[5] / N).toFixed(4),
+        champion: +(counts[6] / N).toFixed(4),
+      };
+    }
+
+    return res.json({
+      winner:          sorted[0]?.[0] || '',
+      runner_up:       sorted[1]?.[0] || '',
+      semi_finalists:  sorted.slice(0, 4).map(e => e[0]),
+      simulations_run: N,
+      model:           'Ensemble (ELO + Poisson)',
+      win_probabilities,
+      round_probabilities,
+      analytical_groups: analyticalGroups,
+    });
   }
 
   // GET /api/accuracy

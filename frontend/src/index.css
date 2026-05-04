@@ -6,7 +6,12 @@ body {
   font-family: 'Inter', sans-serif;
   background-color: #f9fafb;
   color: #111827;
+  overflow-x: hidden;
 }
+
+/* Masquer la scrollbar du nav header (Chrome affiche une barre en haut sinon) */
+header nav::-webkit-scrollbar { display: none; }
+header nav { -ms-overflow-style: none; scrollbar-width: none; }
 
 html.dark body {
   background-color: #0f0f1a;

@@ -89,12 +89,32 @@ export interface GroupStanding {
   }[]
 }
 
+export interface RoundProbabilities {
+  qualify: number
+  r16: number
+  qf: number
+  sf: number
+  final: number
+  champion: number
+}
+
+export interface AnalyticalGroupTeam {
+  name: string
+  code: string
+  p_qualify: number
+  p_1st: number
+  p_3rd: number
+}
+
 export interface TournamentSimulation {
   winner: string
   runner_up: string
   semi_finalists: string[]
   simulations_run: number
+  model?: string
   win_probabilities: Record<string, number>
+  round_probabilities?: Record<string, RoundProbabilities>
+  analytical_groups?: Record<string, AnalyticalGroupTeam[]>
 }
 
 export const teamsApi = {

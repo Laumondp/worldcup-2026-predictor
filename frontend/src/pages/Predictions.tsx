@@ -166,7 +166,7 @@ export default function Predictions() {
                   {getOutcomeLabel(prediction.data.predicted_outcome)}
                 </div>
                 <div className="text-sm text-gray-500 mt-2 dark:text-gray-400">
-                  Confiance : {(prediction.data.confidence * 100).toFixed(1)}%
+                  Confiance : {prediction.data.confidence}%
                 </div>
               </div>
 

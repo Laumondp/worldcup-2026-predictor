@@ -3,7 +3,6 @@ import { Trophy, BarChart3, Grid3X3, GitBranch, RefreshCw, CheckCircle, XCircle,
 import { useState, useRef, useEffect } from 'react'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { adminApi, statsApi } from '../services/api'
-import ShareButtons from './ShareButtons'
 import { useTheme } from '../context/ThemeContext'
 
 const navItems = [
@@ -166,7 +165,6 @@ export default function Layout() {
               >
                 <img src="/valeo-logo.png" alt="Valeo" className="h-6 w-auto object-contain" />
               </a>
-              <ShareButtons compact />
               <button
                 onClick={toggleTheme}
                 title={theme === 'dark' ? 'Mode clair' : 'Mode sombre'}
@@ -213,24 +211,6 @@ export default function Layout() {
       <footer className="border-t border-gray-200 py-6 text-center text-gray-500 dark:border-gray-700 dark:text-gray-400 pb-24 md:pb-6">
         <p>World Cup 2026 Predictor - Powered by Machine Learning</p>
         <p className="text-sm mt-1 text-gray-400 dark:text-gray-500">&copy; 2026 LAUMOND Philippe — Tous droits réservés</p>
-        <a
-          href="https://cm2026-deploy.vercel.app"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="inline-flex items-center gap-2 mt-3 transition-opacity hover:opacity-75"
-        >
-          <img src="/valeo-logo.png" alt="Valeo" className="h-5 w-auto object-contain" />
-          <ExternalLink className="w-3.5 h-3.5" style={{ color: '#003B77' }} />
-        </a>
-        <div className="mt-4 flex justify-center">
-          <button
-            onClick={toggleTheme}
-            title={theme === 'dark' ? 'Mode clair' : 'Mode sombre'}
-            className="flex items-center px-3 py-2 rounded-full border border-gray-300 bg-gray-100 text-gray-700 hover:bg-gray-200 transition-colors dark:border-gray-600 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700"
-          >
-            {theme === 'dark' ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
-          </button>
-        </div>
       </footer>
     </div>
   )

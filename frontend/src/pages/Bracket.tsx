@@ -1,204 +1,286 @@
+import { useState } from 'react'
 import { useQuery } from '@tanstack/react-query'
-import { matchesApi, predictionsApi } from '../services/api'
-import { Trophy, RefreshCw } from 'lucide-react'
+import { predictionsApi } from '../services/api'
+import type { RoundProbabilities } from '../services/api'
+import { Trophy, RefreshCw, ChevronDown, ChevronUp } from 'lucide-react'
 import { FlagImg } from '../utils/flags'
+import { Helmet } from 'react-helmet-async'
+
+const ROUND_LABELS: Record<keyof RoundProbabilities, string> = {
+  qualify:  'Qualification',
+  r16:      '16es',
+  qf:       'Quarts',
+  sf:       'Demies',
+  final:    'Finale',
+  champion: 'Champion',
+}
+
+const ROUND_COLORS: Record<keyof RoundProbabilities, string> = {
+  qualify:  'bg-blue-500',
+  r16:      'bg-cyan-500',
+  qf:       'bg-violet-500',
+  sf:       'bg-orange-500',
+  final:    'bg-yellow-500',
+  champion: 'bg-emerald-500',
+}
+
+function ProbBar({ value, color }: { value: number; color: string }) {
+  const pct = Math.round(value * 100)
+  return (
+    <div className="flex items-center gap-1.5 w-full">
+      <div className="flex-1 h-1.5 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
+        <div className={`h-full rounded-full ${color}`} style={{ width: `${pct}%` }} />
+      </div>
+      <span className="w-9 text-right text-xs tabular-nums text-gray-600 dark:text-gray-400">
+        {pct}%
+      </span>
+    </div>
+  )
+}
 
 export default function Bracket() {
-  const { data: bracket, isLoading } = useQuery({
-    queryKey: ['bracket'],
-    queryFn: () => matchesApi.getBracket(),
-  })
+  const [showAnalytical, setShowAnalytical] = useState(false)
+  const [sortRound, setSortRound] = useState<keyof RoundProbabilities>('champion')
 
-  const { data: simulation, refetch: refetchSimulation, isFetching } = useQuery({
+  const { data: simulation, refetch, isFetching } = useQuery({
     queryKey: ['tournamentSimulation'],
-    queryFn: () => predictionsApi.simulateTournament(1000),
+    queryFn: () => predictionsApi.simulateTournament(2000),
     staleTime: 1000 * 60 * 10,
   })
 
-  if (isLoading) {
-    return (
-      <div className="card text-center text-gray-500 dark:text-gray-400">
-        Chargement du tableau...
-      </div>
-    )
-  }
+  const sim = simulation?.data
 
-  const stages = [
-    'Round of 32',
-    'Round of 16',
-    'Quarter-final',
-    'Semi-final',
-    'Final',
-  ]
+  // Build sorted teams table
+  const teams = sim?.round_probabilities
+    ? Object.entries(sim.round_probabilities)
+        .map(([name, probs]) => ({ name, ...probs }))
+        .sort((a, b) => b[sortRound] - a[sortRound])
+    : []
 
-  const stageLabels: Record<string, string> = {
-    'Round of 32': '32es de finale',
-    'Round of 16': '16es de finale',
-    'Quarter-final': 'Quart de finale',
-    'Semi-final': 'Demi-finale',
-    'Final': 'Finale',
-  }
+  const roundKeys: (keyof RoundProbabilities)[] = ['qualify', 'r16', 'qf', 'sf', 'final', 'champion']
 
   return (
     <div className="space-y-8">
+      <Helmet>
+        <title>Tableau éliminatoire — FIFA World Cup 2026</title>
+      </Helmet>
+
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-        <h1 className="text-3xl font-bold">Tableau éliminatoire</h1>
+        <div>
+          <h1 className="text-3xl font-bold">Simulation du tournoi</h1>
+          {sim?.model && (
+            <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
+              Modèle : <span className="font-medium text-blue-600 dark:text-blue-400">{sim.model}</span>
+              {' · '}{sim.simulations_run.toLocaleString()} simulations Monte Carlo
+            </p>
+          )}
+        </div>
         <button
-          onClick={() => refetchSimulation()}
+          onClick={() => refetch()}
           disabled={isFetching}
-          className="btn-primary flex items-center gap-2"
+          className="btn-primary flex items-center gap-2 self-start"
         >
           <RefreshCw className={`w-4 h-4 ${isFetching ? 'animate-spin' : ''}`} />
-          Lancer la simulation
+          {isFetching ? 'Simulation en cours…' : 'Relancer la simulation'}
         </button>
       </div>
 
-      {/* Tournament Prediction */}
-      {simulation?.data && (
-        <div className="card bg-gradient-to-r from-yellow-50 to-orange-50 dark:from-yellow-900/30 dark:to-orange-900/30">
-          <div className="flex items-center gap-3 mb-4">
+      {/* ── Podium prédit ── */}
+      {sim && (
+        <div className="card bg-gradient-to-r from-yellow-50 to-orange-50 dark:from-yellow-900/20 dark:to-orange-900/20">
+          <div className="flex items-center gap-3 mb-5">
             <Trophy className="w-8 h-8 text-yellow-500" />
-            <h2 className="text-2xl font-bold">Prédiction du tournoi</h2>
+            <h2 className="text-xl font-bold">Prédiction du tournoi</h2>
           </div>
-
-          <div className="grid md:grid-cols-4 gap-6">
-            {/* Winner */}
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             <div className="text-center">
-              <div className="text-sm text-gray-500 mb-2 dark:text-gray-400">Vainqueur prédit</div>
-              <div className="text-3xl font-bold text-yellow-500 dark:text-yellow-400">
-                {simulation.data.winner}
+              <div className="text-xs text-gray-500 dark:text-gray-400 mb-1">🥇 Vainqueur</div>
+              <div className="flex items-center justify-center gap-2">
+                <FlagImg code={sim.winner} size={24} />
+                <span className="text-2xl font-bold text-yellow-500 dark:text-yellow-400">{sim.winner}</span>
               </div>
-              <div className="text-sm text-gray-500 mt-1 dark:text-gray-400">
-                {((simulation.data.win_probabilities[simulation.data.winner] || 0) * 100).toFixed(1)}% de chances
+              <div className="text-sm text-gray-500 dark:text-gray-400 mt-1">
+                {((sim.win_probabilities[sim.winner] || 0) * 100).toFixed(1)}% de chances
               </div>
             </div>
-
-            {/* Runner-up */}
             <div className="text-center">
-              <div className="text-sm text-gray-500 mb-2 dark:text-gray-400">Finaliste</div>
-              <div className="text-2xl font-bold text-gray-700 dark:text-gray-300">
-                {simulation.data.runner_up}
+              <div className="text-xs text-gray-500 dark:text-gray-400 mb-1">🥈 Finaliste</div>
+              <div className="flex items-center justify-center gap-2">
+                <FlagImg code={sim.runner_up} size={24} />
+                <span className="text-xl font-bold text-gray-700 dark:text-gray-300">{sim.runner_up}</span>
+              </div>
+              <div className="text-sm text-gray-500 dark:text-gray-400 mt-1">
+                {((sim.win_probabilities[sim.runner_up] || 0) * 100).toFixed(1)}%
               </div>
             </div>
-
-            {/* Semi-finalists */}
             <div className="text-center md:col-span-2">
-              <div className="text-sm text-gray-500 mb-2 dark:text-gray-400">Demi-finalistes</div>
+              <div className="text-xs text-gray-500 dark:text-gray-400 mb-2">🥉 Demi-finalistes</div>
               <div className="flex flex-wrap justify-center gap-2">
-                {simulation.data.semi_finalists.map((team) => (
-                  <span
-                    key={team}
-                    className="bg-gray-200 px-3 py-1 rounded-full text-sm dark:bg-gray-700"
-                  >
+                {sim.semi_finalists.map((team) => (
+                  <span key={team} className="flex items-center gap-1.5 bg-white/60 dark:bg-gray-800/60 px-3 py-1 rounded-full text-sm font-medium">
+                    <FlagImg code={team} size={16} />
                     {team}
                   </span>
                 ))}
               </div>
             </div>
           </div>
-
-          <div className="mt-4 text-xs text-gray-400 text-center dark:text-gray-500">
-            Basé sur {simulation.data.simulations_run.toLocaleString()} simulations Monte Carlo
-          </div>
         </div>
       )}
 
-      {/* Win Probabilities */}
-      {simulation?.data && (
+      {/* ── Probabilités par tour (toutes les 48 équipes) ── */}
+      {teams.length > 0 && (
         <div className="card">
-          <h3 className="text-xl font-bold mb-4">Probabilités de victoire</h3>
-          <div className="grid md:grid-cols-2 gap-4">
-            {Object.entries(simulation.data.win_probabilities)
-              .slice(0, 16)
-              .map(([team, prob], index) => (
-                <div key={team} className="flex items-center gap-3">
-                  <span className="w-6 text-gray-500 text-sm dark:text-gray-400">{index + 1}.</span>
-                  <span className="flex-1 font-medium">{team}</span>
-                  <div className="w-32 h-2 bg-gray-200 rounded-full overflow-hidden dark:bg-gray-700">
-                    <div
-                      className="h-full rounded-full transition-all"
-                      style={{
-                        width: `${(prob as number) * 100 * 5}%`,
-                        backgroundColor: index < 4 ? '#F59E0B' : index < 8 ? '#3B82F6' : '#6B7280',
-                      }}
-                    />
-                  </div>
-                  <span className="w-16 text-right text-sm text-gray-500 dark:text-gray-400">
-                    {((prob as number) * 100).toFixed(1)}%
-                  </span>
-                </div>
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4">
+            <h3 className="text-xl font-bold">Probabilités d'avancement par tour</h3>
+            <div className="flex flex-wrap gap-1">
+              {roundKeys.map((r) => (
+                <button
+                  key={r}
+                  onClick={() => setSortRound(r)}
+                  className={`px-3 py-1 rounded-full text-xs font-semibold transition-all ${
+                    sortRound === r
+                      ? 'bg-blue-600 text-white'
+                      : 'bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-700'
+                  }`}
+                >
+                  {ROUND_LABELS[r]}
+                </button>
               ))}
+            </div>
+          </div>
+
+          <div className="overflow-x-auto">
+            <table className="w-full text-sm">
+              <thead>
+                <tr className="text-left text-xs text-gray-500 dark:text-gray-400 border-b border-gray-200 dark:border-gray-700">
+                  <th className="pb-2 pr-3 font-medium w-6">#</th>
+                  <th className="pb-2 pr-4 font-medium">Équipe</th>
+                  {roundKeys.map((r) => (
+                    <th key={r} className={`pb-2 px-2 font-medium text-center ${sortRound === r ? 'text-blue-600 dark:text-blue-400' : ''}`}>
+                      {ROUND_LABELS[r]}
+                    </th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-gray-100 dark:divide-gray-800">
+                {teams.map((team, idx) => (
+                  <tr key={team.name} className="hover:bg-gray-50 dark:hover:bg-gray-800/40 transition-colors">
+                    <td className="py-2 pr-3 text-gray-400 dark:text-gray-500 text-xs">{idx + 1}</td>
+                    <td className="py-2 pr-4">
+                      <div className="flex items-center gap-2">
+                        <FlagImg code={team.name} size={20} />
+                        <span className="font-medium">{team.name}</span>
+                      </div>
+                    </td>
+                    {roundKeys.map((r) => {
+                      const val = team[r] as number
+                      const pct = Math.round(val * 100)
+                      const isSort = r === sortRound
+                      return (
+                        <td key={r} className={`py-2 px-2 text-center tabular-nums text-xs ${
+                          isSort ? 'font-bold text-gray-900 dark:text-gray-100' : 'text-gray-600 dark:text-gray-400'
+                        }`}>
+                          <span className={`inline-block px-2 py-0.5 rounded-full ${
+                            pct >= 70 ? 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/40 dark:text-emerald-400' :
+                            pct >= 40 ? 'bg-blue-100 text-blue-700 dark:bg-blue-900/40 dark:text-blue-400' :
+                            pct >= 15 ? 'bg-gray-100 text-gray-600 dark:bg-gray-800 dark:text-gray-400' :
+                            'text-gray-400 dark:text-gray-600'
+                          }`}>
+                            {pct}%
+                          </span>
+                        </td>
+                      )
+                    })}
+                  </tr>
+                ))}
+              </tbody>
+            </table>
           </div>
         </div>
       )}
 
-      {/* Bracket Visualization */}
-      <div className="card overflow-x-auto">
-        <h3 className="text-xl font-bold mb-6">Tableau des phases éliminatoires</h3>
-
-        <div className="min-w-[800px]">
-          <div className="flex justify-around mb-4">
-            {stages.map((stage) => (
-              <div
-                key={stage}
-                className="text-center font-semibold text-gray-500 dark:text-gray-400"
-              >
-                {stageLabels[stage] || stage}
+      {/* ── Top 16 — probabilités de victoire ── */}
+      {sim?.win_probabilities && (
+        <div className="card">
+          <h3 className="text-xl font-bold mb-4">Top 16 — probabilités de remporter le tournoi</h3>
+          <div className="grid md:grid-cols-2 gap-3">
+            {Object.entries(sim.win_probabilities).slice(0, 16).map(([team, prob], index) => (
+              <div key={team} className="flex items-center gap-3">
+                <span className="w-6 text-gray-400 dark:text-gray-500 text-xs text-right">{index + 1}.</span>
+                <FlagImg code={team} size={20} />
+                <span className="flex-1 font-medium text-sm">{team}</span>
+                <ProbBar
+                  value={prob as number}
+                  color={index < 4 ? 'bg-yellow-500' : index < 8 ? 'bg-blue-500' : 'bg-gray-400'}
+                />
               </div>
             ))}
           </div>
-
-          <div className="flex justify-around gap-4">
-            {stages.map((stage) => {
-              const stageMatches = bracket?.data?.[stage] || []
-              return (
-                <div key={stage} className="flex-1 space-y-2">
-                  {stageMatches.length > 0 ? (
-                    stageMatches.map((match: any) => (
-                      <div
-                        key={match.id}
-                        className={`bg-gray-100 rounded-lg p-3 text-sm dark:bg-gray-700/50 ${
-                          stage === 'Final' ? 'border-2 border-yellow-500' : ''
-                        }`}
-                      >
-                        <div className={`flex justify-between ${match.played && match.home_score > match.away_score ? 'font-bold' : ''}`}>
-                          <span className="flex items-center gap-1"><FlagImg code={match.home_team} size={20} />{match.home_team}</span>
-                          {match.played && <span>{match.home_score}</span>}
-                        </div>
-                        <div className="border-t border-gray-200 my-1 dark:border-gray-600" />
-                        <div className={`flex justify-between ${match.played && match.away_score > match.home_score ? 'font-bold' : ''}`}>
-                          <span className="flex items-center gap-1"><FlagImg code={match.away_team} size={20} />{match.away_team}</span>
-                          {match.played && <span>{match.away_score}</span>}
-                        </div>
-                        {match.predictions && !match.played && (
-                          <div className="mt-2 text-xs text-gray-500 text-center dark:text-gray-400">
-                            {(match.predictions.home_win * 100).toFixed(0)}% - {(match.predictions.draw * 100).toFixed(0)}% - {(match.predictions.away_win * 100).toFixed(0)}%
-                          </div>
-                        )}
-                      </div>
-                    ))
-                  ) : (
-                    <div className="bg-gray-100/60 rounded-lg p-4 text-center text-gray-400 text-sm dark:bg-gray-700/30 dark:text-gray-500">
-                      À définir
-                    </div>
-                  )}
-                </div>
-              )
-            })}
-          </div>
         </div>
-      </div>
+      )}
 
-      {/* Knockout Format Info */}
-      <div className="card bg-blue-50 dark:bg-blue-900/30">
-        <h3 className="text-lg font-bold mb-3">Format des phases éliminatoires</h3>
-        <ul className="space-y-2 text-gray-700 dark:text-gray-300">
-          <li>- 32es de finale : 32 équipes (24 premiers/2es de groupe + 8 meilleurs 3es)</li>
-          <li>- 16es de finale : 16 équipes</li>
-          <li>- Quarts de finale : 8 équipes</li>
-          <li>- Demi-finales : 4 équipes</li>
-          <li>- Match pour la 3e place + Finale</li>
-          <li>- Tous les matchs éliminatoires se décident aux prolongations et tirs au but si nécessaire</li>
+      {/* ── Calcul analytique des groupes ── */}
+      {sim?.analytical_groups && (
+        <div className="card">
+          <button
+            onClick={() => setShowAnalytical(v => !v)}
+            className="w-full flex items-center justify-between text-left"
+          >
+            <div>
+              <h3 className="text-xl font-bold">Probabilités analytiques de groupes</h3>
+              <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
+                Calcul exact par énumération des 729 résultats possibles par groupe (sans aléatoire)
+              </p>
+            </div>
+            {showAnalytical
+              ? <ChevronUp className="w-5 h-5 text-gray-400 shrink-0" />
+              : <ChevronDown className="w-5 h-5 text-gray-400 shrink-0" />
+            }
+          </button>
+
+          {showAnalytical && (
+            <div className="mt-6 grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {Object.entries(sim.analytical_groups)
+                .sort(([a], [b]) => a.localeCompare(b))
+                .map(([group, groupTeams]) => (
+                  <div key={group} className="bg-gray-50 dark:bg-gray-800/40 rounded-xl p-4">
+                    <h4 className="font-bold text-blue-600 dark:text-blue-400 mb-3">Groupe {group}</h4>
+                    <div className="space-y-3">
+                      {[...groupTeams].sort((a, b) => b.p_qualify - a.p_qualify).map((t) => (
+                        <div key={t.name}>
+                          <div className="flex items-center justify-between mb-1">
+                            <div className="flex items-center gap-2">
+                              <FlagImg code={t.code} size={16} />
+                              <span className="text-sm font-medium">{t.name}</span>
+                            </div>
+                            <div className="flex gap-3 text-xs text-gray-500 dark:text-gray-400">
+                              <span className="text-green-600 dark:text-green-400 font-semibold">
+                                {Math.round(t.p_qualify * 100)}% qual.
+                              </span>
+                              <span>1er: {Math.round(t.p_1st * 100)}%</span>
+                              <span>3e: {Math.round(t.p_3rd * 100)}%</span>
+                            </div>
+                          </div>
+                          <ProbBar value={t.p_qualify} color={t.p_qualify >= 0.5 ? 'bg-green-500' : 'bg-orange-400'} />
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                ))}
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* ── Info format ── */}
+      <div className="card bg-blue-50 dark:bg-blue-900/20">
+        <h3 className="text-lg font-bold mb-3">Format de la Coupe du Monde 2026</h3>
+        <ul className="space-y-1.5 text-sm text-gray-700 dark:text-gray-300">
+          <li>• 48 équipes réparties en 12 groupes de 4 — 72 matchs de poule</li>
+          <li>• 32 qualifiés : 2 premiers de chaque groupe + 8 meilleurs 3es</li>
+          <li>• 32es → 16es → Quarts → Demies → Finale (+ match 3e place)</li>
+          <li>• Prolongations et tirs au but si nécessaire en phase éliminatoire</li>
         </ul>
       </div>
     </div>
