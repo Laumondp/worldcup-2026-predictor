@@ -317,25 +317,47 @@ async function fetchFifaRankings() {
   return null;
 }
 
-// Static bracket labels for R32 matches (FIFA doesn't provide PlaceholderName for KO rounds)
-// Mapping derived from official FIFA WC2026 schedule, ordered chronologically
-const R32_BRACKET = {
-  '400021518': { home: '2e Gr. A',          away: '2e Gr. B'         },
-  '400021516': { home: '1er Gr. C',         away: '2e Gr. F'         },
-  '400021513': { home: '1er Gr. E',         away: '3e Gr. A/B/C/D/F' },
-  '400021522': { home: '1er Gr. F',         away: '2e Gr. C'         },
-  '400021514': { home: '2e Gr. E',          away: '2e Gr. I'         },
-  '400021523': { home: '1er Gr. I',         away: '3e Gr. C/D/F/G/H' },
-  '400021520': { home: '1er Gr. A',         away: '3e Gr. C/E/F/H/I' },
-  '400021512': { home: '1er Gr. L',         away: '3e Gr. E/H/I/J/K' },
-  '400021525': { home: '1er Gr. G',         away: '3e Gr. A/E/H/I/J' },
-  '400021524': { home: '1er Gr. D',         away: '3e Gr. B/E/F/I/J' },
-  '400021519': { home: '1er Gr. H',         away: '2e Gr. J'         },
-  '400021526': { home: '2e Gr. K',          away: '2e Gr. L'         },
-  '400021527': { home: '1er Gr. B',         away: '3e Gr. E/F/G/I/J' },
-  '400021515': { home: '2e Gr. D',          away: '2e Gr. G'         },
-  '400021521': { home: '1er Gr. J',         away: '2e Gr. H'         },
-  '400021517': { home: '1er Gr. K',         away: '3e Gr. D/E/I/J/L' },
+// Static bracket labels for all KO matches (FIFA API doesn't populate PlaceholderName for KO rounds)
+// IDs mapped chronologically from official FIFA WC2026 schedule
+const KO_BRACKET = {
+  // ── 32es de finale ──
+  '400021518': { home: '2e Gr. A',                away: '2e Gr. B'                },
+  '400021516': { home: '1er Gr. C',               away: '2e Gr. F'                },
+  '400021513': { home: '1er Gr. E',               away: '3e Gr. A/B/C/D/F'        },
+  '400021522': { home: '1er Gr. F',               away: '2e Gr. C'                },
+  '400021514': { home: '2e Gr. E',                away: '2e Gr. I'                },
+  '400021523': { home: '1er Gr. I',               away: '3e Gr. C/D/F/G/H'        },
+  '400021520': { home: '1er Gr. A',               away: '3e Gr. C/E/F/H/I'        },
+  '400021512': { home: '1er Gr. L',               away: '3e Gr. E/H/I/J/K'        },
+  '400021525': { home: '1er Gr. G',               away: '3e Gr. A/E/H/I/J'        },
+  '400021524': { home: '1er Gr. D',               away: '3e Gr. B/E/F/I/J'        },
+  '400021519': { home: '1er Gr. H',               away: '2e Gr. J'                },
+  '400021526': { home: '2e Gr. K',                away: '2e Gr. L'                },
+  '400021527': { home: '1er Gr. B',               away: '3e Gr. E/F/G/I/J'        },
+  '400021515': { home: '2e Gr. D',                away: '2e Gr. G'                },
+  '400021521': { home: '1er Gr. J',               away: '2e Gr. H'                },
+  '400021517': { home: '1er Gr. K',               away: '3e Gr. D/E/I/J/L'        },
+  // ── 16es de finale ──
+  '400021530': { home: 'V. (2e A / 2e B)',        away: 'V. (1er F / 2e C)'       },
+  '400021533': { home: 'V. (1er E / 3e ABCDF)',   away: 'V. (1er I / 3e CDFGH)'   },
+  '400021532': { home: 'V. (1er C / 2e F)',       away: 'V. (2e E / 2e I)'         },
+  '400021531': { home: 'V. (1er A / 3e CEFHI)',   away: 'V. (1er L / 3e EHIJK)'   },
+  '400021529': { home: 'V. (2e K / 2e L)',        away: 'V. (1er H / 2e J)'        },
+  '400021534': { home: 'V. (1er D / 3e BEFIJ)',   away: 'V. (1er G / 3e AEHIJ)'   },
+  '400021528': { home: 'V. (1er J / 2e H)',       away: 'V. (2e D / 2e G)'         },
+  '400021535': { home: 'V. (1er B / 3e EFGIJ)',   away: 'V. (1er K / 3e DEIJL)'   },
+  // ── Quarts de finale ──
+  '400021536': { home: 'V. 8e Philadelphie',      away: 'V. 8e Houston'            },
+  '400021538': { home: 'V. 8e Dallas',            away: 'V. 8e Seattle'            },
+  '400021539': { home: 'V. 8e New York/NJ',       away: 'V. 8e Mexico'             },
+  '400021537': { home: 'V. 8e Atlanta',           away: 'V. 8e Vancouver'          },
+  // ── Demi-finales ──
+  '400021541': { home: 'V. QF Boston',            away: 'V. QF Los Angeles'        },
+  '400021540': { home: 'V. QF Miami',             away: 'V. QF Kansas City'        },
+  // ── Petite finale ──
+  '400021542': { home: 'Perdant DF Dallas',       away: 'Perdant DF Atlanta'       },
+  // ── Finale ──
+  '400021543': { home: 'Vainqueur DF Dallas',     away: 'Vainqueur DF Atlanta'     },
 };
 
 async function fetchFifaFixtures() {
@@ -348,7 +370,7 @@ async function fetchFifaFixtures() {
     const stadium = m.Stadium||{};
     const statusMap = {0:'scheduled',1:'scheduled',3:'live',4:'finished',99:'finished'};
     const id = String(m.IdMatch||'');
-    const bracket = R32_BRACKET[id] || {};
+    const bracket = KO_BRACKET[id] || {};
     const homeTeam = desc(m.Home?.TeamName) || bracket.home || '';
     const awayTeam = desc(m.Away?.TeamName) || bracket.away || '';
     return { id, date, home_team: homeTeam, away_team: awayTeam, home_score:score(m.Home), away_score:score(m.Away), stage:desc(m.StageName), group:desc(m.GroupName), venue:desc(stadium.Name)||stadium.Name||'', city:desc(stadium.CityName)||stadium.CityName||'', status:statusMap[m.MatchStatus??0]||'scheduled' };
