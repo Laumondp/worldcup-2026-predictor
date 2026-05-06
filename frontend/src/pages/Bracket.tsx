@@ -279,7 +279,7 @@ export default function Bracket() {
         <ul className="space-y-1.5 text-sm text-gray-700 dark:text-gray-300">
           <li>• 48 équipes réparties en 12 groupes de 4 — 72 matchs de poule</li>
           <li>• 32 qualifiés : 2 premiers de chaque groupe + 8 meilleurs 3es</li>
-          <li>• 32es → 16es → Quarts → Demies → Finale (+ match 3e place)</li>
+          <li>• 16es → 8es → Quarts → Demies → Finale (+ match 3e place)</li>
           <li>• Prolongations et tirs au but si nécessaire en phase éliminatoire</li>
         </ul>
       </div>

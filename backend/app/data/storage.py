@@ -135,6 +135,15 @@ class FIFARanking(Base):
     date = Column(DateTime)
 
 
+class PageView(Base):
+    """Page visit tracking."""
+
+    __tablename__ = "page_views"
+
+    id = Column(Integer, primary_key=True, index=True)
+    visited_at = Column(DateTime, default=datetime.utcnow, index=True)
+
+
 def init_db():
     """Initialize database tables."""
     Base.metadata.create_all(bind=engine)

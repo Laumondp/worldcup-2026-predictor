@@ -99,10 +99,12 @@ app = FastAPI(
 )
 
 # CORS middleware
+_raw_origins = os.getenv("ALLOWED_ORIGINS", "http://localhost:3000,http://localhost:5173")
+_allowed_origins = [o.strip() for o in _raw_origins.split(",") if o.strip()]
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # In production, specify actual origins
-    allow_credentials=True,
+    allow_origins=_allowed_origins,
+    allow_credentials=False,
     allow_methods=["*"],
     allow_headers=["*"],
 )
@@ -218,7 +220,7 @@ def get_fifa_rankings(db=Depends(get_db)):
             "previousRank": rank,
             "countryCode": name,
             "confederation": conf,
-            "qualified": name.lower() in qualified_set or True,
+            "qualified": name.lower() in qualified_set,
         }
         for name, rank, pts, conf in STATIC_RANKINGS
     ]
@@ -229,6 +231,29 @@ def get_fifa_rankings(db=Depends(get_db)):
         "count": len(rankings),
         "rankings": rankings,
     }
+
+
+@app.post("/api/stats/visit")
+def record_visit(db=Depends(get_db)):
+    """Record a page visit."""
+    from app.data.storage import PageView
+    from datetime import datetime
+    db.add(PageView(visited_at=datetime.utcnow()))
+    db.commit()
+    return {"status": "ok"}
+
+
+@app.get("/api/stats/visitors")
+def get_visitor_stats(db=Depends(get_db)):
+    """Return total visits and active visitors (last 5 minutes)."""
+    from app.data.storage import PageView
+    from sqlalchemy import func
+    from datetime import datetime, timedelta
+
+    total = db.query(func.count(PageView.id)).scalar() or 0
+    since = datetime.utcnow() - timedelta(minutes=5)
+    active = db.query(func.count(PageView.id)).filter(PageView.visited_at >= since).scalar() or 0
+    return {"total_visits": total, "active_now": active}
 
 
 @app.post("/api/admin/retrain")

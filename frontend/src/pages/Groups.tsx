@@ -34,8 +34,8 @@ function stageRank(stage: string): number {
 
 function stageFrenchLabel(stage: string): string {
   switch (stageRank(stage)) {
-    case 1: return '32es de finale'
-    case 2: return '16es de finale'
+    case 1: return '16es de finale'
+    case 2: return '8es de finale'
     case 3: return 'Quarts de finale'
     case 4: return 'Demi-finales'
     case 5: return 'Match pour la 3e place'
@@ -293,7 +293,7 @@ export default function Groups() {
           <li>- Chaque équipe dispute 3 matchs de phase de groupes</li>
           <li>- Les 2 premiers de chaque groupe avancent (24 équipes)</li>
           <li>- Les 8 meilleurs 3es se qualifient également</li>
-          <li>- 32es de finale, puis élimination directe jusqu'en Finale</li>
+          <li>- 16es de finale, puis élimination directe jusqu'en Finale</li>
         </ul>
       </div>
     </div>
