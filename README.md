@@ -1,189 +1,186 @@
 # World Cup 2026 Predictor
 
-Machine Learning powered predictions for FIFA World Cup 2026 matches.
+Application de prédictions pour la Coupe du Monde 2026 (Mexique / USA / Canada), propulsée par un modèle de machine learning (Random Forest + XGBoost) et une simulation Monte Carlo du tournoi.
 
-## Features
+🌐 **[worldcup-2026-predictor.vercel.app](https://worldcup-2026-predictor.vercel.app)**
 
-- **Match Predictions**: Get AI-powered predictions for any match with win probabilities
-- **Tournament Simulation**: Monte Carlo simulation of the entire tournament
-- **Team Statistics**: Detailed stats, FIFA rankings, ELO ratings
-- **Group Standings**: Live group standings with qualification predictions
-- **Knockout Bracket**: Interactive bracket visualization
-- **Prediction History**: Track model accuracy over time
+---
 
-## Tech Stack
-
-### Backend
-- **FastAPI** - Modern Python web framework
-- **SQLAlchemy** - Database ORM (SQLite/PostgreSQL)
-- **scikit-learn + XGBoost** - Machine Learning
-- **pandas + numpy** - Data processing
-- **APScheduler** - Automated data updates
+## Stack technique
 
 ### Frontend
-- **React + TypeScript** - UI framework
-- **Vite** - Build tool
-- **TailwindCSS** - Styling
-- **Recharts** - Data visualization
-- **React Query** - API state management
+- React 18 + TypeScript, Vite 5
+- Tailwind CSS, Recharts, React Query v5, React Router v6
 
-### ML Model
-- Ensemble model (Random Forest + XGBoost)
-- Features: FIFA rankings, ELO ratings, recent form, head-to-head history
-- Target accuracy: >50% (baseline random = 33%)
+### Backend
+- FastAPI (Python 3.11+), SQLAlchemy 2.0, SQLite / PostgreSQL
+- scikit-learn + XGBoost (modèle ML)
+- APScheduler (mise à jour automatique toutes les 24h)
 
-## Quick Start
+### Déploiement
+- Vercel (frontend statique + routes serverless Node.js)
+- Docker Compose (développement local)
 
-### Prerequisites
-- Python 3.11+
-- Node.js 18+
-- Docker (optional)
+---
 
-### Development Setup
+## Pages
 
-#### Backend
-```bash
-cd backend
+| Route | Description |
+|---|---|
+| `/` | Accueil : prochains matchs + simulation du tournoi |
+| `/predictions` | Prédire un match entre deux équipes |
+| `/groups` | Classements en temps réel des 12 groupes |
+| `/bracket` | Tableau éliminatoire + probabilités de progression |
+| `/fixtures` | Calendrier complet du tournoi |
+| `/rankings` | Classement FIFA des 48 équipes qualifiées |
+| `/teams` | Fiche détaillée de chaque équipe |
+| `/history` | Précision historique du modèle |
 
-# Create virtual environment
-python -m venv venv
-source venv/bin/activate  # On Windows: venv\Scripts\activate
+---
 
-# Install dependencies
-pip install -r requirements.txt
+## Système de prédictions
 
-# Copy environment file
-cp .env.example .env
+### Modèle ML (ensemble voting)
+Combine **Random Forest** (200 estimateurs) et **XGBoost** (200 estimateurs, vote soft).
 
-# Run the server
-python -m app.main
+**Features utilisées :**
+- Classement FIFA + score ELO (calculé depuis le ranking)
+- Forme récente (5 derniers matchs) : points, buts marqués/concédés
+- Historique H2H (victoires, nuls, buts)
+- Confédération, stats de qualification
+- Contexte du match (phase de groupes vs élimination directe)
+
+**Outputs :**
+- Probabilités victoire / nul / défaite
+- Score prédit (buts attendus par équipe)
+- Score de confiance
+
+### Simulation Monte Carlo
+1 000 simulations complètes du tournoi :
+1. Phase de groupes (round-robin, tous contre tous)
+2. Qualification des 32 meilleurs (2 premiers + 8 meilleurs 3es)
+3. Phases éliminatoires : 16es → 8es → Quarts → Demies → 3e place → Finale
+4. Résultat : probabilité de victoire finale par équipe
+
+---
+
+## Architecture
+
+```
+worldcup-2026-predictor/
+├── frontend/               # Application React
+│   └── src/
+│       ├── pages/          # 8 pages de l'application
+│       ├── components/     # MatchCard, TeamSelector, ProbabilityChart…
+│       ├── services/api.ts # Client Axios + types TypeScript
+│       └── context/        # ThemeContext (dark/light)
+│
+├── backend/                # API FastAPI + ML
+│   └── app/
+│       ├── api/            # Endpoints predictions, teams, matches
+│       ├── ml/             # Modèle, features, pipeline d'entraînement
+│       └── data/           # ORM SQLAlchemy, collecteurs de données
+│
+└── api/                    # Routes serverless Vercel (Node.js)
+    └── _data.js            # Données statiques + helpers ELO
 ```
 
-Backend will be available at http://localhost:8000
+---
 
-#### Frontend
-```bash
-cd frontend
+## Endpoints API
 
-# Install dependencies
-npm install
-
-# Run development server
-npm run dev
+### Prédictions
+```
+POST  /api/predictions/match                  Prédire un match
+POST  /api/predictions/simulate-tournament    Simulation Monte Carlo
+GET   /api/predictions/accuracy               Précision du modèle
 ```
 
-Frontend will be available at http://localhost:3000
+### Équipes
+```
+GET   /api/teams                              Liste des 48 équipes
+GET   /api/teams/{name}                       Détails d'une équipe
+GET   /api/teams/h2h/{team1}/{team2}          Historique H2H
+GET   /api/teams/rankings/top/{n}             Top N par ranking FIFA
+GET   /api/teams/confederations/summary       Résumé par confédération
+```
 
-### Docker Setup
+### Matchs
+```
+GET   /api/matches                            Tous les matchs
+GET   /api/matches/upcoming/next/{n}          Prochains N matchs
+GET   /api/matches/groups/standings           Classements des groupes
+GET   /api/matches/knockout/bracket           Structure du tableau KO
+PUT   /api/matches/{id}/result                Saisir un résultat
+```
+
+### Utilitaires
+```
+GET   /api/rankings                           Classement FIFA
+GET   /api/stats/visitors                     Visites totales + actifs (5 min)
+GET   /health                                 Health check
+POST  /api/admin/retrain                      Réentraîner le modèle manuellement
+```
+
+---
+
+## Données
+
+- **48 équipes** avec ranking FIFA (avril 2026), score ELO, confédération, groupe
+- **112 matchs** : 80 de poules (11 juin → 27 juin) + 32 éliminatoires (→ 19 juillet 2026)
+- **~300 matchs historiques** WC 2006–2022 pour l'entraînement du modèle
+- Scraping automatique du classement FIFA officiel (fallback statique si indisponible)
+
+---
+
+## Installation locale
+
+### Avec Docker
 
 ```bash
-# Build and run all services
 docker-compose up --build
-
-# Or run in background
-docker-compose up -d
+# Frontend → http://localhost:3000
+# Backend  → http://localhost:8000
+# API docs → http://localhost:8000/docs
 ```
 
-- Frontend: http://localhost:3000
-- Backend API: http://localhost:8000
-- API Docs: http://localhost:8000/docs
+### Sans Docker
 
-## API Endpoints
+```bash
+# Backend
+cd backend
+python -m venv venv
+source venv/bin/activate   # Windows : venv\Scripts\activate
+pip install -r requirements.txt
+python -m app.main         # http://localhost:8000
 
-### Predictions
-- `POST /api/predictions/match` - Predict single match
-- `GET /api/predictions/match/{id}` - Get match prediction by ID
-- `POST /api/predictions/simulate-tournament` - Run tournament simulation
-- `GET /api/predictions/accuracy` - Get prediction accuracy stats
+# Frontend
+cd frontend
+npm install
+npm run dev                # http://localhost:5173
+```
 
-### Teams
-- `GET /api/teams` - List all teams
-- `GET /api/teams/{name}` - Get team details
-- `GET /api/teams/h2h/{team1}/{team2}` - Head-to-head stats
-- `GET /api/teams/group/{letter}` - Teams in group
-
-### Matches
-- `GET /api/matches` - List all matches
-- `GET /api/matches/{id}` - Get match details
-- `GET /api/matches/groups/standings` - Group standings
-- `GET /api/matches/knockout/bracket` - Knockout bracket
-
-## Data Sources
-
-| Source | Data | Free Tier |
-|--------|------|-----------|
-| [API-Football](https://www.api-football.com/) | Live matches, stats | 100 req/day |
-| [Football-Data.org](https://www.football-data.org/) | Historical data | Free |
-| FIFA Rankings | Official rankings | Scraped |
-| Historical Data | World Cup history | Built-in |
-
-## Configuration
-
-Create a `.env` file in the backend directory:
+### Variables d'environnement (`backend/.env`)
 
 ```env
-# API Keys (optional, for live data)
-API_FOOTBALL_KEY=your_key_here
-FOOTBALL_DATA_ORG_KEY=your_key_here
-
-# Database
 DATABASE_URL=sqlite:///./data/worldcup.db
-
-# Settings
+API_FOOTBALL_KEY=...        # optionnel
+FOOTBALL_DATA_ORG_KEY=...   # optionnel
 DEBUG=true
 DATA_REFRESH_INTERVAL=24
 ```
 
-## Project Structure
+---
 
+## Déploiement
+
+Le projet se déploie automatiquement sur Vercel à chaque push sur `master`.
+
+**`vercel.json`** — build du frontend + rewrites SPA :
+```json
+{
+  "buildCommand": "cd frontend && npm install && npx vite build",
+  "outputDirectory": "frontend/dist",
+  "rewrites": [{ "source": "/(.*)", "destination": "/index.html" }]
+}
 ```
-worldcup-2026-predictor/
-├── backend/
-│   ├── app/
-│   │   ├── api/           # FastAPI endpoints
-│   │   ├── data/          # Data collectors & storage
-│   │   ├── ml/            # Machine learning models
-│   │   ├── config.py      # Configuration
-│   │   └── main.py        # FastAPI app
-│   ├── models/            # Trained ML models
-│   ├── data/              # SQLite database
-│   └── requirements.txt
-├── frontend/
-│   ├── src/
-│   │   ├── components/    # React components
-│   │   ├── pages/         # Page components
-│   │   └── services/      # API services
-│   └── package.json
-├── docker-compose.yml
-└── README.md
-```
-
-## ML Model Details
-
-### Features
-- FIFA ranking (home/away)
-- ELO rating (home/away)
-- Recent form (last 5 matches)
-- Goals scored/conceded averages
-- Head-to-head history
-- Confederation
-- Qualification performance
-- Match context (knockout vs group)
-
-### Training
-The model is automatically trained on startup using historical World Cup data. You can manually retrain:
-
-```bash
-# Via API
-curl -X POST http://localhost:8000/api/admin/retrain
-```
-
-## License
-
-MIT License - feel free to use and modify!
-
-## Acknowledgments
-
-- FIFA for official ranking data
-- Football-Data.org for historical match data
-- API-Football for live match statistics
