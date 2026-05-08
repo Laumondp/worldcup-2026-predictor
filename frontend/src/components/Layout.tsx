@@ -1,5 +1,5 @@
 import { Outlet, Link, useLocation } from 'react-router-dom'
-import { Trophy, BarChart3, Grid3X3, GitBranch, RefreshCw, CheckCircle, XCircle, Calendar, Award, Eye, Sun, Moon, ExternalLink } from 'lucide-react'
+import { Trophy, BarChart3, Grid3X3, GitBranch, RefreshCw, CheckCircle, XCircle, Calendar, Award, Eye, Sun, Moon, ExternalLink, ShoppingBag } from 'lucide-react'
 import { useState, useRef, useEffect } from 'react'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { adminApi, statsApi } from '../services/api'
@@ -164,6 +164,16 @@ export default function Layout() {
                 className="flex items-center px-3 py-1.5 rounded-lg transition-all hover:opacity-75 hover:bg-gray-100 dark:hover:bg-gray-800"
               >
                 <img src="/valeo-logo.png" alt="Valeo" className="h-6 w-auto object-contain" />
+              </a>
+              <a
+                href="https://store.fifa.com/fr-fr/collections/new-arrivals"
+                target="_blank"
+                rel="noopener noreferrer"
+                title="Boutique officielle FIFA"
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-medium transition-colors text-gray-600 hover:bg-blue-50 hover:text-blue-700 dark:text-gray-300 dark:hover:bg-blue-900/30 dark:hover:text-blue-300"
+              >
+                <ShoppingBag className="w-4 h-4 shrink-0" />
+                <span>Boutique FIFA</span>
               </a>
               <button
                 onClick={toggleTheme}
