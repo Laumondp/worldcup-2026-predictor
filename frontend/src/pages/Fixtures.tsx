@@ -33,8 +33,8 @@ function stageRank(stage: string): number {
 
 function stageFrenchLabel(stage: string): string {
   switch (stageRank(stage)) {
-    case 1: return '32es de finale'
-    case 2: return '16es de finale'
+    case 1: return '16es de finale'
+    case 2: return '8es de finale'
     case 3: return 'Quarts de finale'
     case 4: return 'Demi-finales'
     case 5: return 'Match pour la 3e place'
