@@ -42,7 +42,8 @@ function simulateOnce() {
     for (let i = 0; i < remaining.length; i += 2) {
       const a = remaining[i], b = remaining[i + 1] || remaining[i];
       const p = predictMatch(a.elo, b.elo, true);
-      next.push(Math.random() < p.home_win_probability / (p.home_win_probability + p.away_win_probability) ? a : b);
+      const sum = p.home_win_probability + p.away_win_probability;
+      next.push(Math.random() < (sum > 0 ? p.home_win_probability / sum : 0.5) ? a : b);
     }
     remaining = next;
   }

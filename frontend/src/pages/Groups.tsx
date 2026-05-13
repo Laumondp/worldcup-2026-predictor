@@ -163,7 +163,7 @@ export default function Groups() {
   })
 
   const allFixtures: KOFixture[] = fixturesData?.data?.fixtures ?? []
-  const isGroupFixture = (f: KOFixture) => /groupe\s+[a-l]/i.test(f.group || '')
+  const isGroupFixture = (f: KOFixture) => /^Groupe\s+[A-L]$/i.test(f.group || '')
   const groupFixtures = allFixtures.filter(isGroupFixture)
   const knockoutFixtures = allFixtures.filter(f => !isGroupFixture(f))
 
