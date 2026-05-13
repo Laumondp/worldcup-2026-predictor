@@ -10,7 +10,7 @@ export default async function handler(req, res) {
     const desc = (lst) => Array.isArray(lst) && lst[0] ? lst[0].Description || '' : '';
     const n = parseInt(req.query.n) || 10;
     const upcoming = (data.Results || [])
-      .filter(m => !m.Home?.Score && !m.Away?.Score)
+      .filter(m => m.Home?.Score == null && m.Away?.Score == null)
       .slice(0, n)
       .map(m => ({
         id: m.IdMatch,

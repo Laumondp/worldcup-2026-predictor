@@ -50,7 +50,7 @@ function simulateOnce() {
 }
 
 export default function handler(req, res) {
-  const n = parseInt(req.query.num_simulations) || 500;
+  const n = parseInt(req.query.n) || 500;
   const capped = Math.min(n, 500);
   const wins = {};
   for (let i = 0; i < capped; i++) {
