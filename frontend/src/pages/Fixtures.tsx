@@ -101,12 +101,7 @@ function FixtureCard({ fix }: { fix: Fixture }) {
       </div>
 
       <div className="text-xs text-gray-400 text-center dark:text-gray-500">
-        {mt.day}
-        {mt.parisTime && (
-          mt.localTime
-            ? <> · 🕐 {mt.localTime}{mt.zoneLabel ? ` ${mt.zoneLabel}` : ''} · 🇫🇷 {mt.parisTime} Paris</>
-            : <> · 🇫🇷 {mt.parisTime} Paris</>
-        )}
+        {mt.day}{mt.parisTime && <> · 🇫🇷 {mt.parisTime}</>}
         {fix.city && ` · ${fix.city}`}
       </div>
     </div>

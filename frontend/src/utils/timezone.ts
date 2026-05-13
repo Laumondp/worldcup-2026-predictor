@@ -65,8 +65,9 @@ function normalizeCity(s: string): string {
 
 export function formatMatchTime(isoDate: string, city: string): MatchTime {
   // Force interprétation UTC si la date n'a pas de suffixe Z ni offset signé
-  const hasOffset = /Z$|[+-]\d{2}:\d{2}$|[+-]\d{4}$/.test(isoDate)
-  const normalized = hasOffset ? isoDate : isoDate + 'Z'
+  const raw = (isoDate ?? '').trim()
+  const hasOffset = /Z$|[+-]\d{2}:\d{2}$|[+-]\d{4}$/.test(raw)
+  const normalized = hasOffset ? raw : raw + 'Z'
   const d = new Date(normalized)
 
   if (isNaN(d.getTime())) {
