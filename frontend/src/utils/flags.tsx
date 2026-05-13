@@ -33,7 +33,7 @@ const NAME_TO_CODE: Record<string, string> = {
   'colombia': 'co', 'netherlands': 'nl', 'south korea': 'kr',
   'republic of korea': 'kr', 'korea republic': 'kr', 'algeria': 'dz',
   'uruguay': 'uy', 'belgium': 'be', 'australia': 'au', 'tunisia': 'tn',
-  'ecuador': 'ec', 'italy': 'it', 'iran': 'ir', 'ivory coast': 'ci',
+  'ecuador': 'ec', 'italy': 'it', 'iran': 'ir', 'ri iran': 'ir', 'islamic republic of iran': 'ir', 'ivory coast': 'ci',
   'cote d ivoire': 'ci', 'paraguay': 'py', 'croatia': 'hr',
   'saudi arabia': 'sa', 'ghana': 'gh', 'switzerland': 'ch', 'qatar': 'qa',
   'costa rica': 'cr', 'venezuela': 've', 'denmark': 'dk', 'iraq': 'iq',
@@ -53,7 +53,7 @@ const NAME_TO_CODE: Record<string, string> = {
   // Équipes avec accents/caractères spéciaux (normalisés sans accents)
   'tcheque': 'cz', 'tchecoslovaquie': 'cz', 'republique tcheque': 'cz',
   'czech republic': 'cz', 'czechia': 'cz', 'tchequie': 'cz',
-  'bosnie': 'ba', 'bosnie herzegovine': 'ba', 'bosnia': 'ba',
+  'bosnie': 'ba', 'bosnie herzegovine': 'ba', 'bosnie et herzegovine': 'ba', 'bosnia': 'ba',
   'bosnia and herzegovina': 'ba', 'bosnie-herzegovine': 'ba',
   'haiti': 'ht',
   'ecosse': 'gb-sct', 'scotland': 'gb-sct',
