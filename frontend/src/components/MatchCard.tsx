@@ -49,9 +49,9 @@ export default function MatchCard({
           <div>{mt.day}</div>
           {mt.localTime && (
             <div className="text-xs flex gap-2 justify-end">
-              <span>🕐 {mt.localTime} <span className="text-gray-400">(local)</span></span>
+              <span>🕐 {mt.localTime}{mt.zoneLabel ? <span className="text-gray-400"> {mt.zoneLabel}</span> : ''}</span>
               <span>·</span>
-              <span>🇫🇷 {mt.parisTime} <span className="text-gray-400">(Paris)</span></span>
+              <span>🇫🇷 {mt.parisTime} <span className="text-gray-400">Paris</span></span>
             </div>
           )}
         </div>
