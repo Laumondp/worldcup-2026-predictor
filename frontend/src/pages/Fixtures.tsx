@@ -62,6 +62,7 @@ function StatusBadge({ status }: { status: Fixture['status'] }) {
 
 function FixtureCard({ fix }: { fix: Fixture }) {
   const hasScore = fix.home_score !== null && fix.away_score !== null
+  const mt = formatMatchTime(fix.date, fix.city)
   return (
     <div className={`card flex flex-col gap-2 border ${
       fix.status === 'live'
@@ -100,14 +101,11 @@ function FixtureCard({ fix }: { fix: Fixture }) {
       </div>
 
       <div className="text-xs text-gray-400 text-center dark:text-gray-500">
-        {(() => {
-          const mt = formatMatchTime(fix.date, fix.city)
-          return mt.localTime ? (
-            <>{mt.day} · 🕐 {mt.localTime} (local) · 🇫🇷 {mt.parisTime} (Paris){fix.city && ` · ${fix.city}`}</>
-          ) : (
-            <>{fix.date}{fix.city && ` · ${fix.city}`}</>
-          )
-        })()}
+        {mt.day}
+        {mt.localTime && (
+          <> · 🕐 {mt.localTime} (local) · 🇫🇷 {mt.parisTime} (Paris)</>
+        )}
+        {fix.city && ` · ${fix.city}`}
       </div>
     </div>
   )
