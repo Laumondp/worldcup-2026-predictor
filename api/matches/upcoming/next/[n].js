@@ -23,7 +23,7 @@ export default async function handler(req, res) {
         played: false,
         home_score: null, away_score: null,
       }));
-    return res.json({ data: upcoming });
+    return res.json(upcoming);
   } catch {
     return res.json({ data: [] });
   }
