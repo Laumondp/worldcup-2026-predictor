@@ -3,6 +3,7 @@ import { useQuery } from '@tanstack/react-query'
 import { Calendar, RefreshCw, Wifi, Clock, Trophy, ChevronDown, ChevronUp } from 'lucide-react'
 import axios from 'axios'
 import { FlagImg, flagUrl } from '../utils/flags'
+import { formatMatchTime } from '../utils/timezone'
 
 interface Fixture {
   id: string
@@ -99,7 +100,14 @@ function FixtureCard({ fix }: { fix: Fixture }) {
       </div>
 
       <div className="text-xs text-gray-400 text-center dark:text-gray-500">
-        {fix.date}{fix.city && ` · ${fix.city}`}
+        {(() => {
+          const mt = formatMatchTime(fix.date, fix.city)
+          return mt.localTime ? (
+            <>{mt.day} · 🕐 {mt.localTime} (local) · 🇫🇷 {mt.parisTime} (Paris){fix.city && ` · ${fix.city}`}</>
+          ) : (
+            <>{fix.date}{fix.city && ` · ${fix.city}`}</>
+          )
+        })()}
       </div>
     </div>
   )

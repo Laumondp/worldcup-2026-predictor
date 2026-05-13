@@ -3,6 +3,7 @@ import { useQuery } from '@tanstack/react-query'
 import { predictionsApi } from '../services/api'
 import { FlagImg } from '../utils/flags'
 import ProbabilityChart from './ProbabilityChart'
+import { formatMatchTime } from '../utils/timezone'
 
 interface MatchCardProps {
   homeTeam: string
@@ -11,6 +12,7 @@ interface MatchCardProps {
   awayCode: string
   date: string
   stage: string
+  city?: string
   played?: boolean
   homeScore?: number | null
   awayScore?: number | null
@@ -23,6 +25,7 @@ export default function MatchCard({
   awayCode,
   date,
   stage,
+  city = '',
   played = false,
   homeScore,
   awayScore,
@@ -36,19 +39,22 @@ export default function MatchCard({
     retry: 1,
   })
 
-  const formattedDate = new Date(date).toLocaleDateString('fr-FR', {
-    weekday: 'short',
-    month: 'short',
-    day: 'numeric',
-    hour: '2-digit',
-    minute: '2-digit',
-  })
+  const mt = formatMatchTime(date, city)
 
   return (
     <div className="card hover:ring-2 hover:ring-blue-500 transition-all">
       <div className="text-sm text-gray-500 mb-3 flex justify-between dark:text-gray-400">
         <span>{stage}</span>
-        <span>{formattedDate}</span>
+        <div className="text-right">
+          <div>{mt.day}</div>
+          {mt.localTime && (
+            <div className="text-xs flex gap-2 justify-end">
+              <span>🕐 {mt.localTime} <span className="text-gray-400">(local)</span></span>
+              <span>·</span>
+              <span>🇫🇷 {mt.parisTime} <span className="text-gray-400">(Paris)</span></span>
+            </div>
+          )}
+        </div>
       </div>
 
       <div className="flex items-center justify-between mb-4">

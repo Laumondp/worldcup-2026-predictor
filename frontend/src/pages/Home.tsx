@@ -108,6 +108,7 @@ export default function Home() {
                   awayCode={match.away_team}
                   date={match.date}
                   stage={match.stage}
+                  city={match.city ?? ''}
                 />
               )) || (
                 <div className="col-span-2 card text-center text-gray-500 dark:text-gray-400">

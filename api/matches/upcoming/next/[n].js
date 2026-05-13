@@ -18,7 +18,9 @@ export default async function handler(req, res) {
         away_team: desc(m.Away?.TeamName),
         date: m.Date,
         stage: desc(m.StageName),
-        venue: null, city: null, played: false,
+        venue: desc(m.Stadium?.Name) || null,
+        city: desc(m.Stadium?.CityName) || m.Stadium?.CityName || null,
+        played: false,
         home_score: null, away_score: null,
       }));
     return res.json({ data: upcoming });

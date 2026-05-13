@@ -16,13 +16,7 @@ export default async function handler(req, res) {
       const desc = (lst) => (Array.isArray(lst) && lst[0] ? lst[0].Description ?? '' : '');
       const score = (t) => (t.Score !== null && t.Score !== undefined ? t.Score : null);
 
-      let date = m.Date ?? '';
-      try {
-        const d = new Date(date);
-        date = d.toLocaleDateString('fr-FR', {
-          day: '2-digit', month: '2-digit', year: 'numeric',
-        }) + ' ' + d.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' });
-      } catch {}
+      const date = m.Date ?? '';
 
       const stadium = m.Stadium ?? {};
       const venue = desc(stadium.Name) || stadium.Name || '';
