@@ -14,6 +14,7 @@ const CITY_TZ: Record<string, string> = {
   'Miami':               'America/New_York',
   'Miami Gardens':       'America/New_York',
   'Philadelphia':        'America/New_York',
+  'Philadelphie':        'America/New_York',
   'Boston':              'America/New_York',
   'Foxborough':          'America/New_York',
   'Atlanta':             'America/New_York',
@@ -21,6 +22,7 @@ const CITY_TZ: Record<string, string> = {
   'Dallas':              'America/Chicago',
   'Arlington':           'America/Chicago',
   'Kansas City':         'America/Chicago',
+  'Houston':             'America/Chicago',
   // USA Pacifique (PDT, UTC-7 en été)
   'Los Angeles':         'America/Los_Angeles',
   'Inglewood':           'America/Los_Angeles',

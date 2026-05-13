@@ -145,7 +145,7 @@ export const matchesApi = {
     api.get<Match>('/match', { params: { id } }),
 
   getUpcoming: (n: number = 10) =>
-    api.get(`/matches/upcoming/next/${n}`),
+    api.get('/upcoming', { params: { n } }),
 
   getGroupStandings: () =>
     api.get<GroupStanding[]>('/standings'),
