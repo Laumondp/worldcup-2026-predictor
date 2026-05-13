@@ -55,25 +55,36 @@ export interface MatchTime {
   sameAsLocal: boolean  // true si l'utilisateur est déjà à Paris
 }
 
+// Normalise un nom de ville : minuscules, espaces insécables → espaces, accents retirés
+function normalizeCity(s: string): string {
+  return (s ?? '')
+    .replace(/ /g, ' ')
+    .normalize('NFD').replace(/[̀-ͯ]/g, '')
+    .toLowerCase().trim()
+}
+
 export function formatMatchTime(isoDate: string, city: string): MatchTime {
-  // Force interprétation UTC si la date n'a pas de suffixe Z ni offset
-  const normalized = /[Z+]/.test(isoDate) ? isoDate : isoDate + 'Z'
+  // Force interprétation UTC si la date n'a pas de suffixe Z ni offset signé
+  const hasOffset = /Z$|[+-]\d{2}:\d{2}$|[+-]\d{4}$/.test(isoDate)
+  const normalized = hasOffset ? isoDate : isoDate + 'Z'
   const d = new Date(normalized)
 
   if (isNaN(d.getTime())) {
-    return { day: isoDate, localTime: '', parisTime: '', localTz: '', sameAsLocal: false }
+    return { day: isoDate, localTime: '', parisTime: '', localTz: '', zoneLabel: '', sameAsLocal: false }
   }
 
-  const cityKey = Object.keys(CITY_TZ).find(k => city?.toLowerCase().includes(k.toLowerCase()))
-  const localTz = cityKey ? CITY_TZ[cityKey] : 'UTC'
+  const normCity = normalizeCity(city)
+  const cityKey = Object.keys(CITY_TZ).find(k => normCity.includes(normalizeCity(k)))
+  const localTz = cityKey ? CITY_TZ[cityKey] : ''
 
   const fmt = (tz: string, opts: Intl.DateTimeFormatOptions) =>
     d.toLocaleString('fr-FR', { timeZone: tz, ...opts })
 
   const day = fmt('Europe/Paris', { weekday: 'short', day: 'numeric', month: 'short' })
-  const localTime = fmt(localTz, { hour: '2-digit', minute: '2-digit' })
+  // Si le fuseau local est inconnu, on n'affiche pas l'heure locale (évite de montrer UTC comme heure "locale")
+  const localTime = localTz ? fmt(localTz, { hour: '2-digit', minute: '2-digit' }) : ''
   const parisTime = fmt('Europe/Paris', { hour: '2-digit', minute: '2-digit' })
 
-  const zoneLabel = TZ_LABEL[localTz] ?? ''
+  const zoneLabel = localTz ? (TZ_LABEL[localTz] ?? '') : ''
   return { day, localTime, parisTime, localTz, zoneLabel, sameAsLocal: localTz === 'Europe/Paris' }
 }

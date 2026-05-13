@@ -47,10 +47,14 @@ export default function MatchCard({
         <span>{stage}</span>
         <div className="text-right">
           <div>{mt.day}</div>
-          {mt.localTime && (
+          {mt.parisTime && (
             <div className="text-xs flex gap-2 justify-end">
-              <span>🕐 {mt.localTime}{mt.zoneLabel ? <span className="text-gray-400"> {mt.zoneLabel}</span> : ''}</span>
-              <span>·</span>
+              {mt.localTime && (
+                <>
+                  <span>🕐 {mt.localTime}{mt.zoneLabel ? <span className="text-gray-400"> {mt.zoneLabel}</span> : ''}</span>
+                  <span>·</span>
+                </>
+              )}
               <span>🇫🇷 {mt.parisTime} <span className="text-gray-400">Paris</span></span>
             </div>
           )}
