@@ -19,8 +19,8 @@ export default async function handler(req, res) {
       const date = m.Date ?? '';
 
       const stadium = m.Stadium ?? {};
-      const venue = desc(stadium.Name) || stadium.Name || '';
-      const city  = desc(stadium.CityName) || stadium.CityName || '';
+      const venue = desc(stadium.Name) || '';
+      const city  = desc(stadium.CityName) || '';
 
       const statusMap = { 0: 'scheduled', 1: 'scheduled', 3: 'live', 4: 'finished', 99: 'finished' };
 
