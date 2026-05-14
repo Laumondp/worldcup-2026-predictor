@@ -2,7 +2,6 @@ import { useState } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import { Trophy, ChevronDown, ChevronUp, Wifi, Clock } from 'lucide-react'
 import axios from 'axios'
-import { matchesApi, GroupStanding } from '../services/api'
 import { FlagImg, flagUrl } from '../utils/flags'
 
 const groupLetters = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L']
@@ -19,6 +18,55 @@ interface KOFixture {
   venue: string
   city: string
   status: 'scheduled' | 'live' | 'finished'
+}
+
+interface TeamRow {
+  name: string
+  played: number
+  wins: number
+  draws: number
+  losses: number
+  gf: number
+  ga: number
+  pts: number
+}
+
+function computeGroupStandings(fixtures: KOFixture[], groupLetter: string): TeamRow[] {
+  const groupName = `Groupe ${groupLetter}`
+  const gf = fixtures.filter(f => f.group === groupName)
+
+  const teams: Record<string, TeamRow> = {}
+  for (const fix of gf) {
+    if (fix.home_team) teams[fix.home_team] ??= { name: fix.home_team, played: 0, wins: 0, draws: 0, losses: 0, gf: 0, ga: 0, pts: 0 }
+    if (fix.away_team) teams[fix.away_team] ??= { name: fix.away_team, played: 0, wins: 0, draws: 0, losses: 0, gf: 0, ga: 0, pts: 0 }
+  }
+
+  for (const fix of gf) {
+    if (fix.status !== 'finished' || fix.home_score === null || fix.away_score === null) continue
+    const h = teams[fix.home_team], a = teams[fix.away_team]
+    if (!h || !a) continue
+    h.played++; a.played++
+    h.gf += fix.home_score; h.ga += fix.away_score
+    a.gf += fix.away_score; a.ga += fix.home_score
+    if (fix.home_score > fix.away_score) { h.wins++; a.losses++; h.pts += 3 }
+    else if (fix.home_score < fix.away_score) { a.wins++; h.losses++; a.pts += 3 }
+    else { h.draws++; a.draws++; h.pts++; a.pts++ }
+  }
+
+  return Object.values(teams).sort(
+    (a, b) => b.pts - a.pts || (b.gf - b.ga) - (a.gf - a.ga) || b.gf - a.gf || a.name.localeCompare(b.name)
+  )
+}
+
+function formatMatchDate(isoDate: string): string {
+  try {
+    return new Intl.DateTimeFormat('fr-FR', {
+      timeZone: 'Europe/Paris',
+      day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit',
+    }).format(new Date(isoDate))
+  } catch {
+    return isoDate
+  }
 }
 
 function stageRank(stage: string): number {
@@ -141,22 +189,41 @@ function KnockoutSection({ fixtures, groupsComplete }: { fixtures: KOFixture[]; 
   )
 }
 
+function GroupMatchRow({ fix }: { fix: KOFixture }) {
+  const hasScore = fix.home_score !== null && fix.away_score !== null
+  return (
+    <div className={`flex items-center justify-between rounded-lg p-3 gap-2 ${
+      fix.status === 'live'
+        ? 'bg-green-50 border border-green-400 dark:bg-green-900/20 dark:border-green-600'
+        : 'bg-gray-50 dark:bg-gray-700/50'
+    }`}>
+      <div className="flex-1 text-right flex items-center justify-end gap-1.5 min-w-0">
+        {flagUrl(fix.home_team) && <FlagImg code={fix.home_team} size={18} />}
+        <span className="font-medium text-sm truncate">{fix.home_team || '?'}</span>
+      </div>
+      <div className="text-center shrink-0 min-w-[80px]">
+        {hasScore ? (
+          <span className="text-lg font-bold tabular-nums">{fix.home_score} – {fix.away_score}</span>
+        ) : (
+          <div className="text-xs text-gray-400 dark:text-gray-500">
+            <div>{formatMatchDate(fix.date)}</div>
+          </div>
+        )}
+      </div>
+      <div className="flex-1 flex items-center gap-1.5 min-w-0">
+        {flagUrl(fix.away_team) && <FlagImg code={fix.away_team} size={18} />}
+        <span className="font-medium text-sm truncate">{fix.away_team || '?'}</span>
+      </div>
+      <KOStatusBadge status={fix.status} />
+    </div>
+  )
+}
+
 export default function Groups() {
   const [selectedGroup, setSelectedGroup] = useState<string | null>(null)
   const [showGroups, setShowGroups] = useState(false)
 
-  const { data: standings, isLoading } = useQuery({
-    queryKey: ['groupStandings'],
-    queryFn: () => matchesApi.getGroupStandings(),
-  })
-
-  const { data: groupMatches } = useQuery({
-    queryKey: ['groupMatches', selectedGroup],
-    queryFn: () => matchesApi.getGroupMatches(selectedGroup!),
-    enabled: !!selectedGroup,
-  })
-
-  const { data: fixturesData } = useQuery({
+  const { data: fixturesData, isLoading } = useQuery({
     queryKey: ['fixtures'],
     queryFn: () => axios.get<{ count: number; fixtures: KOFixture[] }>('/api/fixtures'),
     staleTime: 90 * 1000,
@@ -176,6 +243,10 @@ export default function Groups() {
       </div>
     )
   }
+
+  const selectedGroupFixtures = selectedGroup
+    ? groupFixtures.filter(f => f.group === `Groupe ${selectedGroup}`)
+    : []
 
   const groupStandingsSection = (
     <div className="space-y-6">
@@ -198,88 +269,73 @@ export default function Groups() {
 
       {/* Group Standings Grid */}
       <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {standings?.data
-          ?.filter((g: GroupStanding) => !selectedGroup || g.group === selectedGroup)
-          .map((group: GroupStanding) => (
-            <div key={group.group} className="card !p-3">
-              <h3 className="text-base font-bold mb-2 text-center">
-                Groupe {group.group}
-              </h3>
-              <div className="overflow-x-auto">
-                <table className="w-full text-xs">
-                  <thead>
-                    <tr className="text-gray-500 border-b border-gray-200 dark:text-gray-400 dark:border-gray-700">
-                      <th className="text-left py-1 pr-1">Équipe</th>
-                      <th className="text-center py-1 px-1">J</th>
-                      <th className="text-center py-1 px-1">V</th>
-                      <th className="text-center py-1 px-1">N</th>
-                      <th className="text-center py-1 px-1">D</th>
-                      <th className="text-center py-1 px-1">DB</th>
-                      <th className="text-center py-1 px-1 font-bold">Pts</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {group.teams.map((team, index) => (
-                      <tr
-                        key={team.name}
-                        className={`border-b border-gray-100 dark:border-gray-700/50 ${
-                          index < 2 ? 'bg-green-50 dark:bg-green-900/20' : ''
-                        }`}
-                      >
-                        <td className="py-1 pr-1">
-                          <span className="inline-flex items-center gap-1">
-                            <FlagImg code={team.code} size={18} />
-                            <span className="truncate max-w-[72px]">{team.name}</span>
-                          </span>
-                        </td>
-                        <td className="text-center py-1 px-1">{team.played}</td>
-                        <td className="text-center py-1 px-1 text-green-600 dark:text-green-400">{team.wins}</td>
-                        <td className="text-center py-1 px-1 text-yellow-600 dark:text-yellow-400">{team.draws}</td>
-                        <td className="text-center py-1 px-1 text-red-600 dark:text-red-400">{team.losses}</td>
-                        <td className="text-center py-1 px-1">
-                          <span className={team.goal_difference >= 0 ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400'}>
-                            {team.goal_difference >= 0 ? '+' : ''}{team.goal_difference}
-                          </span>
-                        </td>
-                        <td className="text-center py-1 px-1 font-bold">{team.points}</td>
+        {groupLetters
+          .filter(letter => !selectedGroup || letter === selectedGroup)
+          .map(letter => {
+            const teams = computeGroupStandings(groupFixtures, letter)
+            return (
+              <div key={letter} className="card !p-3">
+                <h3 className="text-base font-bold mb-2 text-center">Groupe {letter}</h3>
+                <div className="overflow-x-auto">
+                  <table className="w-full text-xs">
+                    <thead>
+                      <tr className="text-gray-500 border-b border-gray-200 dark:text-gray-400 dark:border-gray-700">
+                        <th className="text-left py-1 pr-1">Équipe</th>
+                        <th className="text-center py-1 px-1">J</th>
+                        <th className="text-center py-1 px-1">V</th>
+                        <th className="text-center py-1 px-1">N</th>
+                        <th className="text-center py-1 px-1">D</th>
+                        <th className="text-center py-1 px-1">DB</th>
+                        <th className="text-center py-1 px-1 font-bold">Pts</th>
                       </tr>
-                    ))}
-                  </tbody>
-                </table>
+                    </thead>
+                    <tbody>
+                      {teams.map((team, index) => {
+                        const gd = team.gf - team.ga
+                        return (
+                          <tr
+                            key={team.name}
+                            className={`border-b border-gray-100 dark:border-gray-700/50 ${
+                              index < 2 ? 'bg-green-50 dark:bg-green-900/20' : ''
+                            }`}
+                          >
+                            <td className="py-1 pr-1">
+                              <span className="inline-flex items-center gap-1">
+                                {flagUrl(team.name) && <FlagImg code={team.name} size={18} />}
+                                <span className="truncate max-w-[72px]">{team.name}</span>
+                              </span>
+                            </td>
+                            <td className="text-center py-1 px-1">{team.played}</td>
+                            <td className="text-center py-1 px-1 text-green-600 dark:text-green-400">{team.wins}</td>
+                            <td className="text-center py-1 px-1 text-yellow-600 dark:text-yellow-400">{team.draws}</td>
+                            <td className="text-center py-1 px-1 text-red-600 dark:text-red-400">{team.losses}</td>
+                            <td className="text-center py-1 px-1">
+                              <span className={gd >= 0 ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400'}>
+                                {gd >= 0 ? '+' : ''}{gd}
+                              </span>
+                            </td>
+                            <td className="text-center py-1 px-1 font-bold">{team.pts}</td>
+                          </tr>
+                        )
+                      })}
+                    </tbody>
+                  </table>
+                </div>
+                <div className="mt-2 text-[10px] text-gray-500 text-center dark:text-gray-400">
+                  Les 2 premiers qualifiés · 8 meilleurs 3es
+                </div>
               </div>
-              <div className="mt-2 text-[10px] text-gray-500 text-center dark:text-gray-400">
-                Les 2 premiers qualifiés · 8 meilleurs 3es
-              </div>
-            </div>
-          ))}
+            )
+          })}
       </div>
 
       {/* Selected Group Matches */}
-      {selectedGroup && groupMatches?.data && (
+      {selectedGroup && selectedGroupFixtures.length > 0 && (
         <div className="card">
           <h3 className="text-xl font-bold mb-4">Matchs du Groupe {selectedGroup}</h3>
-          <div className="space-y-3">
-            {groupMatches.data.map((match: any) => (
-              <div
-                key={match.id}
-                className="flex items-center justify-between bg-gray-100 rounded-lg p-4 dark:bg-gray-700/50"
-              >
-                <div className="flex-1 text-right">
-                  <span className="font-medium">{match.home_team}</span>
-                </div>
-                <div className="px-6 text-center">
-                  {match.played ? (
-                    <span className="text-xl font-bold">
-                      {match.home_score} - {match.away_score}
-                    </span>
-                  ) : (
-                    <span className="text-gray-400">vs</span>
-                  )}
-                </div>
-                <div className="flex-1">
-                  <span className="font-medium">{match.away_team}</span>
-                </div>
-              </div>
+          <div className="space-y-2">
+            {selectedGroupFixtures.map(fix => (
+              <GroupMatchRow key={fix.id || `${fix.date}-${fix.home_team}`} fix={fix} />
             ))}
           </div>
         </div>
@@ -307,7 +363,6 @@ export default function Groups() {
       </div>
 
       {groupsComplete ? (
-        // PHASE ÉLIMINATOIRE : knockout en premier, groupes repliables
         <div className="space-y-8">
           <KnockoutSection fixtures={knockoutFixtures} groupsComplete={groupsComplete} />
           <div className="border-t border-gray-200 dark:border-gray-700 pt-4">
@@ -322,7 +377,6 @@ export default function Groups() {
           </div>
         </div>
       ) : (
-        // PHASE DE GROUPES : groupes en premier, phases élim. en dessous
         <div className="space-y-10">
           {groupStandingsSection}
           <KnockoutSection fixtures={knockoutFixtures} groupsComplete={groupsComplete} />
