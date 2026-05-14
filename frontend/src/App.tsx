@@ -8,6 +8,7 @@ import Groups from './pages/Groups'
 import Bracket from './pages/Bracket'
 import History from './pages/History'
 import Rankings from './pages/Rankings'
+import Calendar from './pages/Calendar'
 
 function App() {
   return (
@@ -17,6 +18,7 @@ function App() {
           <Route path="/" element={<Layout />}>
             <Route index element={<Home />} />
             <Route path="predictions" element={<Predictions />} />
+            <Route path="calendar" element={<Calendar />} />
             <Route path="teams" element={<Teams />} />
             <Route path="groups" element={<Groups />} />
             <Route path="bracket" element={<Bracket />} />
