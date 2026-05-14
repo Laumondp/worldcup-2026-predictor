@@ -7,7 +7,6 @@ import Teams from './pages/Teams'
 import Groups from './pages/Groups'
 import Bracket from './pages/Bracket'
 import History from './pages/History'
-import Fixtures from './pages/Fixtures'
 import Rankings from './pages/Rankings'
 
 function App() {
@@ -22,7 +21,6 @@ function App() {
             <Route path="groups" element={<Groups />} />
             <Route path="bracket" element={<Bracket />} />
             <Route path="history" element={<History />} />
-            <Route path="fixtures" element={<Fixtures />} />
             <Route path="rankings" element={<Rankings />} />
           </Route>
         </Routes>

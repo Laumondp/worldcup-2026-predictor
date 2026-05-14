@@ -1,5 +1,5 @@
 import { Outlet, Link, useLocation } from 'react-router-dom'
-import { Trophy, BarChart3, Grid3X3, GitBranch, RefreshCw, CheckCircle, XCircle, Calendar, Award, Eye, Sun, Moon, ExternalLink, ShoppingBag } from 'lucide-react'
+import { Trophy, BarChart3, Grid3X3, GitBranch, RefreshCw, CheckCircle, XCircle, Award, Eye, Sun, Moon, ExternalLink, ShoppingBag } from 'lucide-react'
 import { useState, useRef, useEffect } from 'react'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { adminApi, statsApi } from '../services/api'
@@ -10,7 +10,6 @@ const navItems = [
   { path: '/predictions', label: 'Prédictions', icon: BarChart3 },
   { path: '/groups', label: 'Groupes', icon: Grid3X3 },
   { path: '/bracket', label: 'Tableau', icon: GitBranch },
-  { path: '/fixtures', label: 'Calendrier FIFA', icon: Calendar },
   { path: '/rankings', label: 'Classement FIFA', icon: Award },
 ]
 
