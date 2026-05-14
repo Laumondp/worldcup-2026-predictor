@@ -31,29 +31,39 @@ interface TeamRow {
   pts: number
 }
 
-function computeGroupStandings(fixtures: KOFixture[], groupLetter: string): TeamRow[] {
-  const groupName = `Groupe ${groupLetter}`
-  const gf = fixtures.filter(f => f.group === groupName)
+function extractGroupLetter(group: string): string {
+  const m = (group || '').trim().match(/([A-L])\s*$/i)
+  return m ? m[1].toUpperCase() : ''
+}
 
-  const teams: Record<string, TeamRow> = {}
-  for (const fix of gf) {
-    if (fix.home_team) teams[fix.home_team] ??= { name: fix.home_team, played: 0, wins: 0, draws: 0, losses: 0, gf: 0, ga: 0, pts: 0 }
-    if (fix.away_team) teams[fix.away_team] ??= { name: fix.away_team, played: 0, wins: 0, draws: 0, losses: 0, gf: 0, ga: 0, pts: 0 }
+function computeGroupStandings(fixtures: KOFixture[], targetLetter: string): TeamRow[] {
+  const letter = targetLetter.toUpperCase()
+  const fixesForGroup = fixtures.filter(f => extractGroupLetter(f.group) === letter)
+
+  const teamsMap: Record<string, TeamRow> = {}
+  for (const fix of fixesForGroup) {
+    if (fix.home_team && !teamsMap[fix.home_team]) {
+      teamsMap[fix.home_team] = { name: fix.home_team, played: 0, wins: 0, draws: 0, losses: 0, gf: 0, ga: 0, pts: 0 }
+    }
+    if (fix.away_team && !teamsMap[fix.away_team]) {
+      teamsMap[fix.away_team] = { name: fix.away_team, played: 0, wins: 0, draws: 0, losses: 0, gf: 0, ga: 0, pts: 0 }
+    }
   }
 
-  for (const fix of gf) {
+  for (const fix of fixesForGroup) {
     if (fix.status !== 'finished' || fix.home_score === null || fix.away_score === null) continue
-    const h = teams[fix.home_team], a = teams[fix.away_team]
-    if (!h || !a) continue
-    h.played++; a.played++
-    h.gf += fix.home_score; h.ga += fix.away_score
-    a.gf += fix.away_score; a.ga += fix.home_score
-    if (fix.home_score > fix.away_score) { h.wins++; a.losses++; h.pts += 3 }
-    else if (fix.home_score < fix.away_score) { a.wins++; h.losses++; a.pts += 3 }
-    else { h.draws++; a.draws++; h.pts++; a.pts++ }
+    const home = teamsMap[fix.home_team]
+    const away = teamsMap[fix.away_team]
+    if (!home || !away) continue
+    home.played++; away.played++
+    home.gf += fix.home_score; home.ga += fix.away_score
+    away.gf += fix.away_score; away.ga += fix.home_score
+    if (fix.home_score > fix.away_score) { home.wins++; away.losses++; home.pts += 3 }
+    else if (fix.home_score < fix.away_score) { away.wins++; home.losses++; away.pts += 3 }
+    else { home.draws++; away.draws++; home.pts++; away.pts++ }
   }
 
-  return Object.values(teams).sort(
+  return Object.values(teamsMap).sort(
     (a, b) => b.pts - a.pts || (b.gf - b.ga) - (a.gf - a.ga) || b.gf - a.gf || a.name.localeCompare(b.name)
   )
 }
@@ -230,7 +240,7 @@ export default function Groups() {
   })
 
   const allFixtures: KOFixture[] = fixturesData?.data?.fixtures ?? []
-  const isGroupFixture = (f: KOFixture) => /^Groupe\s+[A-L]$/i.test(f.group || '')
+  const isGroupFixture = (f: KOFixture) => extractGroupLetter(f.group) !== ''
   const groupFixtures = allFixtures.filter(isGroupFixture)
   const knockoutFixtures = allFixtures.filter(f => !isGroupFixture(f))
 
@@ -245,7 +255,7 @@ export default function Groups() {
   }
 
   const selectedGroupFixtures = selectedGroup
-    ? groupFixtures.filter(f => f.group === `Groupe ${selectedGroup}`)
+    ? groupFixtures.filter(f => extractGroupLetter(f.group) === selectedGroup.toUpperCase())
     : []
 
   const groupStandingsSection = (
