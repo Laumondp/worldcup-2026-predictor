@@ -1,69 +1,95 @@
-import { findGroupMatch, KO_DATES, detectKOPhase } from './_schedule.js';
+import { GROUP_SCHEDULE, KO_DATES, normalizeTeam, detectKOPhase } from './_schedule.js';
+
+const FIFA_URL =
+  'https://api.fifa.com/api/v3/calendar/matches' +
+  '?idCompetition=17&idSeason=285023&count=200&language=fr-FR';
+
+const STAGE_LABELS = {
+  round32: '16e de finale',
+  round16: '8e de finale',
+  quarter: 'Quarts de finale',
+  semi:    'Demi-finales',
+  third:   'Match pour la 3e place',
+  final:   'Finale',
+};
 
 export default async function handler(req, res) {
-  const url =
-    'https://api.fifa.com/api/v3/calendar/matches' +
-    '?idCompetition=17&idSeason=285023&count=200&language=fr-FR';
-
+  // Fetch FIFA API (scores + statuts)
+  let fifaResults = [];
   try {
-    const r = await fetch(url, {
+    const r = await fetch(FIFA_URL, {
       headers: { 'User-Agent': 'Mozilla/5.0', Accept: 'application/json' },
     });
     const data = await r.json();
-    const results = data.Results ?? [];
+    fifaResults = data.Results ?? [];
+  } catch {}
 
-    // Compteurs pour assigner les dates KO par position chronologique
-    const koCounters = { round32: 0, round16: 0, quarter: 0, semi: 0, third: 0, final: 0 };
+  const desc  = (lst) => (Array.isArray(lst) && lst[0] ? lst[0].Description ?? '' : '');
+  const score = (t)   => (t?.Score !== null && t?.Score !== undefined ? t.Score : null);
+  const statusMap = { 0: 'scheduled', 1: 'scheduled', 3: 'live', 4: 'finished', 99: 'finished' };
 
-    const fixtures = results.map((m) => {
-      const home = m.Home ?? {};
-      const away = m.Away ?? {};
-      const desc = (lst) => (Array.isArray(lst) && lst[0] ? lst[0].Description ?? '' : '');
-      const score = (t) => (t.Score !== null && t.Score !== undefined ? t.Score : null);
-
-      const homeTeam = desc(home.TeamName) || home.Name || '';
-      const awayTeam = desc(away.TeamName) || away.Name || '';
-      const stageName = desc(m.StageName);
-      const groupName = desc(m.GroupName);
-      const isGroup = /groupe\s+[a-l]/i.test(groupName);
-
-      // Cherche la date correcte dans le planning statique
-      let correctedDate = m.Date ?? '';
-      if (isGroup) {
-        const entry = findGroupMatch(homeTeam, awayTeam);
-        if (entry) correctedDate = entry.date;
-      } else {
-        const phase = detectKOPhase(stageName);
-        if (phase && KO_DATES[phase]) {
-          const idx = koCounters[phase]++;
-          if (idx < KO_DATES[phase].length) correctedDate = KO_DATES[phase][idx];
-        }
-      }
-
-      const stadium = m.Stadium ?? {};
-      const venue = desc(stadium.Name) || '';
-      const city  = desc(stadium.CityName) || '';
-
-      const statusMap = { 0: 'scheduled', 1: 'scheduled', 3: 'live', 4: 'finished', 99: 'finished' };
-
-      return {
-        id:         String(m.IdMatch ?? ''),
-        date:       correctedDate,
-        home_team:  homeTeam,
-        away_team:  awayTeam,
-        home_score: score(home),
-        away_score: score(away),
-        stage:      stageName,
-        group:      groupName,
-        venue,
-        city,
-        status:     statusMap[m.MatchStatus ?? 0] ?? 'scheduled',
-      };
-    });
-
-    res.setHeader('Cache-Control', 's-maxage=120, stale-while-revalidate=60');
-    res.json({ count: fixtures.length, fixtures });
-  } catch (err) {
-    res.status(500).json({ error: String(err) });
+  // ── Lookup FIFA par paire d'équipes (normalisée) → données live ──────────────
+  const fifaByTeams = new Map();
+  for (const m of fifaResults) {
+    const h = normalizeTeam(desc(m.Home?.TeamName) || m.Home?.Name || '');
+    const a = normalizeTeam(desc(m.Away?.TeamName) || m.Away?.Name || '');
+    if (h && a) fifaByTeams.set(`${h}|${a}`, m);
   }
+
+  // ── Lookup FIFA KO par phase, trié chronologiquement ─────────────────────────
+  const fifaKO = {};
+  for (const m of fifaResults) {
+    const phase = detectKOPhase(desc(m.StageName));
+    if (phase) {
+      (fifaKO[phase] ??= []).push(m);
+    }
+  }
+  for (const arr of Object.values(fifaKO)) {
+    arr.sort((a, b) => new Date(a.Date ?? 0) - new Date(b.Date ?? 0));
+  }
+
+  const fixtures = [];
+
+  // ── Phase de groupes : 72 matchs, date TOUJOURS depuis le planning statique ──
+  for (const entry of GROUP_SCHEDULE) {
+    const key = `${normalizeTeam(entry.home)}|${normalizeTeam(entry.away)}`;
+    const fifa = fifaByTeams.get(key);
+    fixtures.push({
+      id:         fifa ? String(fifa.IdMatch ?? '') : `${entry.home}_${entry.away}`,
+      date:       entry.date,               // ← date officielle, jamais de l'API FIFA
+      home_team:  fifa ? (desc(fifa.Home?.TeamName) || entry.home) : entry.home,
+      away_team:  fifa ? (desc(fifa.Away?.TeamName) || entry.away) : entry.away,
+      home_score: fifa ? score(fifa.Home) : null,
+      away_score: fifa ? score(fifa.Away) : null,
+      stage:      entry.stage,
+      group:      `Groupe ${entry.group}`,
+      venue:      entry.venue,
+      city:       entry.city,
+      status:     fifa ? (statusMap[fifa.MatchStatus ?? 0] ?? 'scheduled') : 'scheduled',
+    });
+  }
+
+  // ── Phases éliminatoires : date TOUJOURS depuis KO_DATES ─────────────────────
+  for (const [phase, dates] of Object.entries(KO_DATES)) {
+    const phaseFifa = (fifaKO[phase] ?? []);
+    for (let i = 0; i < dates.length; i++) {
+      const fifa = phaseFifa[i] ?? null;
+      fixtures.push({
+        id:         fifa ? String(fifa.IdMatch ?? '') : `${phase}_${i}`,
+        date:       dates[i],               // ← date officielle, jamais de l'API FIFA
+        home_team:  fifa ? (desc(fifa.Home?.TeamName) || '') : '',
+        away_team:  fifa ? (desc(fifa.Away?.TeamName) || '') : '',
+        home_score: fifa ? score(fifa.Home) : null,
+        away_score: fifa ? score(fifa.Away) : null,
+        stage:      STAGE_LABELS[phase] ?? phase,
+        group:      '',
+        venue:      fifa ? (desc(fifa.Stadium?.Name) || '') : '',
+        city:       fifa ? (desc(fifa.Stadium?.CityName) || '') : '',
+        status:     fifa ? (statusMap[fifa.MatchStatus ?? 0] ?? 'scheduled') : 'scheduled',
+      });
+    }
+  }
+
+  res.setHeader('Cache-Control', 's-maxage=120, stale-while-revalidate=60');
+  res.json({ count: fixtures.length, fixtures });
 }
