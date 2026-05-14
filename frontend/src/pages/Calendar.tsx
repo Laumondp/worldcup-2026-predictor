@@ -1,7 +1,7 @@
 import { useState, useMemo } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import { Helmet } from 'react-helmet-async'
-import { Moon, MapPin, Calendar as CalendarIcon } from 'lucide-react'
+import { Moon, MapPin } from 'lucide-react'
 import { FlagImg } from '../utils/flags'
 import { matchesApi } from '../services/api'
 import type { GroupStanding, BracketEntry } from '../services/api'
@@ -122,7 +122,6 @@ const GROUP_MATCHES: GroupMatch[] = [
 
 // ── 32 matchs éliminatoires ──────────────────────────────────────
 const KO_MATCHES: KOMatch[] = [
-  // 16es de finale
   { id:'M73',  round:'round32', homeLabel:'2e Gr. A',          awayLabel:'2e Gr. B',           date:'2026-06-28', time:'21:00', venue:'SoFi Stadium',            city:'Los Angeles'  },
   { id:'M76',  round:'round32', homeLabel:'1er Gr. C',         awayLabel:'2e Gr. F',           date:'2026-06-29', time:'19:00', venue:'NRG Stadium',             city:'Houston'      },
   { id:'M74',  round:'round32', homeLabel:'1er Gr. E',         awayLabel:'3e Gr. A/B/C/D/F',  date:'2026-06-29', time:'22:30', venue:'Gillette Stadium',        city:'Boston'       },
@@ -139,7 +138,6 @@ const KO_MATCHES: KOMatch[] = [
   { id:'M88',  round:'round32', homeLabel:'2e Gr. D',          awayLabel:'2e Gr. G',           date:'2026-07-03', time:'20:00', venue:'AT&T Stadium',            city:'Dallas'       },
   { id:'M86',  round:'round32', homeLabel:'1er Gr. J',         awayLabel:'2e Gr. H',           date:'2026-07-04', time:'00:00', venue:'Hard Rock Stadium',       city:'Miami'        },
   { id:'M87',  round:'round32', homeLabel:'1er Gr. K',         awayLabel:'3e Gr. D/E/I/J/L',  date:'2026-07-04', time:'03:30', venue:'Arrowhead Stadium',       city:'Kansas City'  },
-  // 8es de finale
   { id:'M90',  round:'round16', homeLabel:'V. (2e A / 2e B)',       awayLabel:'V. (1er F / 2e C)',      date:'2026-07-04', time:'19:00', venue:'NRG Stadium',             city:'Houston'      },
   { id:'M89',  round:'round16', homeLabel:'V. (1er E / 3e ABCDF)', awayLabel:'V. (1er I / 3e CDFGH)', date:'2026-07-04', time:'23:00', venue:'Lincoln Financial Field', city:'Philadelphie' },
   { id:'M91',  round:'round16', homeLabel:'V. (1er C / 2e F)',      awayLabel:'V. (2e E / 2e I)',       date:'2026-07-05', time:'22:00', venue:'MetLife Stadium',         city:'New York/NJ'  },
@@ -148,42 +146,65 @@ const KO_MATCHES: KOMatch[] = [
   { id:'M94',  round:'round16', homeLabel:'V. (1er D / 3e BEFIJ)', awayLabel:'V. (1er G / 3e AEHIJ)', date:'2026-07-07', time:'02:00', venue:'Lumen Field',             city:'Seattle'      },
   { id:'M95',  round:'round16', homeLabel:'V. (1er J / 2e H)',      awayLabel:'V. (2e D / 2e G)',       date:'2026-07-07', time:'18:00', venue:'Mercedes-Benz Stadium',  city:'Atlanta'      },
   { id:'M96',  round:'round16', homeLabel:'V. (1er B / 3e EFGIJ)', awayLabel:'V. (1er K / 3e DEIJL)', date:'2026-07-07', time:'22:00', venue:'BC Place',                city:'Vancouver'    },
-  // Quarts de finale
   { id:'M97',  round:'quarter', homeLabel:'V. 8e Philadelphie', awayLabel:'V. 8e Houston',     date:'2026-07-09', time:'22:00', venue:'Gillette Stadium',  city:'Boston'      },
   { id:'M98',  round:'quarter', homeLabel:'V. 8e Dallas',       awayLabel:'V. 8e Seattle',     date:'2026-07-10', time:'21:00', venue:'SoFi Stadium',      city:'Los Angeles' },
   { id:'M99',  round:'quarter', homeLabel:'V. 8e New York/NJ',  awayLabel:'V. 8e Mexico',      date:'2026-07-11', time:'23:00', venue:'Hard Rock Stadium', city:'Miami'       },
   { id:'M100', round:'quarter', homeLabel:'V. 8e Atlanta',      awayLabel:'V. 8e Vancouver',   date:'2026-07-12', time:'03:00', venue:'Arrowhead Stadium', city:'Kansas City' },
-  // Demi-finales
   { id:'M101', round:'semi',    homeLabel:'V. QF Boston',       awayLabel:'V. QF Los Angeles', date:'2026-07-14', time:'21:00', venue:'AT&T Stadium',           city:'Dallas'      },
   { id:'M102', round:'semi',    homeLabel:'V. QF Miami',        awayLabel:'V. QF Kansas City', date:'2026-07-15', time:'21:00', venue:'Mercedes-Benz Stadium', city:'Atlanta'     },
-  // 3e place
   { id:'M103', round:'third',   homeLabel:'Perdant DF Dallas',  awayLabel:'Perdant DF Atlanta', date:'2026-07-18', time:'23:00', venue:'Hard Rock Stadium', city:'Miami'       },
-  // Finale
   { id:'M104', round:'final',   homeLabel:'Vainqueur DF Dallas',awayLabel:'Vainqueur DF Atlanta', date:'2026-07-19', time:'21:00', venue:'MetLife Stadium', city:'New York/NJ' },
 ]
 
-// ── Labels des phases éliminatoires ─────────────────────────────
+// ── Constantes ───────────────────────────────────────────────────
 const ROUND_LABELS: Record<string, string> = {
   round32: '16es de finale', round16: '8es de finale',
   quarter: 'Quarts de finale', semi: 'Demi-finales',
   third: 'Match pour la 3e place', final: 'Finale',
 }
-const ROUND_ICONS: Record<string, string> = {
-  round32: '🔵', round16: '🟣', quarter: '🟠',
-  semi: '🔴', third: '🥉', final: '🏆',
-}
 const ROUND_ORDER = ['round32','round16','quarter','semi','third','final']
 
 const ROUND_TO_STAGE: Record<string, string> = {
-  round32: 'Round of 32',
-  round16: 'Round of 16',
-  quarter: 'Quarter-final',
-  semi:    'Semi-final',
-  third:   'Third Place',
-  final:   'Final',
+  round32: 'Round of 32', round16: 'Round of 16',
+  quarter: 'Quarter-final', semi: 'Semi-final',
+  third: 'Third Place', final: 'Final',
 }
 
+const ROUND_STYLES: Record<string, { dot: string; label: string; accent: string }> = {
+  round32: { dot: 'bg-sky-500',    label: 'text-sky-600 dark:text-sky-400',       accent: 'from-sky-500/10'    },
+  round16: { dot: 'bg-violet-500', label: 'text-violet-600 dark:text-violet-400', accent: 'from-violet-500/10' },
+  quarter: { dot: 'bg-orange-500', label: 'text-orange-500 dark:text-orange-400', accent: 'from-orange-500/10' },
+  semi:    { dot: 'bg-rose-500',   label: 'text-rose-600 dark:text-rose-400',     accent: 'from-rose-500/10'   },
+  third:   { dot: 'bg-amber-600',  label: 'text-amber-600 dark:text-amber-500',   accent: 'from-amber-500/10'  },
+  final:   { dot: 'bg-yellow-400', label: 'text-yellow-500 dark:text-yellow-400', accent: 'from-yellow-400/10' },
+}
+
+// ── Interfaces ───────────────────────────────────────────────────
 interface ResolvedTeam { name: string; code: string }
+
+// ── Utilitaires ──────────────────────────────────────────────────
+function isNight(time: string) { return time < '06:00' }
+
+function displayDate(date: string, time: string): string {
+  if (!isNight(time)) return date
+  const d = new Date(date + 'T12:00:00Z')
+  d.setUTCDate(d.getUTCDate() - 1)
+  return d.toISOString().slice(0, 10)
+}
+
+function formatDayFull(dateStr: string): { weekday: string; date: string } {
+  const d = new Date(dateStr + 'T12:00:00Z')
+  return {
+    weekday: d.toLocaleDateString('fr-FR', { weekday: 'long' }),
+    date: d.toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' }),
+  }
+}
+
+function formatDayShort(dateStr: string): string {
+  return new Date(dateStr + 'T12:00:00Z').toLocaleDateString('fr-FR', {
+    day: 'numeric', month: 'short',
+  })
+}
 
 function resolveGroupLabel(
   label: string,
@@ -200,85 +221,87 @@ function resolveGroupLabel(
   return { name: TEAM_NAMES[team.code] ?? team.name, code: team.code }
 }
 
-// ── Utilitaires ──────────────────────────────────────────────────
-function isNight(time: string) { return time < '06:00' }
+// ── Composants visuels ───────────────────────────────────────────
 
-function displayDate(date: string, time: string): string {
-  if (!isNight(time)) return date
-  const d = new Date(date + 'T12:00:00Z')
-  d.setUTCDate(d.getUTCDate() - 1)
-  return d.toISOString().slice(0, 10)
-}
-
-function formatDay(dateStr: string): string {
-  return new Date(dateStr + 'T12:00:00Z').toLocaleDateString('fr-FR', {
-    weekday: 'long', day: 'numeric', month: 'long',
-  })
-}
-
-function formatDayShort(dateStr: string): string {
-  return new Date(dateStr + 'T12:00:00Z').toLocaleDateString('fr-FR', {
-    day: 'numeric', month: 'short',
-  })
-}
-
-// ── Sous-composants ──────────────────────────────────────────────
 function TimeChip({ time }: { time: string }) {
   const night = isNight(time)
   return (
-    <span className={`inline-flex items-center gap-1 text-xs font-bold tabular-nums rounded-lg px-2 py-1 shrink-0 ${
+    <span className={`inline-flex items-center gap-1.5 text-[11px] font-bold tabular-nums rounded-full px-3 py-1 shrink-0 ${
       night
-        ? 'bg-indigo-100 text-indigo-700 dark:bg-indigo-900/40 dark:text-indigo-300'
-        : 'bg-blue-50 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300'
+        ? 'bg-indigo-950 text-indigo-200 border border-indigo-700/60 shadow-sm shadow-indigo-950'
+        : 'bg-slate-100 text-slate-500 dark:bg-slate-800 dark:text-slate-400'
     }`}>
-      {night && <Moon className="w-3 h-3 shrink-0" />}
+      {night && <Moon className="w-2.5 h-2.5 shrink-0" />}
       {time}
     </span>
   )
 }
 
-function GroupMatchRow({ m }: { m: GroupMatch }) {
+function GroupMatchCard({ m }: { m: GroupMatch }) {
   const homeName = TEAM_NAMES[m.home] || m.home
   const awayName = TEAM_NAMES[m.away] || m.away
   const night = isNight(m.time)
+
   return (
-    <div className={`flex items-center gap-2 sm:gap-3 px-3 py-2.5 rounded-xl border transition-colors ${
+    <div className={`group relative overflow-hidden rounded-2xl transition-all duration-200 hover:-translate-y-px hover:shadow-lg ${
       night
-        ? 'bg-indigo-50/60 border-indigo-200/60 dark:bg-indigo-950/30 dark:border-indigo-800/40'
-        : 'bg-white border-gray-100 dark:bg-gray-900/60 dark:border-gray-800'
+        ? 'bg-[#06101f] border border-indigo-900/50 shadow-md shadow-indigo-950/60'
+        : 'bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm'
     }`}>
-      {/* Heure */}
-      <TimeChip time={m.time} />
+      {/* shimmer top */}
+      <div className={`absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent ${
+        night ? 'via-indigo-400/50' : 'via-blue-300/50 dark:via-slate-500/30'
+      } to-transparent`} />
 
-      {/* Équipe domicile */}
-      <div className="flex items-center gap-2 flex-1 min-w-0">
-        <FlagImg code={m.home} size={40} className="shrink-0" />
-        <span className="font-bold text-3xl text-gray-900 dark:text-gray-100 truncate">{homeName}</span>
-      </div>
+      <div className="p-4 pb-3.5">
+        {/* Header */}
+        <div className="flex items-center justify-between mb-4">
+          <span className={`text-[9px] font-black tracking-[0.15em] uppercase px-2.5 py-1 rounded-full border ${
+            night
+              ? 'text-indigo-300/80 bg-indigo-900/20 border-indigo-800/40'
+              : 'text-slate-400 bg-slate-50 dark:bg-slate-800 border-slate-200 dark:border-slate-700'
+          }`}>
+            Groupe {m.group}
+          </span>
+          <TimeChip time={m.time} />
+        </div>
 
-      {/* Séparateur */}
-      <span className="text-gray-400 dark:text-gray-500 font-bold text-base shrink-0">–</span>
+        {/* Teams */}
+        <div className="flex items-center gap-2">
+          {/* Home */}
+          <div className="flex items-center gap-2.5 flex-1 min-w-0">
+            <FlagImg code={m.home} size={32} className="shrink-0 drop-shadow-sm" />
+            <span className={`font-bold text-lg leading-tight truncate ${
+              night ? 'text-white' : 'text-slate-900 dark:text-slate-100'
+            }`}>{homeName}</span>
+          </div>
 
-      {/* Équipe extérieure */}
-      <div className="flex items-center gap-2 flex-1 min-w-0 justify-end">
-        <span className="font-bold text-3xl text-gray-900 dark:text-gray-100 truncate text-right">{awayName}</span>
-        <FlagImg code={m.away} size={40} className="shrink-0" />
-      </div>
+          <span className={`shrink-0 font-thin text-xl px-1 ${
+            night ? 'text-indigo-800/80' : 'text-slate-200 dark:text-slate-700'
+          }`}>—</span>
 
-      {/* Lieu + groupe */}
-      <div className="hidden sm:flex items-center gap-3 shrink-0">
-        <span className="flex items-center gap-1 text-xs text-gray-400 dark:text-gray-500">
-          <MapPin className="w-3 h-3 shrink-0" />{m.city}
-        </span>
-        <span className="text-xs font-bold text-gray-400 dark:text-gray-600 bg-gray-100 dark:bg-gray-800 px-2 py-0.5 rounded-md">
-          Gr.{m.group}
-        </span>
+          {/* Away */}
+          <div className="flex items-center gap-2.5 flex-1 min-w-0 justify-end">
+            <span className={`font-bold text-lg leading-tight truncate text-right ${
+              night ? 'text-white' : 'text-slate-900 dark:text-slate-100'
+            }`}>{awayName}</span>
+            <FlagImg code={m.away} size={32} className="shrink-0 drop-shadow-sm" />
+          </div>
+        </div>
+
+        {/* Venue */}
+        <div className={`mt-3 flex items-center gap-1.5 text-[10px] tracking-wide ${
+          night ? 'text-indigo-400/50' : 'text-slate-400 dark:text-slate-600'
+        }`}>
+          <MapPin className="w-2.5 h-2.5 shrink-0" />
+          <span className="truncate">{m.venue} · {m.city}</span>
+        </div>
       </div>
     </div>
   )
 }
 
-function KOMatchRow({
+function KOMatchCard({
   m,
   resolvedHome,
   resolvedAway,
@@ -288,40 +311,64 @@ function KOMatchRow({
   resolvedAway: ResolvedTeam | null
 }) {
   const night = isNight(m.time)
+
   return (
-    <div className={`flex items-center gap-2 sm:gap-3 px-3 py-2.5 rounded-xl border transition-colors ${
+    <div className={`relative overflow-hidden rounded-2xl transition-all duration-200 hover:-translate-y-px hover:shadow-lg ${
       night
-        ? 'bg-indigo-50/60 border-indigo-200/60 dark:bg-indigo-950/30 dark:border-indigo-800/40'
-        : 'bg-white border-gray-100 dark:bg-gray-900/60 dark:border-gray-800'
+        ? 'bg-[#06101f] border border-indigo-900/50 shadow-md shadow-indigo-950/60'
+        : 'bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm'
     }`}>
-      <TimeChip time={m.time} />
+      <div className={`absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent ${
+        night ? 'via-indigo-400/50' : 'via-amber-300/60 dark:via-amber-600/30'
+      } to-transparent`} />
 
-      <div className="flex items-center gap-2 flex-1 min-w-0">
-        {resolvedHome ? (
-          <>
-            <FlagImg code={resolvedHome.code} size={40} className="shrink-0" />
-            <span className="font-bold text-3xl text-gray-900 dark:text-gray-100 truncate">{resolvedHome.name}</span>
-          </>
-        ) : (
-          <span className="font-bold text-xl text-gray-400 dark:text-gray-500 truncate italic">{m.homeLabel}</span>
-        )}
-      </div>
+      <div className="p-4 pb-3.5">
+        <div className="flex justify-end mb-4">
+          <TimeChip time={m.time} />
+        </div>
 
-      <span className="text-gray-400 dark:text-gray-500 font-bold text-base shrink-0">–</span>
+        <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2.5 flex-1 min-w-0">
+            {resolvedHome ? (
+              <>
+                <FlagImg code={resolvedHome.code} size={32} className="shrink-0 drop-shadow-sm" />
+                <span className={`font-bold text-lg leading-tight truncate ${
+                  night ? 'text-white' : 'text-slate-900 dark:text-slate-100'
+                }`}>{resolvedHome.name}</span>
+              </>
+            ) : (
+              <span className={`text-sm font-medium italic truncate leading-tight ${
+                night ? 'text-indigo-400/60' : 'text-slate-400 dark:text-slate-500'
+              }`}>{m.homeLabel}</span>
+            )}
+          </div>
 
-      <div className="flex items-center gap-2 flex-1 min-w-0 justify-end">
-        {resolvedAway ? (
-          <>
-            <span className="font-bold text-3xl text-gray-900 dark:text-gray-100 truncate text-right">{resolvedAway.name}</span>
-            <FlagImg code={resolvedAway.code} size={40} className="shrink-0" />
-          </>
-        ) : (
-          <span className="font-bold text-xl text-gray-400 dark:text-gray-500 truncate text-right italic">{m.awayLabel}</span>
-        )}
-      </div>
+          <span className={`shrink-0 font-thin text-xl px-1 ${
+            night ? 'text-indigo-800/80' : 'text-slate-200 dark:text-slate-700'
+          }`}>—</span>
 
-      <div className="hidden sm:flex items-center gap-1 text-xs text-gray-400 dark:text-gray-500 shrink-0">
-        <MapPin className="w-3 h-3 shrink-0" />{m.city}
+          <div className="flex items-center gap-2.5 flex-1 min-w-0 justify-end">
+            {resolvedAway ? (
+              <>
+                <span className={`font-bold text-lg leading-tight truncate text-right ${
+                  night ? 'text-white' : 'text-slate-900 dark:text-slate-100'
+                }`}>{resolvedAway.name}</span>
+                <FlagImg code={resolvedAway.code} size={32} className="shrink-0 drop-shadow-sm" />
+              </>
+            ) : (
+              <span className={`text-sm font-medium italic truncate text-right leading-tight ${
+                night ? 'text-indigo-400/60' : 'text-slate-400 dark:text-slate-500'
+              }`}>{m.awayLabel}</span>
+            )}
+          </div>
+        </div>
+
+        <div className={`mt-3 flex items-center gap-1.5 text-[10px] tracking-wide ${
+          night ? 'text-indigo-400/50' : 'text-slate-400 dark:text-slate-600'
+        }`}>
+          <MapPin className="w-2.5 h-2.5 shrink-0" />
+          <span className="truncate">{m.venue} · {m.city}</span>
+        </div>
       </div>
     </div>
   )
@@ -331,7 +378,6 @@ function KOMatchRow({
 export default function Calendar() {
   const [tab, setTab] = useState<'group' | 'ko'>('group')
 
-  // ── Données live ─────────────────────────────────────────────────
   const { data: standingsData } = useQuery({
     queryKey: ['group-standings'],
     queryFn: () => matchesApi.getGroupStandings().then(r => r.data),
@@ -344,13 +390,11 @@ export default function Calendar() {
     staleTime: 5 * 60 * 1000,
   })
 
-  // Lookup classements : { A: [{name,code,played,...}], B: [...], ... }
   const standingsLookup = useMemo(() => {
     if (!standingsData) return {} as Record<string, GroupStanding['teams']>
     return Object.fromEntries(standingsData.map(s => [s.group, s.teams]))
   }, [standingsData])
 
-  // Lookup bracket : { round32: [...], round16: [...], ... }
   const bracketLookup = useMemo((): Record<string, BracketEntry[]> => {
     if (!bracketData) return {}
     return Object.fromEntries(
@@ -358,7 +402,6 @@ export default function Calendar() {
     )
   }, [bracketData])
 
-  // Matchs de poule groupés par date d'affichage (date FIFA locale)
   const groupedByDate = useMemo(() => {
     const byDate: Record<string, GroupMatch[]> = {}
     for (const m of GROUP_MATCHES) {
@@ -366,57 +409,60 @@ export default function Calendar() {
       if (!byDate[d]) byDate[d] = []
       byDate[d].push(m)
     }
-    for (const d in byDate) {
-      byDate[d].sort((a, b) =>
-        a.date.localeCompare(b.date) || a.time.localeCompare(b.time)
-      )
-    }
+    for (const d in byDate)
+      byDate[d].sort((a, b) => a.date.localeCompare(b.date) || a.time.localeCompare(b.time))
     return Object.entries(byDate).sort(([a], [b]) => a.localeCompare(b))
   }, [])
 
-  // Matchs KO groupés par phase
   const koByRound = useMemo(() => {
     const byRound: Record<string, KOMatch[]> = {}
     for (const m of KO_MATCHES) {
       if (!byRound[m.round]) byRound[m.round] = []
       byRound[m.round].push(m)
     }
-    for (const r in byRound) {
+    for (const r in byRound)
       byRound[r].sort((a, b) => a.date.localeCompare(b.date) || a.time.localeCompare(b.time))
-    }
     return ROUND_ORDER.filter(r => byRound[r]).map(r => ({ round: r, matches: byRound[r] }))
   }, [])
 
   return (
-    <div className="space-y-6 animate-fade-up">
+    <div className="animate-fade-up">
       <Helmet>
         <title>Calendrier FIFA World Cup 2026 — Tous les matchs</title>
         <meta name="description" content="Calendrier complet des 104 matchs de la Coupe du Monde 2026. Dates, horaires Paris (CEST), équipes, stades." />
       </Helmet>
 
-      {/* En-tête */}
-      <div className="flex items-start gap-3">
-        <div className="p-2.5 rounded-xl bg-blue-600 text-white shrink-0">
-          <CalendarIcon className="w-5 h-5" />
-        </div>
-        <div>
-          <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">
-            Calendrier FIFA World Cup 2026
+      {/* ── Hero ─────────────────────────────────────────────────── */}
+      <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-blue-950 via-blue-900 to-indigo-900 mb-8 p-6 sm:p-8">
+        {/* grid pattern */}
+        <div className="absolute inset-0 opacity-[0.07]"
+          style={{ backgroundImage: 'repeating-linear-gradient(0deg,#fff 0,#fff 1px,transparent 1px,transparent 40px),repeating-linear-gradient(90deg,#fff 0,#fff 1px,transparent 1px,transparent 40px)' }} />
+        {/* glow */}
+        <div className="absolute -top-20 -right-20 w-64 h-64 rounded-full bg-blue-400/10 blur-3xl" />
+        <div className="absolute -bottom-10 -left-10 w-48 h-48 rounded-full bg-indigo-400/10 blur-3xl" />
+
+        <div className="relative">
+          <div className="flex items-center gap-2 text-blue-300 text-xs font-semibold tracking-widest uppercase mb-2">
+            <span>🏆</span>
+            <span>FIFA World Cup 2026</span>
+          </div>
+          <h1 className="text-3xl sm:text-4xl font-black text-white tracking-tight mb-2">
+            Calendrier Officiel
           </h1>
-          <p className="text-sm text-gray-500 dark:text-gray-400 mt-0.5">
-            104 matchs · 11 juin – 19 juillet 2026 · Heures en heure de Paris <span className="font-medium">CEST (UTC+2)</span>
+          <p className="text-blue-300/80 text-sm">
+            104 matchs · 11 juin – 19 juillet 2026
+            <span className="mx-2 text-blue-500">·</span>
+            Heures Paris <span className="font-semibold text-blue-200">CEST (UTC+2)</span>
           </p>
+          <div className="mt-4 flex items-center gap-2 text-xs text-indigo-300/70">
+            <Moon className="w-3 h-3 shrink-0" />
+            <span>Les matchs en fond sombre ont un coup d'envoi avant 6h heure de Paris</span>
+          </div>
         </div>
       </div>
 
-      {/* Légende nuit */}
-      <div className="flex items-center gap-2 text-xs text-indigo-600 dark:text-indigo-400 bg-indigo-50 dark:bg-indigo-950/30 border border-indigo-200/60 dark:border-indigo-800/40 rounded-xl px-3 py-2 w-fit">
-        <Moon className="w-3.5 h-3.5 shrink-0" />
-        <span>Les horaires <strong>en bleu foncé</strong> indiquent un match joué dans la nuit (coup d'envoi avant 6h heure de Paris).</span>
-      </div>
-
-      {/* Tabs */}
-      <div className="flex gap-2 border-b border-gray-200 dark:border-gray-700">
+      {/* ── Tabs ─────────────────────────────────────────────────── */}
+      <div className="flex gap-1 p-1 rounded-2xl bg-slate-100 dark:bg-slate-800/60 w-fit mb-8">
         {[
           { id: 'group' as const, label: 'Phase de poules', count: 72 },
           { id: 'ko'    as const, label: 'Phase éliminatoire', count: 32 },
@@ -424,110 +470,112 @@ export default function Calendar() {
           <button
             key={id}
             onClick={() => setTab(id)}
-            className={`px-4 py-2.5 text-sm font-semibold border-b-2 -mb-px transition-colors ${
+            className={`flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-semibold transition-all ${
               tab === id
-                ? 'border-blue-600 text-blue-600 dark:text-blue-400 dark:border-blue-400'
-                : 'border-transparent text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200'
+                ? 'bg-white dark:bg-slate-700 text-slate-900 dark:text-white shadow-sm'
+                : 'text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-200'
             }`}
           >
             {label}
-            <span className={`ml-1.5 text-xs px-1.5 py-0.5 rounded-full ${
+            <span className={`text-[10px] font-black px-1.5 py-0.5 rounded-full ${
               tab === id
-                ? 'bg-blue-100 text-blue-700 dark:bg-blue-900/40 dark:text-blue-300'
-                : 'bg-gray-100 text-gray-500 dark:bg-gray-800 dark:text-gray-400'
+                ? 'bg-blue-100 text-blue-700 dark:bg-blue-900/50 dark:text-blue-300'
+                : 'bg-slate-200 dark:bg-slate-700 text-slate-500 dark:text-slate-400'
             }`}>{count}</span>
           </button>
         ))}
       </div>
 
-      {/* ── Phase de poules ── */}
+      {/* ── Phase de poules ──────────────────────────────────────── */}
       {tab === 'group' && (
-        <div className="space-y-6">
-          {groupedByDate.map(([date, matches]) => (
-            <div key={date}>
-              {/* En-tête de journée */}
-              <div className="flex items-center gap-3 mb-2">
-                <div className="flex flex-col">
-                  <span className="text-xs font-bold text-blue-600 dark:text-blue-400 uppercase tracking-wide">
-                    {formatDayShort(date)}
-                  </span>
-                  <span className="text-base font-bold text-gray-900 dark:text-gray-100 capitalize">
-                    {formatDay(date)}
+        <div className="space-y-10">
+          {groupedByDate.map(([date, matches]) => {
+            const { weekday, date: dateLabel } = formatDayFull(date)
+            return (
+              <div key={date}>
+                {/* Day header */}
+                <div className="flex items-end gap-4 mb-4 pb-3 border-b border-slate-200 dark:border-slate-800">
+                  <div>
+                    <p className="text-xs font-black tracking-[0.15em] uppercase text-blue-600 dark:text-blue-400 mb-0.5">
+                      {formatDayShort(date)}
+                    </p>
+                    <h2 className="text-xl font-black text-slate-900 dark:text-slate-100 capitalize leading-none">
+                      {weekday}
+                    </h2>
+                    <p className="text-sm text-slate-400 dark:text-slate-500 mt-0.5 capitalize">{dateLabel}</p>
+                  </div>
+                  <div className="flex-1" />
+                  <span className="text-xs font-semibold text-slate-400 dark:text-slate-500 pb-0.5">
+                    {matches.length} match{matches.length > 1 ? 's' : ''}
                   </span>
                 </div>
-                <div className="flex-1 h-px bg-gray-200 dark:bg-gray-700" />
-                <span className="text-xs text-gray-400 dark:text-gray-500 shrink-0">
-                  {matches.length} match{matches.length > 1 ? 's' : ''}
-                </span>
-              </div>
 
-              {/* Liste des matchs */}
-              <div className="space-y-1.5">
-                {matches.map(m => <GroupMatchRow key={m.id} m={m} />)}
+                {/* Cards grid */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  {matches.map(m => <GroupMatchCard key={m.id} m={m} />)}
+                </div>
               </div>
-            </div>
-          ))}
+            )
+          })}
         </div>
       )}
 
-      {/* ── Phase éliminatoire ── */}
+      {/* ── Phase éliminatoire ───────────────────────────────────── */}
       {tab === 'ko' && (
-        <div className="space-y-8">
-          {koByRound.map(({ round, matches }) => (
-            <div key={round}>
-              {/* En-tête de phase */}
-              <div className="flex items-center gap-3 mb-3">
-                <span className="text-lg">{ROUND_ICONS[round]}</span>
-                <h2 className="text-base font-bold text-gray-900 dark:text-gray-100">
-                  {ROUND_LABELS[round]}
-                </h2>
-                <div className="flex-1 h-px bg-gray-200 dark:bg-gray-700" />
-                <span className="text-xs text-gray-400 dark:text-gray-500 shrink-0">
-                  {matches.length} match{matches.length > 1 ? 's' : ''}
-                </span>
-              </div>
+        <div className="space-y-12">
+          {koByRound.map(({ round, matches }) => {
+            const s = ROUND_STYLES[round]
+            const bracketEntries = bracketLookup[round] ?? []
+            return (
+              <div key={round}>
+                {/* Round header */}
+                <div className="flex items-center gap-3 mb-5">
+                  <span className={`w-3 h-3 rounded-full shrink-0 ${s.dot}`} />
+                  <h2 className={`text-sm font-black tracking-[0.12em] uppercase shrink-0 ${s.label}`}>
+                    {ROUND_LABELS[round]}
+                  </h2>
+                  <div className="flex-1 h-px bg-slate-200 dark:bg-slate-800" />
+                  <span className="text-xs text-slate-400 dark:text-slate-500 shrink-0">
+                    {matches.length} match{matches.length > 1 ? 's' : ''}
+                  </span>
+                </div>
 
-              {/* Liste avec dates */}
-              <div className="space-y-1.5">
-                {matches.map((m, idx) => {
-                  const bracketEntries = bracketLookup[round] ?? []
-                  const entry = bracketEntries[idx]
+                {/* Cards */}
+                <div className={`grid gap-3 ${
+                  matches.length === 1
+                    ? 'grid-cols-1 max-w-lg'
+                    : matches.length === 2
+                    ? 'grid-cols-1 sm:grid-cols-2'
+                    : 'grid-cols-1 sm:grid-cols-2'
+                }`}>
+                  {matches.map((m, idx) => {
+                    const entry = bracketEntries[idx]
 
-                  // Résolution depuis le bracket DB (tours ultérieurs)
-                  let resolvedHome: ResolvedTeam | null = null
-                  let resolvedAway: ResolvedTeam | null = null
-                  if (entry) {
-                    if (entry.home_team_code && entry.home_team !== 'TBD') {
-                      resolvedHome = {
-                        name: TEAM_NAMES[entry.home_team_code] ?? entry.home_team,
-                        code: entry.home_team_code,
-                      }
+                    let resolvedHome: ResolvedTeam | null = null
+                    let resolvedAway: ResolvedTeam | null = null
+
+                    if (entry) {
+                      if (entry.home_team_code && entry.home_team !== 'TBD')
+                        resolvedHome = { name: TEAM_NAMES[entry.home_team_code] ?? entry.home_team, code: entry.home_team_code }
+                      if (entry.away_team_code && entry.away_team !== 'TBD')
+                        resolvedAway = { name: TEAM_NAMES[entry.away_team_code] ?? entry.away_team, code: entry.away_team_code }
                     }
-                    if (entry.away_team_code && entry.away_team !== 'TBD') {
-                      resolvedAway = {
-                        name: TEAM_NAMES[entry.away_team_code] ?? entry.away_team,
-                        code: entry.away_team_code,
-                      }
-                    }
-                  }
-                  // Résolution depuis les classements de groupes (1er/2e Gr. X)
-                  if (!resolvedHome) resolvedHome = resolveGroupLabel(m.homeLabel, standingsLookup)
-                  if (!resolvedAway) resolvedAway = resolveGroupLabel(m.awayLabel, standingsLookup)
+                    if (!resolvedHome) resolvedHome = resolveGroupLabel(m.homeLabel, standingsLookup)
+                    if (!resolvedAway) resolvedAway = resolveGroupLabel(m.awayLabel, standingsLookup)
 
-                  return (
-                  <div key={m.id} className="flex items-center gap-3">
-                    <span className="text-[11px] text-gray-400 dark:text-gray-500 w-16 shrink-0 text-right leading-tight">
-                      {formatDayShort(displayDate(m.date, m.time))}
-                    </span>
-                    <div className="flex-1">
-                      <KOMatchRow m={m} resolvedHome={resolvedHome} resolvedAway={resolvedAway} />
-                    </div>
-                  </div>
-                  )
-                })}
+                    return (
+                      <div key={m.id}>
+                        <p className="text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest mb-1.5 px-1">
+                          {formatDayShort(displayDate(m.date, m.time))}
+                        </p>
+                        <KOMatchCard m={m} resolvedHome={resolvedHome} resolvedAway={resolvedAway} />
+                      </div>
+                    )
+                  })}
+                </div>
               </div>
-            </div>
-          ))}
+            )
+          })}
         </div>
       )}
     </div>
