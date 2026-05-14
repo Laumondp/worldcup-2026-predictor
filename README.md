@@ -31,7 +31,7 @@ Application de prédictions pour la Coupe du Monde 2026 (Mexique / USA / Canada)
 | `/predictions` | Prédire un match entre deux équipes |
 | `/groups` | Classements en temps réel des 12 groupes |
 | `/bracket` | Tableau éliminatoire + probabilités de progression |
-| `/fixtures` | Calendrier complet du tournoi |
+| `/calendar` | Calendrier visuel complet (groupes + phases KO, qualifiés dynamiques) |
 | `/rankings` | Classement FIFA des 48 équipes qualifiées |
 | `/teams` | Fiche détaillée de chaque équipe |
 | `/history` | Précision historique du modèle |
@@ -70,7 +70,7 @@ Combine **Random Forest** (200 estimateurs) et **XGBoost** (200 estimateurs, vot
 worldcup-2026-predictor/
 ├── frontend/               # Application React
 │   └── src/
-│       ├── pages/          # 8 pages de l'application
+│       ├── pages/          # 9 pages de l'application (dont Calendar)
 │       ├── components/     # MatchCard, TeamSelector, ProbabilityChart…
 │       ├── services/api.ts # Client Axios + types TypeScript
 │       └── context/        # ThemeContext (dark/light)
@@ -121,6 +121,17 @@ GET   /api/stats/visitors                     Visites totales + actifs (5 min)
 GET   /health                                 Health check
 POST  /api/admin/retrain                      Réentraîner le modèle manuellement
 ```
+
+---
+
+## Page Calendrier (`/calendar`)
+
+- 104 matchs affichés (80 de groupes + 24 éliminatoires) avec carte visuelle par phase
+- Onglets : **Phase de groupes** (sélecteur de groupe A–L) et **Phases finales** (16es → Finale)
+- Qualifiés dynamiques : les labels « 1er Gr. X / 2e Gr. X » se résolvent en temps réel depuis l'API standings dès qu'un groupe est joué
+- Tableau KO : résolution des équipes via `/api/matches/knockout/bracket` par index de tour
+- Carte nuit : fond sombre (`bg-[#06101f]`) pour les matchs après minuit heure de Paris
+- Design responsive : grille 2 colonnes, hero banner, pills de navigation par round colorés
 
 ---
 
