@@ -222,18 +222,18 @@ function GroupMatchRow({ m }: { m: GroupMatch }) {
       <TimeChip time={m.time} />
 
       {/* Équipe domicile */}
-      <div className="flex items-center gap-2 flex-1 min-w-0 justify-end">
-        <span className="font-bold text-3xl text-gray-900 dark:text-gray-100 truncate text-right">{homeName}</span>
+      <div className="flex items-center gap-2 flex-1 min-w-0">
         <FlagImg code={m.home} size={40} className="shrink-0" />
+        <span className="font-bold text-3xl text-gray-900 dark:text-gray-100 truncate">{homeName}</span>
       </div>
 
       {/* Séparateur */}
       <span className="text-gray-400 dark:text-gray-500 font-bold text-base shrink-0">–</span>
 
       {/* Équipe extérieure */}
-      <div className="flex items-center gap-2 flex-1 min-w-0">
+      <div className="flex items-center gap-2 flex-1 min-w-0 justify-end">
+        <span className="font-bold text-3xl text-gray-900 dark:text-gray-100 truncate text-right">{awayName}</span>
         <FlagImg code={m.away} size={40} className="shrink-0" />
-        <span className="font-bold text-3xl text-gray-900 dark:text-gray-100 truncate">{awayName}</span>
       </div>
 
       {/* Lieu + groupe */}
@@ -258,12 +258,12 @@ function KOMatchRow({ m }: { m: KOMatch }) {
         : 'bg-white border-gray-100 dark:bg-gray-900/60 dark:border-gray-800'
     }`}>
       <TimeChip time={m.time} />
-      <div className="flex items-center gap-2 flex-1 min-w-0 justify-end">
-        <span className="font-bold text-3xl text-gray-900 dark:text-gray-100 truncate text-right">{m.homeLabel}</span>
+      <div className="flex items-center gap-2 flex-1 min-w-0">
+        <span className="font-bold text-3xl text-gray-900 dark:text-gray-100 truncate">{m.homeLabel}</span>
       </div>
       <span className="text-gray-400 dark:text-gray-500 font-bold text-base shrink-0">–</span>
-      <div className="flex items-center gap-2 flex-1 min-w-0">
-        <span className="font-bold text-3xl text-gray-900 dark:text-gray-100 truncate">{m.awayLabel}</span>
+      <div className="flex items-center gap-2 flex-1 min-w-0 justify-end">
+        <span className="font-bold text-3xl text-gray-900 dark:text-gray-100 truncate text-right">{m.awayLabel}</span>
       </div>
       <div className="hidden sm:flex items-center gap-1 text-xs text-gray-400 dark:text-gray-500 shrink-0">
         <MapPin className="w-3 h-3 shrink-0" />{m.city}
