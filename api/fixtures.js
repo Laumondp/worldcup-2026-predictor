@@ -91,5 +91,6 @@ export default async function handler(req, res) {
   }
 
   res.setHeader('Cache-Control', 's-maxage=120, stale-while-revalidate=60');
+  res.setHeader('X-Schedule-Source', 'static');
   res.json({ count: fixtures.length, fixtures });
 }
