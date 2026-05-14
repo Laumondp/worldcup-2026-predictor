@@ -89,6 +89,20 @@ export interface GroupStanding {
   }[]
 }
 
+export interface BracketEntry {
+  id: number
+  home_team: string
+  home_team_code: string | null
+  away_team: string
+  away_team_code: string | null
+  date: string
+  played: boolean
+  home_score: number | null
+  away_score: number | null
+}
+
+export type KOBracket = Record<string, BracketEntry[]>
+
 export interface RoundProbabilities {
   qualify: number
   r16: number
@@ -148,13 +162,13 @@ export const matchesApi = {
     api.get('/upcoming', { params: { n } }),
 
   getGroupStandings: () =>
-    api.get<GroupStanding[]>('/standings'),
+    api.get<GroupStanding[]>('/matches/groups/standings'),
 
   getGroupMatches: (group: string) =>
     api.get('/group-matches', { params: { group } }),
 
   getBracket: () =>
-    api.get('/bracket'),
+    api.get<KOBracket>('/matches/knockout/bracket'),
 }
 
 export const predictionsApi = {

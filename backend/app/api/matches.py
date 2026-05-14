@@ -270,7 +270,9 @@ def get_knockout_bracket(db: Session = Depends(get_db)):
         bracket[stage] = [{
             "id": m.id,
             "home_team": m.home_team.name if m.home_team else "TBD",
+            "home_team_code": m.home_team.code if m.home_team else None,
             "away_team": m.away_team.name if m.away_team else "TBD",
+            "away_team_code": m.away_team.code if m.away_team else None,
             "date": m.date,
             "played": m.played,
             "home_score": m.home_score,

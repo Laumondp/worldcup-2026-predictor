@@ -1,7 +1,10 @@
 import { useState, useMemo } from 'react'
+import { useQuery } from '@tanstack/react-query'
 import { Helmet } from 'react-helmet-async'
 import { Moon, MapPin, Calendar as CalendarIcon } from 'lucide-react'
 import { FlagImg } from '../utils/flags'
+import { matchesApi } from '../services/api'
+import type { GroupStanding, BracketEntry } from '../services/api'
 
 // ── Noms français des équipes ────────────────────────────────────
 const TEAM_NAMES: Record<string, string> = {
@@ -171,6 +174,32 @@ const ROUND_ICONS: Record<string, string> = {
 }
 const ROUND_ORDER = ['round32','round16','quarter','semi','third','final']
 
+const ROUND_TO_STAGE: Record<string, string> = {
+  round32: 'Round of 32',
+  round16: 'Round of 16',
+  quarter: 'Quarter-final',
+  semi:    'Semi-final',
+  third:   'Third Place',
+  final:   'Final',
+}
+
+interface ResolvedTeam { name: string; code: string }
+
+function resolveGroupLabel(
+  label: string,
+  standingsLookup: Record<string, GroupStanding['teams']>
+): ResolvedTeam | null {
+  const m = label.match(/^(1er|2e) Gr\. ([A-L])$/)
+  if (!m) return null
+  const pos = m[1] === '1er' ? 0 : 1
+  const group = m[2]
+  const teams = standingsLookup[group]
+  if (!teams) return null
+  const team = teams[pos]
+  if (!team || team.played === 0) return null
+  return { name: TEAM_NAMES[team.code] ?? team.name, code: team.code }
+}
+
 // ── Utilitaires ──────────────────────────────────────────────────
 function isNight(time: string) { return time < '06:00' }
 
@@ -249,7 +278,15 @@ function GroupMatchRow({ m }: { m: GroupMatch }) {
   )
 }
 
-function KOMatchRow({ m }: { m: KOMatch }) {
+function KOMatchRow({
+  m,
+  resolvedHome,
+  resolvedAway,
+}: {
+  m: KOMatch
+  resolvedHome: ResolvedTeam | null
+  resolvedAway: ResolvedTeam | null
+}) {
   const night = isNight(m.time)
   return (
     <div className={`flex items-center gap-2 sm:gap-3 px-3 py-2.5 rounded-xl border transition-colors ${
@@ -258,13 +295,31 @@ function KOMatchRow({ m }: { m: KOMatch }) {
         : 'bg-white border-gray-100 dark:bg-gray-900/60 dark:border-gray-800'
     }`}>
       <TimeChip time={m.time} />
+
       <div className="flex items-center gap-2 flex-1 min-w-0">
-        <span className="font-bold text-3xl text-gray-900 dark:text-gray-100 truncate">{m.homeLabel}</span>
+        {resolvedHome ? (
+          <>
+            <FlagImg code={resolvedHome.code} size={40} className="shrink-0" />
+            <span className="font-bold text-3xl text-gray-900 dark:text-gray-100 truncate">{resolvedHome.name}</span>
+          </>
+        ) : (
+          <span className="font-bold text-xl text-gray-400 dark:text-gray-500 truncate italic">{m.homeLabel}</span>
+        )}
       </div>
+
       <span className="text-gray-400 dark:text-gray-500 font-bold text-base shrink-0">–</span>
+
       <div className="flex items-center gap-2 flex-1 min-w-0 justify-end">
-        <span className="font-bold text-3xl text-gray-900 dark:text-gray-100 truncate text-right">{m.awayLabel}</span>
+        {resolvedAway ? (
+          <>
+            <span className="font-bold text-3xl text-gray-900 dark:text-gray-100 truncate text-right">{resolvedAway.name}</span>
+            <FlagImg code={resolvedAway.code} size={40} className="shrink-0" />
+          </>
+        ) : (
+          <span className="font-bold text-xl text-gray-400 dark:text-gray-500 truncate text-right italic">{m.awayLabel}</span>
+        )}
       </div>
+
       <div className="hidden sm:flex items-center gap-1 text-xs text-gray-400 dark:text-gray-500 shrink-0">
         <MapPin className="w-3 h-3 shrink-0" />{m.city}
       </div>
@@ -275,6 +330,33 @@ function KOMatchRow({ m }: { m: KOMatch }) {
 // ── Page principale ──────────────────────────────────────────────
 export default function Calendar() {
   const [tab, setTab] = useState<'group' | 'ko'>('group')
+
+  // ── Données live ─────────────────────────────────────────────────
+  const { data: standingsData } = useQuery({
+    queryKey: ['group-standings'],
+    queryFn: () => matchesApi.getGroupStandings().then(r => r.data),
+    staleTime: 5 * 60 * 1000,
+  })
+
+  const { data: bracketData } = useQuery({
+    queryKey: ['ko-bracket'],
+    queryFn: () => matchesApi.getBracket().then(r => r.data),
+    staleTime: 5 * 60 * 1000,
+  })
+
+  // Lookup classements : { A: [{name,code,played,...}], B: [...], ... }
+  const standingsLookup = useMemo(() => {
+    if (!standingsData) return {} as Record<string, GroupStanding['teams']>
+    return Object.fromEntries(standingsData.map(s => [s.group, s.teams]))
+  }, [standingsData])
+
+  // Lookup bracket : { round32: [...], round16: [...], ... }
+  const bracketLookup = useMemo((): Record<string, BracketEntry[]> => {
+    if (!bracketData) return {}
+    return Object.fromEntries(
+      Object.entries(ROUND_TO_STAGE).map(([round, stage]) => [round, bracketData[stage] ?? []])
+    )
+  }, [bracketData])
 
   // Matchs de poule groupés par date d'affichage (date FIFA locale)
   const groupedByDate = useMemo(() => {
@@ -407,16 +489,42 @@ export default function Calendar() {
 
               {/* Liste avec dates */}
               <div className="space-y-1.5">
-                {matches.map(m => (
+                {matches.map((m, idx) => {
+                  const bracketEntries = bracketLookup[round] ?? []
+                  const entry = bracketEntries[idx]
+
+                  // Résolution depuis le bracket DB (tours ultérieurs)
+                  let resolvedHome: ResolvedTeam | null = null
+                  let resolvedAway: ResolvedTeam | null = null
+                  if (entry) {
+                    if (entry.home_team_code && entry.home_team !== 'TBD') {
+                      resolvedHome = {
+                        name: TEAM_NAMES[entry.home_team_code] ?? entry.home_team,
+                        code: entry.home_team_code,
+                      }
+                    }
+                    if (entry.away_team_code && entry.away_team !== 'TBD') {
+                      resolvedAway = {
+                        name: TEAM_NAMES[entry.away_team_code] ?? entry.away_team,
+                        code: entry.away_team_code,
+                      }
+                    }
+                  }
+                  // Résolution depuis les classements de groupes (1er/2e Gr. X)
+                  if (!resolvedHome) resolvedHome = resolveGroupLabel(m.homeLabel, standingsLookup)
+                  if (!resolvedAway) resolvedAway = resolveGroupLabel(m.awayLabel, standingsLookup)
+
+                  return (
                   <div key={m.id} className="flex items-center gap-3">
                     <span className="text-[11px] text-gray-400 dark:text-gray-500 w-16 shrink-0 text-right leading-tight">
                       {formatDayShort(displayDate(m.date, m.time))}
                     </span>
                     <div className="flex-1">
-                      <KOMatchRow m={m} />
+                      <KOMatchRow m={m} resolvedHome={resolvedHome} resolvedAway={resolvedAway} />
                     </div>
                   </div>
-                ))}
+                  )
+                })}
               </div>
             </div>
           ))}
