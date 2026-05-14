@@ -3,6 +3,7 @@ import { useQuery } from '@tanstack/react-query'
 import { Calendar, RefreshCw, Wifi, Clock, Trophy, ChevronDown, ChevronUp } from 'lucide-react'
 import axios from 'axios'
 import { FlagImg, flagUrl } from '../utils/flags'
+import { formatMatchTime } from '../utils/timezone'
 
 interface Fixture {
   id: string
@@ -59,16 +60,10 @@ function StatusBadge({ status }: { status: Fixture['status'] }) {
   )
 }
 
-function formatDay(isoDate: string): string {
-  const raw = (isoDate ?? '').trim()
-  const hasOffset = /Z$|[+-]\d{2}:?\d{2}$/.test(raw)
-  const d = new Date(hasOffset ? raw : raw + 'Z')
-  if (isNaN(d.getTime())) return raw.slice(0, 10)
-  return d.toLocaleDateString('fr-FR', { weekday: 'short', day: 'numeric', month: 'long', timeZone: 'Europe/Paris' })
-}
 
 function FixtureCard({ fix }: { fix: Fixture }) {
   const hasScore = fix.home_score !== null && fix.away_score !== null
+  const mt = formatMatchTime(fix.date, fix.city || '')
   return (
     <div className={`card flex flex-col gap-2 border ${
       fix.status === 'live'
@@ -107,7 +102,9 @@ function FixtureCard({ fix }: { fix: Fixture }) {
       </div>
 
       <div className="text-xs text-gray-400 text-center dark:text-gray-500">
-        {formatDay(fix.date)}{fix.city && ` · ${fix.city}`}
+        {mt.day}
+        {mt.parisTime && <span className="text-blue-500 dark:text-blue-400"> · 🇫🇷 {mt.parisTime}</span>}
+        {fix.city && ` · ${fix.city}`}
       </div>
     </div>
   )
