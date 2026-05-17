@@ -15,14 +15,6 @@ const ROUND_LABELS: Record<keyof RoundProbabilities, string> = {
   champion: 'Champion',
 }
 
-const ROUND_COLORS: Record<keyof RoundProbabilities, string> = {
-  qualify:  'bg-blue-500',
-  r16:      'bg-cyan-500',
-  qf:       'bg-violet-500',
-  sf:       'bg-orange-500',
-  final:    'bg-yellow-500',
-  champion: 'bg-emerald-500',
-}
 
 function ProbBar({ value, color }: { value: number; color: string }) {
   const pct = Math.round(value * 100)
@@ -110,7 +102,9 @@ export default function Bracket() {
                 <span className="text-xl font-bold text-gray-700 dark:text-gray-300">{sim.runner_up}</span>
               </div>
               <div className="text-sm text-gray-500 dark:text-gray-400 mt-1">
-                {((sim.win_probabilities[sim.runner_up] || 0) * 100).toFixed(1)}%
+                {sim.round_probabilities?.[sim.runner_up]?.final != null
+                  ? `${(sim.round_probabilities[sim.runner_up].final * 100).toFixed(1)}% finale`
+                  : `${((sim.win_probabilities[sim.runner_up] || 0) * 100).toFixed(1)}%`}
               </div>
             </div>
             <div className="text-center md:col-span-2">

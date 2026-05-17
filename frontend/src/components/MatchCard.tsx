@@ -34,7 +34,7 @@ export default function MatchCard({
 
   const { data: prediction, isLoading, isError } = useQuery({
     queryKey: ['prediction', homeTeam, awayTeam],
-    queryFn: () => predictionsApi.predictMatch(homeTeam, awayTeam, !/(groupe|group|poule|phase\s+de)/i.test(stage ?? '')),
+    queryFn: () => predictionsApi.predictMatch(homeTeam, awayTeam, !!stage && !/(groupe|group|poule|phase\s+de)/i.test(stage)),
     enabled: showPrediction && !played,
     retry: 1,
   })

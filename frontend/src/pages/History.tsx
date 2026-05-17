@@ -125,7 +125,7 @@ export default function History() {
               return (
                 <div
                   key={match.id}
-                  className="flex items-center gap-4 bg-gray-700/50 rounded-lg p-4"
+                  className="flex items-center gap-4 bg-gray-100 dark:bg-gray-700/50 rounded-lg p-4"
                 >
                   <div className="flex-shrink-0">
                     {prediction ? (
@@ -176,14 +176,14 @@ export default function History() {
       </div>
 
       {/* Model Info */}
-      <div className="card bg-blue-900/30">
+      <div className="card bg-blue-50 dark:bg-blue-900/30">
         <h3 className="text-lg font-bold mb-3">À propos de nos prédictions</h3>
         <ul className="space-y-2 text-gray-300">
-          <li>- Modèle combinant Random Forest et XGBoost</li>
-          <li>- Critères : classement FIFA, cotes ELO, forme, historique des confrontations</li>
-          <li>- Entraîné sur les matchs historiques de Coupes du Monde et internationaux</li>
-          <li>- Les prédictions se mettent à jour à chaque nouvelle donnée</li>
-          <li>- Précision cible : 50% (base aléatoire : 33%)</li>
+          <li className="text-gray-700 dark:text-gray-300">- Modèle combinant Random Forest et XGBoost</li>
+          <li className="text-gray-700 dark:text-gray-300">- Critères : classement FIFA, cotes ELO, forme, historique des confrontations</li>
+          <li className="text-gray-700 dark:text-gray-300">- Entraîné sur les matchs historiques de Coupes du Monde et internationaux</li>
+          <li className="text-gray-700 dark:text-gray-300">- Les prédictions se mettent à jour à chaque nouvelle donnée</li>
+          <li className="text-gray-700 dark:text-gray-300">- Précision cible : 50% (base aléatoire : 33%)</li>
         </ul>
       </div>
     </div>

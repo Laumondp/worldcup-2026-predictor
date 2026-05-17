@@ -1,5 +1,5 @@
 import { Outlet, Link, useLocation } from 'react-router-dom'
-import { Trophy, BarChart3, Grid3X3, GitBranch, RefreshCw, CheckCircle, XCircle, Award, Eye, Sun, Moon, ExternalLink, ShoppingBag, Calendar as CalendarIcon } from 'lucide-react'
+import { Trophy, BarChart3, Grid3X3, GitBranch, RefreshCw, CheckCircle, XCircle, Award, Eye, Sun, Moon, ShoppingBag, Calendar as CalendarIcon } from 'lucide-react'
 import { useState, useRef, useEffect } from 'react'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { adminApi, statsApi } from '../services/api'
@@ -189,25 +189,26 @@ export default function Layout() {
 
       {/* Mobile nav */}
       <nav className="md:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 z-50 dark:bg-gray-900 dark:border-gray-700">
-        <div className="flex justify-around py-2">
-          {navItems.slice(0, 4).map(({ path, label, icon: Icon }) => (
+        <div className="flex justify-around py-1">
+          {navItems.map(({ path, label, icon: Icon }) => (
             <Link
               key={path}
               to={path}
-              className={`flex flex-col items-center p-2 ${
+              className={`flex flex-col items-center px-1 py-1.5 ${
                 location.pathname === path ? 'text-blue-600 dark:text-blue-400' : 'text-gray-500 dark:text-gray-400'
               }`}
             >
               <Icon className="w-5 h-5" />
-              <span className="text-xs mt-1">{label}</span>
+              <span className="text-[9px] mt-0.5 leading-tight text-center">{label}</span>
             </Link>
           ))}
           {/* Theme toggle mobile */}
           <button
             onClick={toggleTheme}
-            className="flex flex-col items-center p-2 text-gray-500 dark:text-gray-400"
+            className="flex flex-col items-center px-1 py-1.5 text-gray-500 dark:text-gray-400"
           >
             {theme === 'dark' ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
+            <span className="text-[9px] mt-0.5">Thème</span>
           </button>
         </div>
       </nav>

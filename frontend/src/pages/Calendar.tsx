@@ -548,8 +548,13 @@ export default function Calendar() {
                     ? 'grid-cols-1 sm:grid-cols-2'
                     : 'grid-cols-1 sm:grid-cols-2'
                 }`}>
-                  {matches.map((m, idx) => {
-                    const entry = bracketEntries[idx]
+                  {(() => {
+                    // Sort bracket entries by ISO date to align with locally date-sorted matches
+                    const sortedEntries = [...bracketEntries].sort((a, b) =>
+                      (a.date ?? '').localeCompare(b.date ?? '')
+                    )
+                    return matches.map((m, idx) => {
+                    const entry = sortedEntries[idx] ?? null
 
                     let resolvedHome: ResolvedTeam | null = null
                     let resolvedAway: ResolvedTeam | null = null
@@ -571,7 +576,8 @@ export default function Calendar() {
                         <KOMatchCard m={m} resolvedHome={resolvedHome} resolvedAway={resolvedAway} />
                       </div>
                     )
-                  })}
+                  })
+                  })()}
                 </div>
               </div>
             )

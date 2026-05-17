@@ -127,13 +127,13 @@ export default function Teams() {
               <div className="space-y-4">
                 {/* Basic Info */}
                 <div className="grid grid-cols-2 gap-4">
-                  <div className="bg-gray-700/50 rounded-lg p-3 text-center">
+                  <div className="bg-gray-100 dark:bg-gray-700/50 rounded-lg p-3 text-center">
                     <div className="text-2xl font-bold text-blue-400">
                       #{teamDetails.data.fifa_ranking}
                     </div>
                     <div className="text-xs text-gray-400">Classement FIFA</div>
                   </div>
-                  <div className="bg-gray-700/50 rounded-lg p-3 text-center">
+                  <div className="bg-gray-100 dark:bg-gray-700/50 rounded-lg p-3 text-center">
                     <div className="text-2xl font-bold text-green-400">
                       {teamDetails.data.elo_rating.toFixed(0)}
                     </div>
@@ -142,7 +142,7 @@ export default function Teams() {
                 </div>
 
                 {/* Confederation & Group */}
-                <div className="bg-gray-700/50 rounded-lg p-4">
+                <div className="bg-gray-100 dark:bg-gray-700/50 rounded-lg p-4">
                   <div className="flex justify-between">
                     <span className="text-gray-400">Confédération</span>
                     <span className="font-semibold">{teamDetails.data.confederation}</span>
@@ -155,7 +155,7 @@ export default function Teams() {
 
                 {/* Stats */}
                 {teamDetails.data.stats && (
-                  <div className="bg-gray-700/50 rounded-lg p-4">
+                  <div className="bg-gray-100 dark:bg-gray-700/50 rounded-lg p-4">
                     <h3 className="font-semibold mb-3">Statistiques historiques</h3>
                     <div className="space-y-2 text-sm">
                       <div className="flex justify-between">
@@ -186,7 +186,7 @@ export default function Teams() {
 
                 {/* Qualification */}
                 {teamDetails.data.qualification && (
-                  <div className="bg-gray-700/50 rounded-lg p-4">
+                  <div className="bg-gray-100 dark:bg-gray-700/50 rounded-lg p-4">
                     <h3 className="font-semibold mb-3">Statistiques de qualification</h3>
                     <div className="space-y-2 text-sm">
                       <div className="flex justify-between">

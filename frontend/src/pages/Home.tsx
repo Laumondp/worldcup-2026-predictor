@@ -3,7 +3,7 @@ import { useQuery } from '@tanstack/react-query'
 import { Helmet } from 'react-helmet-async'
 import { ChevronDown } from 'lucide-react'
 import { Link } from 'react-router-dom'
-import { matchesApi, predictionsApi, statsApi } from '../services/api'
+import { matchesApi, predictionsApi } from '../services/api'
 import MatchCard from '../components/MatchCard'
 import ShareButtons from '../components/ShareButtons'
 
@@ -99,18 +99,20 @@ export default function Home() {
               <Link to="/predictions" className="text-blue-600 hover:underline dark:text-blue-400">Voir tout</Link>
             </div>
             <div className="grid md:grid-cols-2 gap-4">
-              {upcomingMatches?.data?.slice(0, 4).map((match: any) => (
-                <MatchCard
-                  key={match.id}
-                  homeTeam={match.home_team}
-                  awayTeam={match.away_team}
-                  homeCode={match.home_team}
-                  awayCode={match.away_team}
-                  date={match.date}
-                  stage={match.stage}
-                  city={match.city ?? ''}
-                />
-              )) || (
+              {upcomingMatches?.data?.length ? (
+                upcomingMatches.data.slice(0, 4).map((match: any) => (
+                  <MatchCard
+                    key={match.id}
+                    homeTeam={match.home_team}
+                    awayTeam={match.away_team}
+                    homeCode={match.home_team_code ?? match.home_team}
+                    awayCode={match.away_team_code ?? match.away_team}
+                    date={match.date}
+                    stage={match.stage}
+                    city={match.city ?? ''}
+                  />
+                ))
+              ) : (
                 <div className="col-span-2 card text-center text-gray-500 dark:text-gray-400">
                   Aucun match à venir planifié
                 </div>

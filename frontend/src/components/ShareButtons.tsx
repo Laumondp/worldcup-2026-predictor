@@ -41,7 +41,7 @@ const buttons = [
 ]
 
 export default function ShareButtons({ compact = false }: { compact?: boolean }) {
-  const url = encodeURIComponent('https://worldcup-2026-predictor.vercel.app')
+  const url = encodeURIComponent('https://cm2026-deploy.vercel.app')
   const text = encodeURIComponent('Prédictions IA pour la Coupe du Monde 2026 🏆')
 
   return (
