@@ -96,7 +96,7 @@ export default function Home() {
           <div className="md:col-span-2 space-y-4">
             <div className="flex justify-between items-center">
               <h2 className="text-2xl font-bold">Prochains matchs</h2>
-              <Link to="/predictions" className="text-blue-600 hover:underline dark:text-blue-400">Voir tout</Link>
+              <Link to="/calendar" className="text-blue-600 hover:underline dark:text-blue-400">Voir tout</Link>
             </div>
             <div className="grid md:grid-cols-2 gap-4">
               {upcomingMatches?.data?.length ? (
