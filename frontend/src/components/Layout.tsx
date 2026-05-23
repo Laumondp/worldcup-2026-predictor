@@ -165,16 +165,6 @@ export default function Layout() {
               >
                 <img src="/valeo-logo.png" alt="Valeo" className="h-6 w-auto object-contain" />
               </a>
-              <a
-                href="https://store.fifa.com/fr-fr/collections/new-arrivals"
-                target="_blank"
-                rel="noopener noreferrer"
-                title="Boutique officielle FIFA"
-                className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-medium transition-colors text-gray-600 hover:bg-blue-50 hover:text-blue-700 dark:text-gray-300 dark:hover:bg-blue-900/30 dark:hover:text-blue-300"
-              >
-                <ShoppingBag className="w-4 h-4 shrink-0" />
-                <span>Boutique FIFA</span>
-              </a>
               <button
                 onClick={toggleTheme}
                 title={theme === 'dark' ? 'Mode clair' : 'Mode sombre'}
@@ -222,6 +212,18 @@ export default function Layout() {
       <footer className="border-t border-gray-200 py-6 text-center text-gray-500 dark:border-gray-700 dark:text-gray-400 pb-24 md:pb-6">
         <p>World Cup 2026 Predictor - Powered by Machine Learning</p>
         <p className="text-sm mt-1 text-gray-400 dark:text-gray-500">&copy; 2026 LAUMOND Philippe — Tous droits réservés</p>
+        <div className="mt-3">
+          <a
+            href="https://store.fifa.com/fr-fr/collections/new-arrivals"
+            target="_blank"
+            rel="noopener noreferrer"
+            title="Boutique officielle FIFA"
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-medium transition-colors text-gray-500 hover:bg-blue-50 hover:text-blue-700 dark:text-gray-400 dark:hover:bg-blue-900/30 dark:hover:text-blue-300"
+          >
+            <ShoppingBag className="w-4 h-4 shrink-0" />
+            <span>Boutique FIFA</span>
+          </a>
+        </div>
       </footer>
     </div>
   )
