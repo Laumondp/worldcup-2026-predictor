@@ -11,7 +11,7 @@ const navItems = [
   { path: '/calendar', label: 'Calendrier', icon: CalendarIcon },
   { path: '/groups', label: 'Groupes', icon: Grid3X3 },
   { path: '/bracket', label: 'Tableau', icon: GitBranch },
-  { path: '/rankings', label: 'Classement FIFA', icon: Award },
+  { path: '/rankings', label: 'FIFA', icon: Award },
 ]
 
 type RefreshState = 'idle' | 'loading' | 'success' | 'error'
