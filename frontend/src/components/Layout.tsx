@@ -147,7 +147,7 @@ export default function Layout() {
                     {refreshState === 'loading' ? 'Actualisation…' :
                      refreshState === 'success' ? 'Mis à jour' :
                      refreshState === 'error' ? 'Erreur' :
-                     'Actualiser Stats'}
+                     'Stats'}
                   </span>
                 </button>
 
