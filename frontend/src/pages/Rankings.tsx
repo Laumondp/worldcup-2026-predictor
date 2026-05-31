@@ -73,8 +73,7 @@ export default function Rankings() {
             <h1 className="text-3xl font-bold">Classement FIFA</h1>
             {date && (
               <p className="text-gray-500 text-sm dark:text-gray-400">
-                Données au {date}
-                {isStatic && ' · Classement officiel FIFA'}
+                Mis à jour le {date} · Évolution vs avril 2026
               </p>
             )}
           </div>
@@ -99,18 +98,6 @@ export default function Rankings() {
           </button>
         ))}
       </div>
-
-      {/* Bandeau données statiques */}
-      {isStatic && (
-        <div className="flex items-start gap-3 p-3 rounded-lg bg-amber-50 border border-amber-200 text-sm text-amber-800 dark:bg-amber-900/20 dark:border-amber-700/40 dark:text-amber-300">
-          <span className="text-lg leading-none">⚠️</span>
-          <div>
-            <span className="font-semibold">Classement statique — données du 3 avril 2026.</span>
-            {' '}Les résultats des matchs amicaux ne sont pas reflétés ici car l'API FIFA Rankings n'est pas publique.
-            {nextUpdateNote && <span className="block mt-0.5 text-amber-700 dark:text-amber-400">{nextUpdateNote}</span>}
-          </div>
-        </div>
-      )}
 
       {/* Table */}
       <div className="card overflow-x-auto">
