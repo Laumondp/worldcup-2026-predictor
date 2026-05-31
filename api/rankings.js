@@ -60,14 +60,16 @@ export default function handler(req, res) {
     rank: r.rank,
     name: r.name,
     points: r.pts,
-    previousRank: r.rank,
+    previousRank: r.prevRank ?? r.rank,
     countryCode: r.name,
     confederation: r.conf,
     qualified: qualifiedNames.has(r.name.toLowerCase()),
   }))
   res.json({
-    date: new Date().toISOString(),
+    date: '2026-04-03T00:00:00.000Z',
     dateId: 'static-2026-04',
+    isStatic: true,
+    nextUpdateNote: 'Prochain classement FIFA officiel : ~5 juin 2026',
     count: rankings.length,
     rankings,
   })

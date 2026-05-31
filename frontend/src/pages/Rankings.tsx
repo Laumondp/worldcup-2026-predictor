@@ -17,6 +17,8 @@ interface RankingEntry {
 interface RankingsData {
   date: string
   dateId: string
+  isStatic?: boolean
+  nextUpdateNote?: string
   count: number
   rankings: RankingEntry[]
 }
@@ -45,6 +47,8 @@ export default function Rankings() {
   })
 
   const rankings = data?.data?.rankings ?? []
+  const isStatic = data?.data?.isStatic ?? false
+  const nextUpdateNote = data?.data?.nextUpdateNote
   const date = data?.data?.date
     ? new Date(data.data.date).toLocaleDateString('fr-FR', { day: '2-digit', month: 'long', year: 'numeric' })
     : null
@@ -67,7 +71,12 @@ export default function Rankings() {
           <Award className="w-8 h-8 text-yellow-500 dark:text-yellow-400" />
           <div>
             <h1 className="text-3xl font-bold">Classement FIFA</h1>
-            {date && <p className="text-gray-500 text-sm dark:text-gray-400">Mis à jour le {date}</p>}
+            {date && (
+              <p className="text-gray-500 text-sm dark:text-gray-400">
+                Données au {date}
+                {isStatic && ' · Classement officiel FIFA'}
+              </p>
+            )}
           </div>
         </div>
       </div>
@@ -90,6 +99,18 @@ export default function Rankings() {
           </button>
         ))}
       </div>
+
+      {/* Bandeau données statiques */}
+      {isStatic && (
+        <div className="flex items-start gap-3 p-3 rounded-lg bg-amber-50 border border-amber-200 text-sm text-amber-800 dark:bg-amber-900/20 dark:border-amber-700/40 dark:text-amber-300">
+          <span className="text-lg leading-none">⚠️</span>
+          <div>
+            <span className="font-semibold">Classement statique — données du 3 avril 2026.</span>
+            {' '}Les résultats des matchs amicaux ne sont pas reflétés ici car l'API FIFA Rankings n'est pas publique.
+            {nextUpdateNote && <span className="block mt-0.5 text-amber-700 dark:text-amber-400">{nextUpdateNote}</span>}
+          </div>
+        </div>
+      )}
 
       {/* Table */}
       <div className="card overflow-x-auto">
