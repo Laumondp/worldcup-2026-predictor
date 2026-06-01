@@ -162,28 +162,28 @@ export const matchesApi = {
     api.get('/upcoming', { params: { n } }),
 
   getGroupStandings: () =>
-    api.get<GroupStanding[]>('/matches/groups/standings'),
+    api.get<GroupStanding[]>('/standings'),
 
   getGroupMatches: (group: string) =>
     api.get('/group-matches', { params: { group } }),
 
   getBracket: () =>
-    api.get<KOBracket>('/matches/knockout/bracket'),
+    api.get<KOBracket>('/bracket'),
 }
 
 export const predictionsApi = {
   predictMatch: (homeTeam: string, awayTeam: string, isKnockout: boolean = false) =>
-    api.post<Prediction>('/predictions/match', {
+    api.post<Prediction>('/predict', {
       home_team: homeTeam,
       away_team: awayTeam,
       is_knockout: isKnockout,
     }),
 
   getMatchPrediction: (matchId: number) =>
-    api.get<Prediction>('/predictions/match', { params: { match_id: matchId } }),
+    api.get<Prediction>('/predict', { params: { match_id: matchId } }),
 
   simulateTournament: (numSimulations: number = 1000) =>
-    api.get<TournamentSimulation>('/predictions/simulate-tournament', {
+    api.get<TournamentSimulation>('/simulate', {
       params: { n: numSimulations },
     }),
 
