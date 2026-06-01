@@ -4,7 +4,7 @@ const FIFA_URL =
 
 const NAME_TO_CODE = {
   'Mexique': 'MEX', 'Afrique du Sud': 'RSA', 'Corée du Sud': 'KOR', 'Tchéquie': 'CZE',
-  'Canada': 'CAN', 'Bosnie-Herzégovine': 'BIH', 'Qatar': 'QAT', 'Suisse': 'SUI',
+  'Canada': 'CAN', 'Bosnie-et-Herzégovine': 'BIH', 'Qatar': 'QAT', 'Suisse': 'SUI',
   'Brésil': 'BRA', 'Maroc': 'MAR', 'Haïti': 'HAI', 'Écosse': 'SCO',
   'États-Unis': 'USA', 'Australie': 'AUS', 'Turquie': 'TUR', 'Paraguay': 'PAR',
   'Allemagne': 'GER', "Côte d'Ivoire": 'CIV', 'Équateur': 'ECU', 'Curaçao': 'CUW',
@@ -19,7 +19,7 @@ const NAME_TO_CODE = {
 
 const GROUPS = {
   A: ['Mexique', 'Afrique du Sud', 'Corée du Sud', 'Tchéquie'],
-  B: ['Canada', 'Bosnie-Herzégovine', 'Qatar', 'Suisse'],
+  B: ['Canada', 'Bosnie-et-Herzégovine', 'Qatar', 'Suisse'],
   C: ['Brésil', 'Maroc', 'Haïti', 'Écosse'],
   D: ['États-Unis', 'Australie', 'Turquie', 'Paraguay'],
   E: ['Allemagne', "Côte d'Ivoire", 'Équateur', 'Curaçao'],

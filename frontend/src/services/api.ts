@@ -136,7 +136,7 @@ export const teamsApi = {
     api.get<Team[]>('/teams', { params: { confederation } }),
 
   getByName: (name: string) =>
-    api.get<TeamDetails>('/team', { params: { name } }),
+    api.get<TeamDetails>(`/teams/${encodeURIComponent(name)}`),
 
   getGroup: (group: string) =>
     api.get<Team[]>('/teams', { params: { group } }),
@@ -173,22 +173,22 @@ export const matchesApi = {
 
 export const predictionsApi = {
   predictMatch: (homeTeam: string, awayTeam: string, isKnockout: boolean = false) =>
-    api.post<Prediction>('/predict', {
+    api.post<Prediction>('/predictions/match', {
       home_team: homeTeam,
       away_team: awayTeam,
       is_knockout: isKnockout,
     }),
 
   getMatchPrediction: (matchId: number) =>
-    api.get<Prediction>('/predict', { params: { match_id: matchId } }),
+    api.get<Prediction>('/predictions/match', { params: { match_id: matchId } }),
 
   simulateTournament: (numSimulations: number = 1000) =>
-    api.post<TournamentSimulation>('/simulate', null, {
+    api.get<TournamentSimulation>('/predictions/simulate-tournament', {
       params: { n: numSimulations },
     }),
 
   getAccuracy: () =>
-    api.get('/accuracy'),
+    api.get('/predictions/accuracy'),
 }
 
 export const adminApi = {
