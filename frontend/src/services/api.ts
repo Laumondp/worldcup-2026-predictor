@@ -183,7 +183,7 @@ export const predictionsApi = {
     api.get<Prediction>('/predict', { params: { match_id: matchId } }),
 
   simulateTournament: (numSimulations: number = 1000) =>
-    api.get<TournamentSimulation>('/simulate', {
+    api.post<TournamentSimulation>('/simulate', null, {
       params: { n: numSimulations },
     }),
 
