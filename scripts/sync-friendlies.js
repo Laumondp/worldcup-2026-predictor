@@ -9,36 +9,63 @@ import { dirname, join } from 'path';
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const DATA_FILE = join(__dirname, '../api/_data.js');
 
-// ELO baseline as of 2026-04-01 (before pre-WC international window)
+// ELO baseline as of 2026-04-01 — 48 equipes qualifiees (tirage officiel FIFA)
 const BASE_ELOS = {
-  'USA': 1780, 'France': 1950, 'Poland': 1660, 'Morocco': 1760,
-  'Mexico': 1740, 'Spain': 1940, 'Serbia': 1630, 'Senegal': 1720,
-  'Canada': 1560, 'England': 1920, 'Ukraine': 1670, 'Nigeria': 1590,
-  'Argentina': 2000, 'Germany': 1800, 'Turkey': 1620, 'Cameroon': 1580,
-  'Brazil': 1900, 'Portugal': 1880, 'Japan': 1730, 'Egypt': 1570,
-  'Colombia': 1830, 'Netherlands': 1870, 'South Korea': 1650, 'Algeria': 1575,
-  'Uruguay': 1790, 'Belgium': 1850, 'Australia': 1660, 'Tunisia': 1560,
-  'Ecuador': 1600, 'Italy': 1810, 'Iran': 1700, 'Ivory Coast': 1520,
-  'Paraguay': 1510, 'Croatia': 1750, 'Saudi Arabia': 1480, 'Ghana': 1460,
-  'Switzerland': 1710, 'Qatar': 1530, 'Costa Rica': 1510, 'Venezuela': 1490,
-  'Denmark': 1690, 'Iraq': 1440, 'Panama': 1540, 'Bolivia': 1380,
-  'Austria': 1640, 'UAE': 1420, 'Jamaica': 1500, 'New Zealand': 1320,
+  // Groupe A
+  'Mexico': 1740, 'South Africa': 1460, 'South Korea': 1650, 'Czechia': 1570,
+  // Groupe B
+  'Canada': 1560, 'Bosnia-Herzegovina': 1480, 'Qatar': 1530, 'Switzerland': 1710,
+  // Groupe C
+  'Brazil': 1900, 'Morocco': 1760, 'Haiti': 1380, 'Scotland': 1600,
+  // Groupe D
+  'USA': 1780, 'Paraguay': 1510, 'Australia': 1660, 'Turkey': 1620,
+  // Groupe E
+  'Germany': 1800, 'Curcao': 1380, 'Ivory Coast': 1520, 'Ecuador': 1600,
+  // Groupe F
+  'Netherlands': 1870, 'Japan': 1730, 'Sweden': 1630, 'Tunisia': 1560,
+  // Groupe G
+  'Belgium': 1850, 'Egypt': 1570, 'Iran': 1700, 'New Zealand': 1320,
+  // Groupe H
+  'Spain': 1940, 'Cape Verde': 1450, 'Saudi Arabia': 1480, 'Uruguay': 1790,
+  // Groupe I
+  'France': 1950, 'Senegal': 1720, 'Iraq': 1440, 'Norway': 1640,
+  // Groupe J
+  'Argentina': 2000, 'Algeria': 1575, 'Austria': 1640, 'Jordan': 1380,
+  // Groupe K
+  'Portugal': 1880, 'DR Congo': 1460, 'Uzbekistan': 1490, 'Colombia': 1830,
+  // Groupe L
+  'England': 1920, 'Croatia': 1750, 'Ghana': 1460, 'Panama': 1540,
 };
 
-// CSV team names → our names
+// CSV team names -> our names
 const NAME_MAP = {
-  'United States':       'USA',
-  'Korea Republic':      'South Korea',
-  'IR Iran':             'Iran',
-  "Côte d'Ivoire":       'Ivory Coast',
-  'Cote d\'Ivoire':      'Ivory Coast',
-  'United Arab Emirates':'UAE',
-  'Saudi Arabia':        'Saudi Arabia',
-  'New Zealand':         'New Zealand',
-  'Costa Rica':          'Costa Rica',
-  'South Korea':         'South Korea',
-  'Ivory Coast':         'Ivory Coast',
-  'Bolivia':             'Bolivia',
+  'United States':        'USA',
+  'Korea Republic':       'South Korea',
+  'IR Iran':              'Iran',
+  "Cote d'Ivoire":        'Ivory Coast',
+  'Ivory Coast':          'Ivory Coast',
+  'Saudi Arabia':         'Saudi Arabia',
+  'New Zealand':          'New Zealand',
+  'South Korea':          'South Korea',
+  'Bosnia and Herzegovina': 'Bosnia-Herzegovina',
+  'Bosnia-Herzegovina':   'Bosnia-Herzegovina',
+  'Cape Verde':           'Cape Verde',
+  'Cabo Verde':           'Cape Verde',
+  'DR Congo':             'DR Congo',
+  'Congo DR':             'DR Congo',
+  'Uzbekistan':           'Uzbekistan',
+  'Norway':               'Norway',
+  'Sweden':               'Sweden',
+  'Scotland':             'Scotland',
+  'Haiti':                'Haiti',
+  'Czechia':              'Czechia',
+  'Czech Republic':       'Czechia',
+  'South Africa':         'South Africa',
+  'Jordan':               'Jordan',
+  'Paraguay':             'Paraguay',
+  'Algeria':              'Algeria',
+  'Morocco':              'Morocco',
+  'Ecuador':              'Ecuador',
 };
 
 const WINDOW_START = '2026-04-01';
@@ -46,13 +73,12 @@ const WINDOW_START = '2026-04-01';
 function mapName(n) { return NAME_MAP[n] ?? n; }
 function isWC(n)    { return n in BASE_ELOS; }
 
-// K factor by competition
-// K=30 pour les amicaux pré-CM (fenêtre juin 2026) — reflète mieux la forme réelle
+// K factor by competition — K=30 pour amicaux pre-CM (forme recente tres significative)
 function kFactor(tournament) {
   if (/world cup/i.test(tournament) && !/qualifier/i.test(tournament)) return 60;
   if (/euro |copa america|gold cup|afcon|asian cup|nations cup/i.test(tournament)) return 40;
   if (/nations league/i.test(tournament)) return 30;
-  return 30; // amicaux pré-CM : K=30 (forme récente très significative)
+  return 30; // amicaux pre-CM : K=30
 }
 
 // Goal margin multiplier
@@ -112,7 +138,7 @@ async function main() {
     const tournament = f[idx['tournament']]?.trim() ?? 'Friendly';
 
     if (!date || date < WINDOW_START) continue;
-    if (hScoreRaw === '' || aScoreRaw === '') continue; // not played yet
+    if (hScoreRaw === '' || aScoreRaw === '') continue;
 
     const home = mapName(homeCsv);
     const away = mapName(awayCsv);
@@ -128,12 +154,11 @@ async function main() {
   recent.sort((a, b) => a.date.localeCompare(b.date));
   console.log(`${recent.length} match(es) depuis ${WINDOW_START}`);
   for (const [n, e] of Object.entries(elos)) {
-    if (e !== BASE_ELOS[n]) console.log(`  ${n}: ${BASE_ELOS[n]} → ${e}`);
+    if (e !== BASE_ELOS[n]) console.log(`  ${n}: ${BASE_ELOS[n]} -> ${e}`);
   }
 
   const today = new Date().toISOString().slice(0, 10);
 
-  // Read and patch _data.js
   let src = readFileSync(DATA_FILE, 'utf8');
 
   // Replace RECENT_MATCHES block
@@ -159,15 +184,11 @@ async function main() {
         srcLines[i] = srcLines[i].replace(/elo:\d+/, `elo:${elo}`);
       }
     }
-    // Remove manual ELO comment if present
-    if (/\/\/ ELO post-amicaux/.test(srcLines[i])) {
-      srcLines[i] = '';
-    }
   }
-  src = srcLines.filter((l, i, arr) => !(l === '' && arr[i-1] === '')).join('\n');
+  src = srcLines.join('\n');
 
   writeFileSync(DATA_FILE, src, 'utf8');
-  console.log('api/_data.js mis à jour.');
+  console.log('api/_data.js mis a jour.');
 }
 
 main().catch(e => { console.error(e); process.exit(1); });
