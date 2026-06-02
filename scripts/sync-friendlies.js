@@ -47,11 +47,12 @@ function mapName(n) { return NAME_MAP[n] ?? n; }
 function isWC(n)    { return n in BASE_ELOS; }
 
 // K factor by competition
+// K=30 pour les amicaux pré-CM (fenêtre juin 2026) — reflète mieux la forme réelle
 function kFactor(tournament) {
   if (/world cup/i.test(tournament) && !/qualifier/i.test(tournament)) return 60;
   if (/euro |copa america|gold cup|afcon|asian cup|nations cup/i.test(tournament)) return 40;
   if (/nations league/i.test(tournament)) return 30;
-  return 20;
+  return 30; // amicaux pré-CM : K=30 (forme récente très significative)
 }
 
 // Goal margin multiplier
