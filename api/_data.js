@@ -1,7 +1,18 @@
 // Données statiques WC 2026 partagées entre toutes les fonctions
 
+// ── Matchs amicaux récents (pré-CM2026) ──────────────────────────────────────
+// ELO mis à jour après chaque résultat (K=20 amicaux, K×1.75 si écart ≥ 4 buts)
+export const RECENT_MATCHES = [
+  // Fenêtre juin 2026
+  { date:"2026-05-31", home:"USA",    away:"Senegal", home_score:3, away_score:2, tournament:"Friendly" },
+  { date:"2026-05-31", home:"Brazil", away:"Panama",  home_score:6, away_score:2, tournament:"Friendly" },
+];
+
+export const RECENT_MATCHES_DATE = "2026-06-02";
+
 export const TEAMS = [
-  { name:"USA",          code:"USA", confederation:"CONCACAF", group:"A", fifa_ranking:13, elo:1780 },
+  // ELO post-amicaux juin 2026 : USA +8 (victoire vs SEN), BRA +4 (6-2 vs PAN)
+  { name:"USA",          code:"USA", confederation:"CONCACAF", group:"A", fifa_ranking:13, elo:1788 },
   { name:"France",       code:"FRA", confederation:"UEFA",     group:"A", fifa_ranking:2,  elo:1950 },
   { name:"Poland",       code:"POL", confederation:"UEFA",     group:"A", fifa_ranking:24, elo:1660 },
   { name:"Morocco",      code:"MAR", confederation:"CAF",      group:"A", fifa_ranking:14, elo:1760 },
@@ -9,7 +20,7 @@ export const TEAMS = [
   { name:"Mexico",       code:"MEX", confederation:"CONCACAF", group:"B", fifa_ranking:16, elo:1740 },
   { name:"Spain",        code:"ESP", confederation:"UEFA",     group:"B", fifa_ranking:3,  elo:1940 },
   { name:"Serbia",       code:"SRB", confederation:"UEFA",     group:"B", fifa_ranking:27, elo:1630 },
-  { name:"Senegal",      code:"SEN", confederation:"CAF",      group:"B", fifa_ranking:18, elo:1720 },
+  { name:"Senegal",      code:"SEN", confederation:"CAF",      group:"B", fifa_ranking:18, elo:1712 },
 
   { name:"Canada",       code:"CAN", confederation:"CONCACAF", group:"C", fifa_ranking:40, elo:1560 },
   { name:"England",      code:"ENG", confederation:"UEFA",     group:"C", fifa_ranking:4,  elo:1920 },
@@ -21,7 +32,7 @@ export const TEAMS = [
   { name:"Turkey",       code:"TUR", confederation:"UEFA",     group:"D", fifa_ranking:29, elo:1620 },
   { name:"Cameroon",     code:"CMR", confederation:"CAF",      group:"D", fifa_ranking:34, elo:1580 },
 
-  { name:"Brazil",       code:"BRA", confederation:"CONMEBOL", group:"E", fifa_ranking:5,  elo:1900 },
+  { name:"Brazil",       code:"BRA", confederation:"CONMEBOL", group:"E", fifa_ranking:5,  elo:1904 },
   { name:"Portugal",     code:"POR", confederation:"UEFA",     group:"E", fifa_ranking:6,  elo:1880 },
   { name:"Japan",        code:"JPN", confederation:"AFC",      group:"E", fifa_ranking:17, elo:1730 },
   { name:"Egypt",        code:"EGY", confederation:"CAF",      group:"E", fifa_ranking:37, elo:1570 },
@@ -53,7 +64,7 @@ export const TEAMS = [
 
   { name:"Denmark",      code:"DEN", confederation:"UEFA",     group:"K", fifa_ranking:21, elo:1690 },
   { name:"Iraq",         code:"IRQ", confederation:"AFC",      group:"K", fifa_ranking:63, elo:1440 },
-  { name:"Panama",       code:"PAN", confederation:"CONCACAF", group:"K", fifa_ranking:43, elo:1540 },
+  { name:"Panama",       code:"PAN", confederation:"CONCACAF", group:"K", fifa_ranking:43, elo:1536 },
   { name:"Bolivia",      code:"BOL", confederation:"CONMEBOL", group:"K", fifa_ranking:83, elo:1380 },
 
   { name:"Austria",      code:"AUT", confederation:"UEFA",     group:"L", fifa_ranking:26, elo:1640 },
