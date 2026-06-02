@@ -11,7 +11,6 @@ export const RECENT_MATCHES = [
 export const RECENT_MATCHES_DATE = "2026-06-02";
 
 export const TEAMS = [
-  // ELO post-amicaux juin 2026 : USA +8 (victoire vs SEN), BRA +4 (6-2 vs PAN)
   { name:"USA",          code:"USA", confederation:"CONCACAF", group:"A", fifa_ranking:13, elo:1788 },
   { name:"France",       code:"FRA", confederation:"UEFA",     group:"A", fifa_ranking:2,  elo:1950 },
   { name:"Poland",       code:"POL", confederation:"UEFA",     group:"A", fifa_ranking:24, elo:1660 },
