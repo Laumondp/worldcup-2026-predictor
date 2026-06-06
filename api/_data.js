@@ -40,10 +40,14 @@ export const RECENT_MATCHES = [
   { date:"2026-06-04", home:"Iran", away:"Mali", home_score:2, away_score:0, tournament:"Friendly" },
   { date:"2026-06-04", home:"Mexico", away:"Serbia", home_score:5, away_score:1, tournament:"Friendly" },
   { date:"2026-06-04", home:"Spain", away:"Iraq", home_score:1, away_score:1, tournament:"Friendly" },
-  { date:"2026-06-04", home:"Sweden", away:"Greece", home_score:2, away_score:2, tournament:"Friendly" }
+  { date:"2026-06-04", home:"Sweden", away:"Greece", home_score:2, away_score:2, tournament:"Friendly" },
+  { date:"2026-06-05", home:"Canada", away:"Republic of Ireland", home_score:1, away_score:1, tournament:"Friendly" },
+  { date:"2026-06-05", home:"Haiti", away:"Peru", home_score:1, away_score:2, tournament:"Friendly" },
+  { date:"2026-06-05", home:"Paraguay", away:"Nicaragua", home_score:4, away_score:0, tournament:"Friendly" },
+  { date:"2026-06-05", home:"Puerto Rico", away:"Saudi Arabia", home_score:0, away_score:3, tournament:"Friendly" }
 ];
 
-export const RECENT_MATCHES_DATE = "2026-06-05";
+export const RECENT_MATCHES_DATE = "2026-06-06";
 
 // ── 48 équipes qualifiées — groupes officiels FIFA ────────────────────────────
 // ELO = base avril 2026 + ajustements amicaux 22 mai–1er juin 2026 (K=30)
@@ -55,7 +59,7 @@ export const TEAMS = [
   { name:"Czechia",            code:"CZE", confederation:"UEFA",     group:"A", fifa_ranking:35, elo:1603 },
 
   // ── Groupe B : Canada, Bosnie-Herzégovine, Qatar, Suisse ──────────────────
-  { name:"Canada",             code:"CAN", confederation:"CONCACAF", group:"B", fifa_ranking:40, elo:1578 },
+  { name:"Canada",             code:"CAN", confederation:"CONCACAF", group:"B", fifa_ranking:40, elo:1575 },
   { name:"Bosnia-Herzegovina", code:"BIH", confederation:"UEFA",     group:"B", fifa_ranking:57, elo:1481 },
   { name:"Qatar",              code:"QAT", confederation:"AFC",      group:"B", fifa_ranking:37, elo:1514 },
   { name:"Switzerland",        code:"SUI", confederation:"UEFA",     group:"B", fifa_ranking:19, elo:1717 },
@@ -63,12 +67,12 @@ export const TEAMS = [
   // ── Groupe C : Brésil, Maroc, Haïti, Écosse ──────────────────────────────
   { name:"Brazil",             code:"BRA", confederation:"CONMEBOL", group:"C", fifa_ranking:5,  elo:1906 },
   { name:"Morocco",            code:"MAR", confederation:"CAF",      group:"C", fifa_ranking:14, elo:1779 },
-  { name:"Haiti",              code:"HAI", confederation:"CONCACAF", group:"C", fifa_ranking:83, elo:1402 },
+  { name:"Haiti",              code:"HAI", confederation:"CONCACAF", group:"C", fifa_ranking:83, elo:1391 },
   { name:"Scotland",           code:"SCO", confederation:"UEFA",     group:"C", fifa_ranking:39, elo:1619 },
 
   // ── Groupe D : États-Unis, Paraguay, Australie, Turquie ──────────────────
   { name:"USA",                code:"USA", confederation:"CONCACAF", group:"D", fifa_ranking:13, elo:1792 },
-  { name:"Paraguay",           code:"PAR", confederation:"CONMEBOL", group:"D", fifa_ranking:47, elo:1510 },
+  { name:"Paraguay",           code:"PAR", confederation:"CONMEBOL", group:"D", fifa_ranking:47, elo:1536 },
   { name:"Australia",          code:"AUS", confederation:"AFC",      group:"D", fifa_ranking:23, elo:1649 },
   { name:"Turkey",             code:"TUR", confederation:"UEFA",     group:"D", fifa_ranking:29, elo:1638 },
 
@@ -93,7 +97,7 @@ export const TEAMS = [
   // ── Groupe H : Espagne, Cap-Vert, Arabie saoudite, Uruguay ───────────────
   { name:"Spain",              code:"ESP", confederation:"UEFA",     group:"H", fifa_ranking:3,  elo:1927 },
   { name:"Cape Verde",         code:"CPV", confederation:"CAF",      group:"H", fifa_ranking:71, elo:1480 },
-  { name:"Saudi Arabia",       code:"KSA", confederation:"AFC",      group:"H", fifa_ranking:56, elo:1470 },
+  { name:"Saudi Arabia",       code:"KSA", confederation:"AFC",      group:"H", fifa_ranking:56, elo:1499 },
   { name:"Uruguay",            code:"URU", confederation:"CONMEBOL", group:"H", fifa_ranking:12, elo:1790 },
 
   // ── Groupe I : France, Sénégal, Irak, Norvège ────────────────────────────
