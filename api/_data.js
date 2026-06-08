@@ -57,10 +57,14 @@ export const RECENT_MATCHES = [
   { date:"2026-06-06", home:"Portugal", away:"Chile", home_score:2, away_score:1, tournament:"Friendly" },
   { date:"2026-06-06", home:"Qatar", away:"El Salvador", home_score:0, away_score:0, tournament:"Friendly" },
   { date:"2026-06-06", home:"USA", away:"Germany", home_score:1, away_score:2, tournament:"Friendly" },
-  { date:"2026-06-06", home:"Venezuela", away:"Turkey", home_score:1, away_score:2, tournament:"Friendly" }
+  { date:"2026-06-06", home:"Venezuela", away:"Turkey", home_score:1, away_score:2, tournament:"Friendly" },
+  { date:"2026-06-07", home:"Croatia", away:"Slovenia", home_score:2, away_score:1, tournament:"Friendly" },
+  { date:"2026-06-07", home:"Ecuador", away:"Guatemala", home_score:3, away_score:0, tournament:"Friendly" },
+  { date:"2026-06-07", home:"Jordan", away:"Colombia", home_score:0, away_score:2, tournament:"Friendly" },
+  { date:"2026-06-07", home:"Morocco", away:"Norway", home_score:1, away_score:1, tournament:"Friendly" }
 ];
 
-export const RECENT_MATCHES_DATE = "2026-06-07";
+export const RECENT_MATCHES_DATE = "2026-06-08";
 
 // ── 48 équipes qualifiées — groupes officiels FIFA ────────────────────────────
 // ELO = base avril 2026 + ajustements amicaux 22 mai–1er juin 2026 (K=30)
@@ -79,7 +83,7 @@ export const TEAMS = [
 
   // ── Groupe C : Brésil, Maroc, Haïti, Écosse ──────────────────────────────
   { name:"Brazil",             code:"BRA", confederation:"CONMEBOL", group:"C", fifa_ranking:5,  elo:1910 },
-  { name:"Morocco",            code:"MAR", confederation:"CAF",      group:"C", fifa_ranking:14, elo:1779 },
+  { name:"Morocco",            code:"MAR", confederation:"CAF",      group:"C", fifa_ranking:14, elo:1774 },
   { name:"Haiti",              code:"HAI", confederation:"CONCACAF", group:"C", fifa_ranking:83, elo:1391 },
   { name:"Scotland",           code:"SCO", confederation:"UEFA",     group:"C", fifa_ranking:39, elo:1637 },
 
@@ -93,7 +97,7 @@ export const TEAMS = [
   { name:"Germany",            code:"GER", confederation:"UEFA",     group:"E", fifa_ranking:11, elo:1822 },
   { name:"Curaçao",            code:"CUW", confederation:"CONCACAF", group:"E", fifa_ranking:80, elo:1380 },
   { name:"Ivory Coast",        code:"CIV", confederation:"CAF",      group:"E", fifa_ranking:48, elo:1548 },
-  { name:"Ecuador",            code:"ECU", confederation:"CONMEBOL", group:"E", fifa_ranking:33, elo:1610 },
+  { name:"Ecuador",            code:"ECU", confederation:"CONMEBOL", group:"E", fifa_ranking:33, elo:1628 },
 
   // ── Groupe F : Pays-Bas, Japon, Suède, Tunisie ───────────────────────────
   { name:"Netherlands",        code:"NED", confederation:"UEFA",     group:"F", fifa_ranking:7,  elo:1845 },
@@ -117,23 +121,23 @@ export const TEAMS = [
   { name:"France",             code:"FRA", confederation:"UEFA",     group:"I", fifa_ranking:2,  elo:1922 },
   { name:"Senegal",            code:"SEN", confederation:"CAF",      group:"I", fifa_ranking:18, elo:1708 },
   { name:"Iraq",               code:"IRQ", confederation:"AFC",      group:"I", fifa_ranking:63, elo:1471 },
-  { name:"Norway",             code:"NOR", confederation:"UEFA",     group:"I", fifa_ranking:26, elo:1662 },
+  { name:"Norway",             code:"NOR", confederation:"UEFA",     group:"I", fifa_ranking:26, elo:1667 },
 
   // ── Groupe J : Argentine, Algérie, Autriche, Jordanie ────────────────────
   { name:"Argentina",          code:"ARG", confederation:"CONMEBOL", group:"J", fifa_ranking:1,  elo:2002 },
   { name:"Algeria",            code:"ALG", confederation:"CAF",      group:"J", fifa_ranking:36, elo:1600 },
   { name:"Austria",            code:"AUT", confederation:"UEFA",     group:"J", fifa_ranking:26, elo:1652 },
-  { name:"Jordan",             code:"JOR", confederation:"AFC",      group:"J", fifa_ranking:97, elo:1373 },
+  { name:"Jordan",             code:"JOR", confederation:"AFC",      group:"J", fifa_ranking:97, elo:1370 },
 
   // ── Groupe K : Portugal, RD Congo, Ouzbékistan, Colombie ─────────────────
   { name:"Portugal",           code:"POR", confederation:"UEFA",     group:"K", fifa_ranking:6,  elo:1883 },
   { name:"DR Congo",           code:"COD", confederation:"CAF",      group:"K", fifa_ranking:52, elo:1462 },
   { name:"Uzbekistan",         code:"UZB", confederation:"AFC",      group:"K", fifa_ranking:53, elo:1472 },
-  { name:"Colombia",           code:"COL", confederation:"CONMEBOL", group:"K", fifa_ranking:9,  elo:1836 },
+  { name:"Colombia",           code:"COL", confederation:"CONMEBOL", group:"K", fifa_ranking:9,  elo:1839 },
 
   // ── Groupe L : Angleterre, Croatie, Ghana, Panama ────────────────────────
   { name:"England",            code:"ENG", confederation:"UEFA",     group:"L", fifa_ranking:4,  elo:1921 },
-  { name:"Croatia",            code:"CRO", confederation:"UEFA",     group:"L", fifa_ranking:15, elo:1734 },
+  { name:"Croatia",            code:"CRO", confederation:"UEFA",     group:"L", fifa_ranking:15, elo:1740 },
   { name:"Ghana",              code:"GHA", confederation:"CAF",      group:"L", fifa_ranking:60, elo:1455 },
   { name:"Panama",             code:"PAN", confederation:"CONCACAF", group:"L", fifa_ranking:43, elo:1551 },
 ];
