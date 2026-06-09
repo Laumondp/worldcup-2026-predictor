@@ -61,10 +61,13 @@ export const RECENT_MATCHES = [
   { date:"2026-06-07", home:"Croatia", away:"Slovenia", home_score:2, away_score:1, tournament:"Friendly" },
   { date:"2026-06-07", home:"Ecuador", away:"Guatemala", home_score:3, away_score:0, tournament:"Friendly" },
   { date:"2026-06-07", home:"Jordan", away:"Colombia", home_score:0, away_score:2, tournament:"Friendly" },
-  { date:"2026-06-07", home:"Morocco", away:"Norway", home_score:1, away_score:1, tournament:"Friendly" }
+  { date:"2026-06-07", home:"Morocco", away:"Norway", home_score:1, away_score:1, tournament:"Friendly" },
+  { date:"2026-06-08", home:"France", away:"Northern Ireland", home_score:3, away_score:1, tournament:"Friendly" },
+  { date:"2026-06-08", home:"Netherlands", away:"Uzbekistan", home_score:2, away_score:1, tournament:"Friendly" },
+  { date:"2026-06-08", home:"Peru", away:"Spain", home_score:1, away_score:3, tournament:"Friendly" }
 ];
 
-export const RECENT_MATCHES_DATE = "2026-06-08";
+export const RECENT_MATCHES_DATE = "2026-06-09";
 
 // ── 48 équipes qualifiées — groupes officiels FIFA ────────────────────────────
 // ELO = base avril 2026 + ajustements amicaux 22 mai–1er juin 2026 (K=30)
@@ -100,7 +103,7 @@ export const TEAMS = [
   { name:"Ecuador",            code:"ECU", confederation:"CONMEBOL", group:"E", fifa_ranking:33, elo:1628 },
 
   // ── Groupe F : Pays-Bas, Japon, Suède, Tunisie ───────────────────────────
-  { name:"Netherlands",        code:"NED", confederation:"UEFA",     group:"F", fifa_ranking:7,  elo:1845 },
+  { name:"Netherlands",        code:"NED", confederation:"UEFA",     group:"F", fifa_ranking:7,  elo:1848 },
   { name:"Japan",              code:"JPN", confederation:"AFC",      group:"F", fifa_ranking:17, elo:1736 },
   { name:"Sweden",             code:"SWE", confederation:"UEFA",     group:"F", fifa_ranking:27, elo:1603 },
   { name:"Tunisia",            code:"TUN", confederation:"CAF",      group:"F", fifa_ranking:38, elo:1540 },
@@ -112,13 +115,13 @@ export const TEAMS = [
   { name:"New Zealand",        code:"NZL", confederation:"OFC",      group:"G", fifa_ranking:99, elo:1297 },
 
   // ── Groupe H : Espagne, Cap-Vert, Arabie saoudite, Uruguay ───────────────
-  { name:"Spain",              code:"ESP", confederation:"UEFA",     group:"H", fifa_ranking:3,  elo:1927 },
+  { name:"Spain",              code:"ESP", confederation:"UEFA",     group:"H", fifa_ranking:3,  elo:1931 },
   { name:"Cape Verde",         code:"CPV", confederation:"CAF",      group:"H", fifa_ranking:71, elo:1455 },
   { name:"Saudi Arabia",       code:"KSA", confederation:"AFC",      group:"H", fifa_ranking:56, elo:1499 },
   { name:"Uruguay",            code:"URU", confederation:"CONMEBOL", group:"H", fifa_ranking:12, elo:1790 },
 
   // ── Groupe I : France, Sénégal, Irak, Norvège ────────────────────────────
-  { name:"France",             code:"FRA", confederation:"UEFA",     group:"I", fifa_ranking:2,  elo:1922 },
+  { name:"France",             code:"FRA", confederation:"UEFA",     group:"I", fifa_ranking:2,  elo:1926 },
   { name:"Senegal",            code:"SEN", confederation:"CAF",      group:"I", fifa_ranking:18, elo:1708 },
   { name:"Iraq",               code:"IRQ", confederation:"AFC",      group:"I", fifa_ranking:63, elo:1471 },
   { name:"Norway",             code:"NOR", confederation:"UEFA",     group:"I", fifa_ranking:26, elo:1667 },
@@ -132,7 +135,7 @@ export const TEAMS = [
   // ── Groupe K : Portugal, RD Congo, Ouzbékistan, Colombie ─────────────────
   { name:"Portugal",           code:"POR", confederation:"UEFA",     group:"K", fifa_ranking:6,  elo:1883 },
   { name:"DR Congo",           code:"COD", confederation:"CAF",      group:"K", fifa_ranking:52, elo:1462 },
-  { name:"Uzbekistan",         code:"UZB", confederation:"AFC",      group:"K", fifa_ranking:53, elo:1472 },
+  { name:"Uzbekistan",         code:"UZB", confederation:"AFC",      group:"K", fifa_ranking:53, elo:1469 },
   { name:"Colombia",           code:"COL", confederation:"CONMEBOL", group:"K", fifa_ranking:9,  elo:1839 },
 
   // ── Groupe L : Angleterre, Croatie, Ghana, Panama ────────────────────────
