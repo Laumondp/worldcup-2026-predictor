@@ -18,6 +18,7 @@ interface RankingsData {
   date: string
   dateId: string
   isStatic?: boolean
+  source?: 'fifa-live' | 'fifa-schedule' | 'fallback'
   nextUpdateNote?: string
   count: number
   rankings: RankingEntry[]
@@ -48,6 +49,8 @@ export default function Rankings() {
 
   const rankings = data?.data?.rankings ?? []
   const isStatic = data?.data?.isStatic ?? false
+  const source = data?.data?.source
+  const isLive = source === 'fifa-live'
   const nextUpdateNote = data?.data?.nextUpdateNote
   const date = data?.data?.date
     ? new Date(data.data.date).toLocaleDateString('fr-FR', { day: '2-digit', month: 'long', year: 'numeric' })
@@ -70,12 +73,26 @@ export default function Rankings() {
         <div className="flex items-center gap-3">
           <Award className="w-8 h-8 text-yellow-500 dark:text-yellow-400" />
           <div>
-            <h1 className="text-3xl font-bold">Classement FIFA</h1>
-            {date && (
-              <p className="text-gray-500 text-sm dark:text-gray-400">
-                Mis à jour le {date} · Évolution vs avril 2026
-              </p>
-            )}
+            <div className="flex items-center gap-2">
+              <h1 className="text-3xl font-bold">Classement FIFA</h1>
+              {isLive && (
+                <span className="text-xs font-semibold px-2 py-0.5 rounded-full bg-green-100 text-green-700 dark:bg-green-900/50 dark:text-green-400 animate-pulse">
+                  EN DIRECT
+                </span>
+              )}
+              {isStatic && (
+                <span className="text-xs font-semibold px-2 py-0.5 rounded-full bg-orange-100 text-orange-700 dark:bg-orange-900/50 dark:text-orange-400">
+                  HORS LIGNE
+                </span>
+              )}
+            </div>
+            <p className="text-gray-500 text-sm dark:text-gray-400">
+              {isLive
+                ? `Mis à jour en temps réel · inclut matchs amicaux · source FIFA officielle`
+                : date
+                  ? `Snapshot officiel avril 2026 · Évolution vs classement précédent`
+                  : `Source: FIFA`}
+            </p>
           </div>
         </div>
       </div>
