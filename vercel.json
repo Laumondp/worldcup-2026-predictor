@@ -5,6 +5,14 @@
   "functions": {
     "api/**/*.js": {}
   },
+  "headers": [
+    {
+      "source": "/api/rankings",
+      "headers": [
+        { "key": "Cache-Control", "value": "no-store, no-cache, must-revalidate" }
+      ]
+    }
+  ],
   "rewrites": [
     { "source": "/((?!api/).*)", "destination": "/index.html" }
   ]

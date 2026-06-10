@@ -166,21 +166,7 @@ export default async function handler(req, res) {
     })
   } catch (_) {}
 
-  // 2. Try official schedule snapshot (avril 2026)
-  try {
-    const arr = await fetchFifa(FIFA_SCHEDULE_URL)
-    const rankings = arr.map(mapFifaEntry)
-    return res.json({
-      date: '2026-04-01T00:00:00.000Z',
-      dateId: 'FRS_Male_Football_20260119',
-      isStatic: false,
-      source: 'fifa-schedule',
-      count: rankings.length,
-      rankings,
-    })
-  } catch (_) {}
-
-  // 3. Fallback statique
+  // 2. Fallback statique — classement live juin 2026 (Argentina #1)
   const rankings = RANKINGS_FALLBACK.map(r => ({
     rank:          r.rank,
     name:          r.name,
@@ -190,10 +176,9 @@ export default async function handler(req, res) {
     confederation: r.conf,
     qualified:     isQualified(r.name),
   }))
-  res.setHeader('Cache-Control', 's-maxage=3600, stale-while-revalidate')
   res.json({
-    date: '2026-04-01T00:00:00.000Z',
-    dateId: 'FRS_Male_Football_20260119',
+    date: '2026-06-10T00:00:00.000Z',
+    dateId: 'live-fallback-2026-06',
     isStatic: true,
     source: 'fallback',
     count: rankings.length,
