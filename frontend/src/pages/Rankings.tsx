@@ -43,7 +43,7 @@ export default function Rankings() {
 
   const { data, isLoading, refetch, isFetching } = useQuery({
     queryKey: ['rankings'],
-    queryFn: () => axios.get<RankingsData>('/api/rankings-v2'),
+    queryFn: () => axios.get<RankingsData>('/api/rankings'),
     staleTime: 0,
     refetchOnMount: true,
     refetchOnWindowFocus: false,

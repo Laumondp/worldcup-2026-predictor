@@ -11,66 +11,66 @@ function getRedis() {
 }
 
 const TEAMS = [
-  // GROUPE A
-  { name:"Mexico",             code:"MEX", confederation:"CONCACAF", group:"A", fifa_ranking:16, elo:1740 },
-  { name:"South Africa",       code:"RSA", confederation:"CAF",      group:"A", fifa_ranking:55, elo:1470 },
-  { name:"South Korea",        code:"KOR", confederation:"AFC",      group:"A", fifa_ranking:22, elo:1680 },
-  { name:"Czechia",            code:"CZE", confederation:"UEFA",     group:"A", fifa_ranking:37, elo:1570 },
+  // GROUPE A — classement FIFA live 10/06/2026
+  { name:"Mexico",             code:"MEX", confederation:"CONCACAF", group:"A", fifa_ranking:14, elo:1768 },
+  { name:"South Africa",       code:"RSA", confederation:"CAF",      group:"A", fifa_ranking:60, elo:1479 },
+  { name:"South Korea",        code:"KOR", confederation:"AFC",      group:"A", fifa_ranking:25, elo:1674 },
+  { name:"Czechia",            code:"CZE", confederation:"UEFA",     group:"A", fifa_ranking:40, elo:1603 },
   // GROUPE B
-  { name:"Canada",             code:"CAN", confederation:"CONCACAF", group:"B", fifa_ranking:40, elo:1560 },
-  { name:"Switzerland",        code:"SUI", confederation:"UEFA",     group:"B", fifa_ranking:19, elo:1710 },
-  { name:"Qatar",              code:"QAT", confederation:"AFC",      group:"B", fifa_ranking:62, elo:1450 },
-  { name:"Bosnia-Herzegovina", code:"BIH", confederation:"UEFA",     group:"B", fifa_ranking:65, elo:1490 },
+  { name:"Canada",             code:"CAN", confederation:"CONCACAF", group:"B", fifa_ranking:30, elo:1575 },
+  { name:"Switzerland",        code:"SUI", confederation:"UEFA",     group:"B", fifa_ranking:19, elo:1714 },
+  { name:"Qatar",              code:"QAT", confederation:"AFC",      group:"B", fifa_ranking:56, elo:1513 },
+  { name:"Bosnia-Herzegovina", code:"BIH", confederation:"UEFA",     group:"B", fifa_ranking:64, elo:1484 },
   // GROUPE C
-  { name:"Brazil",             code:"BRA", confederation:"CONMEBOL", group:"C", fifa_ranking:5,  elo:1900 },
-  { name:"Morocco",            code:"MAR", confederation:"CAF",      group:"C", fifa_ranking:14, elo:1760 },
-  { name:"Haiti",              code:"HAI", confederation:"CONCACAF", group:"C", fifa_ranking:90, elo:1340 },
-  { name:"Scotland",           code:"SCO", confederation:"UEFA",     group:"C", fifa_ranking:28, elo:1630 },
+  { name:"Brazil",             code:"BRA", confederation:"CONMEBOL", group:"C", fifa_ranking:6,  elo:1910 },
+  { name:"Morocco",            code:"MAR", confederation:"CAF",      group:"C", fifa_ranking:7,  elo:1774 },
+  { name:"Haiti",              code:"HAI", confederation:"CONCACAF", group:"C", fifa_ranking:83, elo:1391 },
+  { name:"Scotland",           code:"SCO", confederation:"UEFA",     group:"C", fifa_ranking:42, elo:1637 },
   // GROUPE D
-  { name:"USA",                code:"USA", confederation:"CONCACAF", group:"D", fifa_ranking:13, elo:1780 },
-  { name:"Paraguay",           code:"PAR", confederation:"CONMEBOL", group:"D", fifa_ranking:47, elo:1510 },
-  { name:"Australia",          code:"AUS", confederation:"AFC",      group:"D", fifa_ranking:23, elo:1660 },
-  { name:"Turkey",             code:"TUR", confederation:"UEFA",     group:"D", fifa_ranking:29, elo:1620 },
+  { name:"USA",                code:"USA", confederation:"CONCACAF", group:"D", fifa_ranking:17, elo:1778 },
+  { name:"Paraguay",           code:"PAR", confederation:"CONMEBOL", group:"D", fifa_ranking:41, elo:1536 },
+  { name:"Australia",          code:"AUS", confederation:"AFC",      group:"D", fifa_ranking:27, elo:1652 },
+  { name:"Turkey",             code:"TUR", confederation:"UEFA",     group:"D", fifa_ranking:22, elo:1647 },
   // GROUPE E
-  { name:"Germany",            code:"GER", confederation:"UEFA",     group:"E", fifa_ranking:10, elo:1810 },
-  { name:"Curaçao",            code:"CUW", confederation:"CONCACAF", group:"E", fifa_ranking:81, elo:1370 },
-  { name:"Ivory Coast",        code:"CIV", confederation:"CAF",      group:"E", fifa_ranking:48, elo:1520 },
-  { name:"Ecuador",            code:"ECU", confederation:"CONMEBOL", group:"E", fifa_ranking:33, elo:1600 },
+  { name:"Germany",            code:"GER", confederation:"UEFA",     group:"E", fifa_ranking:10, elo:1822 },
+  { name:"Curaçao",            code:"CUW", confederation:"CONCACAF", group:"E", fifa_ranking:82, elo:1380 },
+  { name:"Ivory Coast",        code:"CIV", confederation:"CAF",      group:"E", fifa_ranking:33, elo:1548 },
+  { name:"Ecuador",            code:"ECU", confederation:"CONMEBOL", group:"E", fifa_ranking:23, elo:1628 },
   // GROUPE F
-  { name:"Netherlands",        code:"NED", confederation:"UEFA",     group:"F", fifa_ranking:7,  elo:1870 },
-  { name:"Japan",              code:"JPN", confederation:"AFC",      group:"F", fifa_ranking:17, elo:1730 },
-  { name:"Tunisia",            code:"TUN", confederation:"CAF",      group:"F", fifa_ranking:38, elo:1560 },
-  { name:"Sweden",             code:"SWE", confederation:"UEFA",     group:"F", fifa_ranking:32, elo:1605 },
+  { name:"Netherlands",        code:"NED", confederation:"UEFA",     group:"F", fifa_ranking:8,  elo:1848 },
+  { name:"Japan",              code:"JPN", confederation:"AFC",      group:"F", fifa_ranking:18, elo:1736 },
+  { name:"Tunisia",            code:"TUN", confederation:"CAF",      group:"F", fifa_ranking:45, elo:1540 },
+  { name:"Sweden",             code:"SWE", confederation:"UEFA",     group:"F", fifa_ranking:38, elo:1603 },
   // GROUPE G
-  { name:"Belgium",            code:"BEL", confederation:"UEFA",     group:"G", fifa_ranking:8,  elo:1850 },
-  { name:"Egypt",              code:"EGY", confederation:"CAF",      group:"G", fifa_ranking:37, elo:1570 },
-  { name:"Iran",               code:"IRN", confederation:"AFC",      group:"G", fifa_ranking:20, elo:1700 },
-  { name:"New Zealand",        code:"NZL", confederation:"OFC",      group:"G", fifa_ranking:99, elo:1320 },
+  { name:"Belgium",            code:"BEL", confederation:"UEFA",     group:"G", fifa_ranking:9,  elo:1874 },
+  { name:"Egypt",              code:"EGY", confederation:"CAF",      group:"G", fifa_ranking:29, elo:1578 },
+  { name:"Iran",               code:"IRN", confederation:"AFC",      group:"G", fifa_ranking:20, elo:1721 },
+  { name:"New Zealand",        code:"NZL", confederation:"OFC",      group:"G", fifa_ranking:85, elo:1297 },
   // GROUPE H
-  { name:"Spain",              code:"ESP", confederation:"UEFA",     group:"H", fifa_ranking:2,  elo:1940 },
-  { name:"Cape Verde",         code:"CPV", confederation:"CAF",      group:"H", fifa_ranking:62, elo:1450 },
-  { name:"Saudi Arabia",       code:"KSA", confederation:"AFC",      group:"H", fifa_ranking:56, elo:1480 },
-  { name:"Uruguay",            code:"URU", confederation:"CONMEBOL", group:"H", fifa_ranking:12, elo:1790 },
+  { name:"Spain",              code:"ESP", confederation:"UEFA",     group:"H", fifa_ranking:2,  elo:1931 },
+  { name:"Cape Verde",         code:"CPV", confederation:"CAF",      group:"H", fifa_ranking:67, elo:1455 },
+  { name:"Saudi Arabia",       code:"KSA", confederation:"AFC",      group:"H", fifa_ranking:61, elo:1507 },
+  { name:"Uruguay",            code:"URU", confederation:"CONMEBOL", group:"H", fifa_ranking:16, elo:1790 },
   // GROUPE I
-  { name:"France",             code:"FRA", confederation:"UEFA",     group:"I", fifa_ranking:1,  elo:1960 },
-  { name:"Senegal",            code:"SEN", confederation:"CAF",      group:"I", fifa_ranking:18, elo:1720 },
-  { name:"Norway",             code:"NOR", confederation:"UEFA",     group:"I", fifa_ranking:33, elo:1595 },
-  { name:"Iraq",               code:"IRQ", confederation:"AFC",      group:"I", fifa_ranking:63, elo:1440 },
+  { name:"France",             code:"FRA", confederation:"UEFA",     group:"I", fifa_ranking:3,  elo:1926 },
+  { name:"Senegal",            code:"SEN", confederation:"CAF",      group:"I", fifa_ranking:15, elo:1700 },
+  { name:"Norway",             code:"NOR", confederation:"UEFA",     group:"I", fifa_ranking:31, elo:1667 },
+  { name:"Iraq",               code:"IRQ", confederation:"AFC",      group:"I", fifa_ranking:57, elo:1450 },
   // GROUPE J
-  { name:"Argentina",          code:"ARG", confederation:"CONMEBOL", group:"J", fifa_ranking:3,  elo:2000 },
-  { name:"Algeria",            code:"ALG", confederation:"CAF",      group:"J", fifa_ranking:36, elo:1575 },
-  { name:"Austria",            code:"AUT", confederation:"UEFA",     group:"J", fifa_ranking:26, elo:1640 },
-  { name:"Jordan",             code:"JOR", confederation:"AFC",      group:"J", fifa_ranking:73, elo:1445 },
+  { name:"Argentina",          code:"ARG", confederation:"CONMEBOL", group:"J", fifa_ranking:1,  elo:2005 },
+  { name:"Algeria",            code:"ALG", confederation:"CAF",      group:"J", fifa_ranking:28, elo:1600 },
+  { name:"Austria",            code:"AUT", confederation:"UEFA",     group:"J", fifa_ranking:24, elo:1652 },
+  { name:"Jordan",             code:"JOR", confederation:"AFC",      group:"J", fifa_ranking:63, elo:1370 },
   // GROUPE K
-  { name:"Portugal",           code:"POR", confederation:"UEFA",     group:"K", fifa_ranking:6,  elo:1880 },
-  { name:"Uzbekistan",         code:"UZB", confederation:"AFC",      group:"K", fifa_ranking:71, elo:1450 },
-  { name:"Colombia",           code:"COL", confederation:"CONMEBOL", group:"K", fifa_ranking:9,  elo:1830 },
-  { name:"DR Congo",           code:"COD", confederation:"CAF",      group:"K", fifa_ranking:62, elo:1450 },
+  { name:"Portugal",           code:"POR", confederation:"UEFA",     group:"K", fifa_ranking:5,  elo:1883 },
+  { name:"Uzbekistan",         code:"UZB", confederation:"AFC",      group:"K", fifa_ranking:50, elo:1469 },
+  { name:"Colombia",           code:"COL", confederation:"CONMEBOL", group:"K", fifa_ranking:13, elo:1839 },
+  { name:"DR Congo",           code:"COD", confederation:"CAF",      group:"K", fifa_ranking:46, elo:1449 },
   // GROUPE L
-  { name:"England",            code:"ENG", confederation:"UEFA",     group:"L", fifa_ranking:4,  elo:1920 },
-  { name:"Croatia",            code:"CRO", confederation:"UEFA",     group:"L", fifa_ranking:15, elo:1750 },
-  { name:"Ghana",              code:"GHA", confederation:"CAF",      group:"L", fifa_ranking:60, elo:1460 },
-  { name:"Panama",             code:"PAN", confederation:"CONCACAF", group:"L", fifa_ranking:43, elo:1540 },
+  { name:"England",            code:"ENG", confederation:"UEFA",     group:"L", fifa_ranking:4,  elo:1921 },
+  { name:"Croatia",            code:"CRO", confederation:"UEFA",     group:"L", fifa_ranking:11, elo:1740 },
+  { name:"Ghana",              code:"GHA", confederation:"CAF",      group:"L", fifa_ranking:73, elo:1455 },
+  { name:"Panama",             code:"PAN", confederation:"CONCACAF", group:"L", fifa_ranking:33, elo:1551 },
 ];
 
 function getTeam(name) {
@@ -270,22 +270,80 @@ function simulateOnce() {
 const FIFA_HEADERS = { 'User-Agent': 'Mozilla/5.0', Accept: 'application/json' };
 const desc = lst => Array.isArray(lst) && lst[0] ? lst[0].Description||'' : '';
 
-// Corrections manuelles avril 2026 (France #1) — FIFA API bloquée à sept. 2025
-const RANKING_OVERRIDES = {
-  'FRA': { rank: 1, points: 1877.32 },
-  'ESP': { rank: 2, points: 1876.40 },
-  'ARG': { rank: 3, points: 1862.15 },
-  'ENG': { rank: 4, points: 1821.68 },
-  'BRA': { rank: 5, points: 1815.43 },
-  'POR': { rank: 6, points: 1798.22 },
-  'NED': { rank: 7, points: 1789.54 },
-  'BEL': { rank: 8, points: 1775.31 },
-  'COL': { rank: 9, points: 1762.88 },
-  'GER': { rank: 10, points: 1751.24 },
+function normConf(name) {
+  if (!name) return '';
+  const u = name.toUpperCase();
+  if (u.includes('UEFA'))     return 'UEFA';
+  if (u.includes('CONMEBOL')) return 'CONMEBOL';
+  if (u.includes('CONCACAF')) return 'CONCACAF';
+  if (u.includes('CAF'))      return 'CAF';
+  if (u.includes('AFC'))      return 'AFC';
+  if (u.includes('OFC'))      return 'OFC';
+  return name;
+}
+
+// Classement FIFA live 10/06/2026 (Argentine #1) — source: inside.fifa.com
+const RANKING_OVERRIDES_2026_06 = {
+  'ARG': { rank:1,  pts:1877.27 }, 'ESP': { rank:2,  pts:1874.71 },
+  'FRA': { rank:3,  pts:1870.70 }, 'ENG': { rank:4,  pts:1827.05 },
+  'POR': { rank:5,  pts:1766.18 }, 'BRA': { rank:6,  pts:1765.86 },
+  'MAR': { rank:7,  pts:1755.10 }, 'NED': { rank:8,  pts:1753.57 },
+  'BEL': { rank:9,  pts:1742.24 }, 'GER': { rank:10, pts:1735.77 },
+  'CRO': { rank:11, pts:1714.87 }, 'COL': { rank:13, pts:1698.35 },
+  'MEX': { rank:14, pts:1687.48 }, 'SEN': { rank:15, pts:1684.07 },
+  'URU': { rank:16, pts:1673.07 }, 'USA': { rank:17, pts:1671.23 },
+  'JPN': { rank:18, pts:1661.58 }, 'SUI': { rank:19, pts:1650.06 },
+  'IRN': { rank:20, pts:1619.58 }, 'TUR': { rank:22, pts:1605.73 },
+  'ECU': { rank:23, pts:1598.52 }, 'AUT': { rank:24, pts:1597.40 },
+  'KOR': { rank:25, pts:1591.63 }, 'AUS': { rank:27, pts:1579.34 },
+  'ALG': { rank:28, pts:1571.03 }, 'EGY': { rank:29, pts:1562.37 },
+  'CAN': { rank:30, pts:1559.48 }, 'NOR': { rank:31, pts:1557.44 },
+  'CIV': { rank:33, pts:1540.87 }, 'PAN': { rank:34, pts:1539.16 },
+  'SWE': { rank:38, pts:1509.79 }, 'CZE': { rank:40, pts:1505.74 },
+  'PAR': { rank:41, pts:1505.35 }, 'SCO': { rank:42, pts:1503.34 },
+  'CMR': { rank:44, pts:1481.24 }, 'TUN': { rank:45, pts:1476.41 },
+  'COD': { rank:46, pts:1474.43 }, 'UZB': { rank:50, pts:1458.73 },
+  'QAT': { rank:56, pts:1450.31 }, 'IRQ': { rank:57, pts:1446.28 },
+  'RSA': { rank:60, pts:1428.38 }, 'KSA': { rank:61, pts:1423.88 },
+  'JOR': { rank:63, pts:1387.74 }, 'BIH': { rank:64, pts:1387.22 },
+  'CPV': { rank:67, pts:1371.11 }, 'GHA': { rank:73, pts:1346.88 },
+  'CUW': { rank:82, pts:1294.77 }, 'HAI': { rank:83, pts:1293.10 },
+  'NZL': { rank:85, pts:1275.58 },
 };
 
+const FIFA_LIVE_RANKING_URL =
+  'https://inside.fifa.com/api/live-world-ranking/get-rankings' +
+  '?mode=live&gender=1&locale=en&rankingType=football&count=211';
+
 async function fetchFifaRankings() {
-  // id14870 = Sept 18 2025 (plus récent disponible via inside.fifa.com)
+  // 1. API live FIFA (inclut les amicaux du jour)
+  try {
+    const ctrl = new AbortController();
+    const timer = setTimeout(() => ctrl.abort(), 8000);
+    try {
+      const r = await fetch(FIFA_LIVE_RANKING_URL, {
+        headers: { 'User-Agent': 'Mozilla/5.0', Accept: 'application/json', Referer: 'https://inside.fifa.com/fifa-world-ranking/men' },
+        signal: ctrl.signal,
+      });
+      if (r.ok) {
+        const data = await r.json();
+        const arr = Array.isArray(data) ? data : (data.rankings || data.items || data.data || []);
+        if (arr.length > 0) {
+          const rankings = arr.map(e => ({
+            rank: e.rank,
+            name: e.teamName || e.name,
+            points: e.totalPoints ?? e.points ?? 0,
+            previousRank: e.previousRank ?? e.rank,
+            countryCode: e.countryCode,
+            confederation: normConf(e.confederationName || e.confederation || ''),
+          }));
+          return { dateId: 'live', date: new Date().toISOString(), source: 'fifa-live', isStatic: false, rankings };
+        }
+      }
+    } finally { clearTimeout(timer); }
+  } catch {}
+
+  // 2. ranking-overview API avec corrections juin 2026
   const dateIds = ['id14870', 'id14800'];
   for (const dateId of dateIds) {
     try {
@@ -294,23 +352,21 @@ async function fetchFifaRankings() {
       });
       const data = await r.json();
       if (data.rankings && data.rankings.length > 0) {
-        // Appliquer les corrections avril 2026 sur les rangs connus
-        let rankings = data.rankings.map(r => {
-          const code = (r.rankingItem?.countryCode || '').toUpperCase();
-          const ov = RANKING_OVERRIDES[code];
+        let rankings = data.rankings.map(e => {
+          const code = (e.rankingItem?.countryCode || '').toUpperCase();
+          const ov = RANKING_OVERRIDES_2026_06[code];
           return {
-            rank: ov ? ov.rank : r.rankingItem?.rank,
-            name: r.rankingItem?.name,
-            points: ov ? ov.points : r.rankingItem?.totalPoints,
-            previousRank: r.rankingItem?.previousRank,
-            countryCode: r.rankingItem?.countryCode,
-            confederation: r.tag?.id || '',
+            rank: e.rankingItem?.rank,
+            name: e.rankingItem?.name,
+            points: ov ? ov.pts : e.rankingItem?.totalPoints,
+            previousRank: e.rankingItem?.previousRank,
+            countryCode: e.rankingItem?.countryCode,
+            confederation: normConf(e.tag?.id || ''),
           };
         });
-        // Re-trier par points décroissants et renuméroter
         rankings.sort((a, b) => b.points - a.points);
-        rankings = rankings.map((r, i) => ({ ...r, rank: i + 1 }));
-        return { dateId: 'updated-2026-04', date: '2026-04-22T00:00:00+00:00', rankings };
+        rankings = rankings.map((e, i) => ({ ...e, rank: i + 1 }));
+        return { dateId: 'live-2026-06-10', date: '2026-06-10T20:00:00+00:00', source: 'fallback', isStatic: true, rankings };
       }
     } catch { continue; }
   }
@@ -724,14 +780,13 @@ export default async function handler(req, res) {
   if (route === 'rankings') {
     const data = await fetchFifaRankings();
     if (!data) return res.status(503).json({ error: 'Rankings unavailable' });
-    // Enrich with WC qualification info
     const wcCodes = new Set(TEAMS.map(t => t.code));
     const wcNames = new Set(TEAMS.map(t => normName(t.name)));
     const enriched = data.rankings.map(r => ({
       ...r,
       qualified: wcCodes.has((r.countryCode||'').toUpperCase()) || wcNames.has(normName(r.name||'')),
     }));
-    return res.json({ date: data.date, dateId: data.dateId, count: enriched.length, rankings: enriched });
+    return res.json({ date: data.date, dateId: data.dateId, source: data.source, isStatic: data.isStatic, count: enriched.length, rankings: enriched });
   }
 
   // GET /api/fixtures — FIFA live fixtures
