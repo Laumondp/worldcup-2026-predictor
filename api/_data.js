@@ -64,10 +64,14 @@ export const RECENT_MATCHES = [
   { date:"2026-06-07", home:"Morocco", away:"Norway", home_score:1, away_score:1, tournament:"Friendly" },
   { date:"2026-06-08", home:"France", away:"Northern Ireland", home_score:3, away_score:1, tournament:"Friendly" },
   { date:"2026-06-08", home:"Netherlands", away:"Uzbekistan", home_score:2, away_score:1, tournament:"Friendly" },
-  { date:"2026-06-08", home:"Peru", away:"Spain", home_score:1, away_score:3, tournament:"Friendly" }
+  { date:"2026-06-08", home:"Peru", away:"Spain", home_score:1, away_score:3, tournament:"Friendly" },
+  { date:"2026-06-09", home:"Argentina", away:"Iceland", home_score:3, away_score:0, tournament:"Friendly" },
+  { date:"2026-06-09", home:"DR Congo", away:"Chile", home_score:1, away_score:2, tournament:"Friendly" },
+  { date:"2026-06-09", home:"Saudi Arabia", away:"Senegal", home_score:0, away_score:0, tournament:"Friendly" },
+  { date:"2026-06-09", home:"Iraq", away:"Venezuela", home_score:0, away_score:2, tournament:"Friendly" }
 ];
 
-export const RECENT_MATCHES_DATE = "2026-06-09";
+export const RECENT_MATCHES_DATE = "2026-06-10";
 
 // ── 48 équipes qualifiées — groupes officiels FIFA ────────────────────────────
 // ELO = base avril 2026 + ajustements amicaux 22 mai–1er juin 2026 (K=30)
@@ -117,24 +121,24 @@ export const TEAMS = [
   // ── Groupe H : Espagne, Cap-Vert, Arabie saoudite, Uruguay ───────────────
   { name:"Spain",              code:"ESP", confederation:"UEFA",     group:"H", fifa_ranking:3,  elo:1931 },
   { name:"Cape Verde",         code:"CPV", confederation:"CAF",      group:"H", fifa_ranking:71, elo:1455 },
-  { name:"Saudi Arabia",       code:"KSA", confederation:"AFC",      group:"H", fifa_ranking:56, elo:1499 },
+  { name:"Saudi Arabia",       code:"KSA", confederation:"AFC",      group:"H", fifa_ranking:56, elo:1507 },
   { name:"Uruguay",            code:"URU", confederation:"CONMEBOL", group:"H", fifa_ranking:12, elo:1790 },
 
   // ── Groupe I : France, Sénégal, Irak, Norvège ────────────────────────────
   { name:"France",             code:"FRA", confederation:"UEFA",     group:"I", fifa_ranking:2,  elo:1926 },
-  { name:"Senegal",            code:"SEN", confederation:"CAF",      group:"I", fifa_ranking:18, elo:1708 },
-  { name:"Iraq",               code:"IRQ", confederation:"AFC",      group:"I", fifa_ranking:63, elo:1471 },
+  { name:"Senegal",            code:"SEN", confederation:"CAF",      group:"I", fifa_ranking:18, elo:1700 },
+  { name:"Iraq",               code:"IRQ", confederation:"AFC",      group:"I", fifa_ranking:63, elo:1450 },
   { name:"Norway",             code:"NOR", confederation:"UEFA",     group:"I", fifa_ranking:26, elo:1667 },
 
   // ── Groupe J : Argentine, Algérie, Autriche, Jordanie ────────────────────
-  { name:"Argentina",          code:"ARG", confederation:"CONMEBOL", group:"J", fifa_ranking:1,  elo:2002 },
+  { name:"Argentina",          code:"ARG", confederation:"CONMEBOL", group:"J", fifa_ranking:1,  elo:2005 },
   { name:"Algeria",            code:"ALG", confederation:"CAF",      group:"J", fifa_ranking:36, elo:1600 },
   { name:"Austria",            code:"AUT", confederation:"UEFA",     group:"J", fifa_ranking:26, elo:1652 },
   { name:"Jordan",             code:"JOR", confederation:"AFC",      group:"J", fifa_ranking:97, elo:1370 },
 
   // ── Groupe K : Portugal, RD Congo, Ouzbékistan, Colombie ─────────────────
   { name:"Portugal",           code:"POR", confederation:"UEFA",     group:"K", fifa_ranking:6,  elo:1883 },
-  { name:"DR Congo",           code:"COD", confederation:"CAF",      group:"K", fifa_ranking:52, elo:1462 },
+  { name:"DR Congo",           code:"COD", confederation:"CAF",      group:"K", fifa_ranking:52, elo:1449 },
   { name:"Uzbekistan",         code:"UZB", confederation:"AFC",      group:"K", fifa_ranking:53, elo:1469 },
   { name:"Colombia",           code:"COL", confederation:"CONMEBOL", group:"K", fifa_ranking:9,  elo:1839 },
 
