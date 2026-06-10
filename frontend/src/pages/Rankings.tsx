@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useQuery } from '@tanstack/react-query'
-import { TrendingUp, TrendingDown, Minus, Award } from 'lucide-react'
+import { TrendingUp, TrendingDown, Minus, Award, RefreshCw } from 'lucide-react'
 import axios from 'axios'
 import { FlagImg } from '../utils/flags'
 
@@ -41,10 +41,12 @@ export default function Rankings() {
   const [filterConf, setFilterConf] = useState<string>('ALL')
   const [filterWC, setFilterWC] = useState(true)
 
-  const { data, isLoading } = useQuery({
+  const { data, isLoading, refetch, isFetching } = useQuery({
     queryKey: ['rankings'],
     queryFn: () => axios.get<RankingsData>('/api/rankings'),
-    staleTime: 1000 * 60 * 60,
+    staleTime: 0,
+    refetchOnMount: true,
+    refetchOnWindowFocus: false,
   })
 
   const rankings = data?.data?.rankings ?? []
@@ -88,13 +90,21 @@ export default function Rankings() {
             </div>
             <p className="text-gray-500 text-sm dark:text-gray-400">
               {isLive
-                ? `Mis à jour en temps réel · inclut matchs amicaux · source FIFA officielle`
+                ? `Temps réel · inclut matchs amicaux · source FIFA officielle`
                 : date
                   ? `Snapshot officiel avril 2026 · Évolution vs classement précédent`
                   : `Source: FIFA`}
             </p>
           </div>
         </div>
+        <button
+          onClick={() => refetch()}
+          disabled={isFetching}
+          className="flex items-center gap-2 px-4 py-2 rounded-lg bg-blue-600 text-white text-sm font-medium hover:bg-blue-700 disabled:opacity-50 transition-colors"
+        >
+          <RefreshCw className={`w-4 h-4 ${isFetching ? 'animate-spin' : ''}`} />
+          {isFetching ? 'Chargement…' : 'Actualiser'}
+        </button>
       </div>
 
       {/* Filters */}

@@ -126,28 +126,36 @@ function mapFifaEntry(r) {
 }
 
 async function fetchFifa(url) {
-  const res = await fetch(url, {
-    headers: {
-      'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
-      'Accept': 'application/json',
-      'Referer': 'https://inside.fifa.com/fifa-world-ranking/men',
-    },
-    signal: AbortSignal.timeout(8000),
-  })
-  if (!res.ok) throw new Error(`HTTP ${res.status}`)
-  const data = await res.json()
-  // API may return array directly or wrapped in { rankings: [...] }
-  const arr = Array.isArray(data) ? data : (data.rankings || data.items || data.data || [])
-  if (!arr.length) throw new Error('empty')
-  return arr
+  const controller = new AbortController()
+  const timer = setTimeout(() => controller.abort(), 8000)
+  try {
+    const res = await fetch(url, {
+      headers: {
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
+        'Accept': 'application/json',
+        'Referer': 'https://inside.fifa.com/fifa-world-ranking/men',
+      },
+      signal: controller.signal,
+    })
+    if (!res.ok) throw new Error(`HTTP ${res.status}`)
+    const data = await res.json()
+    // API may return array directly or wrapped in { rankings: [...] }
+    const arr = Array.isArray(data) ? data : (data.rankings || data.items || data.data || [])
+    if (!arr.length) throw new Error('empty')
+    return arr
+  } finally {
+    clearTimeout(timer)
+  }
 }
 
 export default async function handler(req, res) {
+  // Pas de cache CDN — toujours fraîche pour éviter données périmées
+  res.setHeader('Cache-Control', 'no-store')
+
   // 1. Try live endpoint (inclut les matchs amicaux en cours)
   try {
     const arr = await fetchFifa(FIFA_LIVE_URL)
     const rankings = arr.map(mapFifaEntry)
-    res.setHeader('Cache-Control', 's-maxage=900, stale-while-revalidate=300')
     return res.json({
       date: new Date().toISOString(),
       dateId: 'live',
@@ -162,7 +170,6 @@ export default async function handler(req, res) {
   try {
     const arr = await fetchFifa(FIFA_SCHEDULE_URL)
     const rankings = arr.map(mapFifaEntry)
-    res.setHeader('Cache-Control', 's-maxage=3600, stale-while-revalidate=600')
     return res.json({
       date: '2026-04-01T00:00:00.000Z',
       dateId: 'FRS_Male_Football_20260119',
