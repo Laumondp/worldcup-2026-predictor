@@ -91,8 +91,8 @@ export default function Rankings() {
             <p className="text-gray-500 text-sm dark:text-gray-400">
               {isLive
                 ? `Temps réel · inclut matchs amicaux · source FIFA officielle`
-                : date
-                  ? `Snapshot officiel avril 2026 · Évolution vs classement précédent`
+                : isStatic
+                  ? `Snapshot officiel juin 2026 · Évolution vs classement précédent`
                   : `Source: FIFA`}
             </p>
           </div>

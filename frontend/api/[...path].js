@@ -224,11 +224,11 @@ function simulateOnce() {
         const pr = predictMatchEnsemble(teams[i].elo, teams[j].elo);
         const r = Math.random();
         if (r < pr.home_win_probability) {
-          teams[i].pts += 3; teams[i].gd++; teams[j].gd--; teams[i].gf += 2;
+          teams[i].pts += 3; teams[i].gd++; teams[j].gd--; teams[i].gf += 2; teams[j].gf += 1;
         } else if (r < pr.home_win_probability + pr.draw_probability) {
           teams[i].pts++; teams[j].pts++; teams[i].gf++; teams[j].gf++;
         } else {
-          teams[j].pts += 3; teams[j].gd++; teams[i].gd--; teams[j].gf += 2;
+          teams[j].pts += 3; teams[j].gd++; teams[i].gd--; teams[j].gf += 2; teams[i].gf += 1;
         }
       }
     }

@@ -55,7 +55,6 @@ const RANKINGS_FALLBACK = [
   { rank:42, name:"Scotland",           conf:"UEFA",      pts:1498.35, prevRank:53 },
   { rank:43, name:"Tunisia",            conf:"CAF",       pts:1483.05, prevRank:35 },
   { rank:44, name:"Cameroon",           conf:"CAF",       pts:1481.24, prevRank:30 },
-  { rank:11, name:"Croatia",             conf:"UEFA",      pts:1717.07, prevRank:13 },
   { rank:45, name:"DR Congo",           conf:"CAF",       pts:1478.35, prevRank:55 },
   { rank:46, name:"Greece",             conf:"UEFA",      pts:1475.82, prevRank:57 },
   { rank:47, name:"Slovakia",           conf:"UEFA",      pts:1473.94, prevRank:59 },
