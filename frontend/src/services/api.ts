@@ -103,6 +103,23 @@ export interface BracketEntry {
 
 export type KOBracket = Record<string, BracketEntry[]>
 
+export interface Fixture {
+  id: string
+  date: string
+  raw_date: string
+  home_team: string
+  home_team_code: string
+  away_team: string
+  away_team_code: string
+  home_score: number | null
+  away_score: number | null
+  stage: string
+  group: string
+  venue: string
+  city: string
+  status: 'scheduled' | 'live' | 'finished'
+}
+
 export interface RoundProbabilities {
   qualify: number
   r16: number
@@ -169,6 +186,9 @@ export const matchesApi = {
 
   getBracket: () =>
     api.get<KOBracket>('/bracket'),
+
+  getFixtures: () =>
+    api.get<{ count: number; fixtures: Fixture[] }>('/fixtures'),
 }
 
 export const predictionsApi = {

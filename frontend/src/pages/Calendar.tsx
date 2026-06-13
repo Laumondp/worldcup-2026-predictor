@@ -4,7 +4,7 @@ import { Helmet } from 'react-helmet-async'
 import { Moon, MapPin } from 'lucide-react'
 import { FlagImg } from '../utils/flags'
 import { matchesApi } from '../services/api'
-import type { GroupStanding, BracketEntry } from '../services/api'
+import type { GroupStanding, BracketEntry, Fixture } from '../services/api'
 
 // ── Noms français des équipes ────────────────────────────────────
 const TEAM_NAMES: Record<string, string> = {
@@ -237,10 +237,12 @@ function TimeChip({ time }: { time: string }) {
   )
 }
 
-function GroupMatchCard({ m }: { m: GroupMatch }) {
+function GroupMatchCard({ m, fixture }: { m: GroupMatch; fixture: Fixture | null }) {
   const homeName = TEAM_NAMES[m.home] || m.home
   const awayName = TEAM_NAMES[m.away] || m.away
   const night = isNight(m.time)
+  const hasScore = fixture && fixture.home_score != null && fixture.away_score != null
+  const isLive = fixture?.status === 'live'
 
   return (
     <div className={`group relative overflow-hidden rounded-2xl transition-all duration-200 hover:-translate-y-px hover:shadow-lg ${
@@ -263,7 +265,15 @@ function GroupMatchCard({ m }: { m: GroupMatch }) {
           }`}>
             Groupe {m.group}
           </span>
-          <TimeChip time={m.time} />
+          <div className="flex items-center gap-2">
+            {isLive && (
+              <span className="inline-flex items-center gap-1 text-[9px] font-black tracking-widest uppercase px-2 py-1 rounded-full bg-red-500/10 text-red-500 border border-red-500/30 animate-pulse">
+                <span className="w-1.5 h-1.5 rounded-full bg-red-500 inline-block" />
+                Live
+              </span>
+            )}
+            <TimeChip time={m.time} />
+          </div>
         </div>
 
         {/* Teams */}
@@ -276,9 +286,23 @@ function GroupMatchCard({ m }: { m: GroupMatch }) {
             }`}>{homeName}</span>
           </div>
 
-          <span className={`shrink-0 font-thin text-xl px-1 ${
-            night ? 'text-indigo-800/80' : 'text-slate-200 dark:text-slate-700'
-          }`}>—</span>
+          {hasScore ? (
+            <div className={`shrink-0 flex items-center gap-1.5 px-3 py-1 rounded-xl font-black text-xl tabular-nums ${
+              isLive
+                ? 'bg-red-500/10 text-red-400 border border-red-500/20'
+                : night
+                  ? 'bg-indigo-900/40 text-indigo-100 border border-indigo-700/30'
+                  : 'bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-slate-100 border border-slate-200 dark:border-slate-700'
+            }`}>
+              <span>{fixture!.home_score}</span>
+              <span className="text-slate-400 dark:text-slate-500 font-thin">-</span>
+              <span>{fixture!.away_score}</span>
+            </div>
+          ) : (
+            <span className={`shrink-0 font-thin text-xl px-1 ${
+              night ? 'text-indigo-800/80' : 'text-slate-200 dark:text-slate-700'
+            }`}>—</span>
+          )}
 
           {/* Away */}
           <div className="flex items-center gap-2.5 flex-1 min-w-0 justify-end">
@@ -389,6 +413,23 @@ export default function Calendar() {
     queryFn: () => matchesApi.getBracket().then(r => r.data),
     staleTime: 5 * 60 * 1000,
   })
+
+  const { data: fixturesData } = useQuery({
+    queryKey: ['fixtures'],
+    queryFn: () => matchesApi.getFixtures().then(r => r.data),
+    staleTime: 60_000,
+    refetchInterval: 60_000,
+  })
+
+  const fixturesLookup = useMemo((): Record<string, Fixture> => {
+    if (!fixturesData) return {}
+    const map: Record<string, Fixture> = {}
+    for (const f of fixturesData.fixtures) {
+      if (f.home_team_code && f.away_team_code)
+        map[`${f.home_team_code}_${f.away_team_code}`] = f
+    }
+    return map
+  }, [fixturesData])
 
   const standingsLookup = useMemo(() => {
     if (!standingsData) return {} as Record<string, GroupStanding['teams']>
@@ -512,7 +553,7 @@ export default function Calendar() {
 
                 {/* Cards grid */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                  {matches.map(m => <GroupMatchCard key={m.id} m={m} />)}
+                  {matches.map(m => <GroupMatchCard key={m.id} m={m} fixture={fixturesLookup[`${m.home}_${m.away}`] ?? null} />)}
                 </div>
               </div>
             )

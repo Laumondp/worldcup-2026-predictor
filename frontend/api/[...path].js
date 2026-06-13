@@ -469,7 +469,7 @@ async function fetchFifaFixtures() {
     // Si les deux scores sont présents et la date est passée → match terminé (robuste aux codes FIFA inconnus)
     const matchMs = m.Date ? new Date(m.Date).getTime() : 0;
     const status = (hScore != null && aScore != null && matchMs > 0 && matchMs < Date.now()) ? 'finished' : rawStatus;
-    return { id, date, raw_date:m.Date||'', home_team: homeTeam, away_team: awayTeam, home_score:hScore, away_score:aScore, stage:desc(m.StageName), group:desc(m.GroupName), venue:desc(stadium.Name)||stadium.Name||'', city:desc(stadium.CityName)||stadium.CityName||'', status };
+    return { id, date, raw_date:m.Date||'', home_team: homeTeam, away_team: awayTeam, home_team_code: findTeam(homeTeam).code, away_team_code: findTeam(awayTeam).code, home_score:hScore, away_score:aScore, stage:desc(m.StageName), group:desc(m.GroupName), venue:desc(stadium.Name)||stadium.Name||'', city:desc(stadium.CityName)||stadium.CityName||'', status };
   });
 }
 
