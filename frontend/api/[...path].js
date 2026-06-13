@@ -151,11 +151,23 @@ function predictMatchEnsemble(homeElo, awayElo, isKnockout = false) {
 // ── CALCUL ANALYTIQUE EXACT DES GROUPES ─────────────────────────────
 // Énumération des 3^6 = 729 combinaisons de résultats possibles (4 équipes, 6 matchs)
 // Donne les probabilités exactes de qualification sans Monte Carlo
-function computeGroupProbs(groupTeams) {
+function computeGroupProbs(groupTeams, playedMap = new Map()) {
   const n = groupTeams.length;
   const games = [];
   for (let i = 0; i < n; i++) for (let j = i + 1; j < n; j++) games.push([i, j]);
-  const precomp = games.map(([i, j]) => predictMatchEnsemble(groupTeams[i].elo, groupTeams[j].elo));
+  const precomp = games.map(([i, j]) => {
+    const key = [groupTeams[i].name, groupTeams[j].name].sort().join('|');
+    const played = playedMap.get(key);
+    if (played) {
+      const homeIsI = played.home === groupTeams[i].name;
+      const hWon = played.homeScore > played.awayScore;
+      const isDraw = played.homeScore === played.awayScore;
+      const iWins = isDraw ? false : (homeIsI ? hWon : !hWon);
+      const jWins = isDraw ? false : !iWins;
+      return { home_win_probability: iWins ? 1 : 0, draw_probability: isDraw ? 1 : 0, away_win_probability: jWins ? 1 : 0 };
+    }
+    return predictMatchEnsemble(groupTeams[i].elo, groupTeams[j].elo);
+  });
   const pQualify = new Array(n).fill(0);
   const p1st     = new Array(n).fill(0);
   const p3rd     = new Array(n).fill(0);
@@ -208,19 +220,41 @@ function computeGroupProbs(groupTeams) {
 }
 
 // ── SIMULATION MONTE CARLO (modèle Ensemble, suivi par tour) ────────
-function simulateOnce() {
+function simulateOnce(liveElos = new Map(), playedGroup = []) {
   const reached = {};
-  for (const t of TEAMS) reached[t.name] = 0; // 0 = éliminé en phase de groupes
+  for (const t of TEAMS) reached[t.name] = 0;
 
   const groups = {};
   for (const t of TEAMS) {
     if (!groups[t.group]) groups[t.group] = [];
-    groups[t.group].push({ ...t, pts: 0, gd: 0, gf: 0 });
+    const elo = liveElos.get(t.name) ?? t.elo;
+    groups[t.group].push({ ...t, elo, pts: 0, gd: 0, gf: 0 });
   }
 
+  // Paires déjà jouées (insensible à l'ordre)
+  const playedSet = new Set(playedGroup.map(m => [m.home, m.away].sort().join('|')));
+
+  // Pré-appliquer les vrais résultats de phase de groupes
+  for (const m of playedGroup) {
+    for (const grp of Object.values(groups)) {
+      const h = grp.find(t => t.name === m.home);
+      const a = grp.find(t => t.name === m.away);
+      if (h && a) {
+        h.gf += m.homeScore; h.gd += m.homeScore - m.awayScore;
+        a.gf += m.awayScore; a.gd += m.awayScore - m.homeScore;
+        if (m.homeScore > m.awayScore) { h.pts += 3; }
+        else if (m.awayScore > m.homeScore) { a.pts += 3; }
+        else { h.pts++; a.pts++; }
+        break;
+      }
+    }
+  }
+
+  // Simuler uniquement les matchs restants
   for (const teams of Object.values(groups)) {
     for (let i = 0; i < teams.length; i++) {
       for (let j = i + 1; j < teams.length; j++) {
+        if (playedSet.has([teams[i].name, teams[j].name].sort().join('|'))) continue;
         const pr = predictMatchEnsemble(teams[i].elo, teams[j].elo);
         const r = Math.random();
         if (r < pr.home_win_probability) {
@@ -435,7 +469,7 @@ async function fetchFifaFixtures() {
     // Si les deux scores sont présents et la date est passée → match terminé (robuste aux codes FIFA inconnus)
     const matchMs = m.Date ? new Date(m.Date).getTime() : 0;
     const status = (hScore != null && aScore != null && matchMs > 0 && matchMs < Date.now()) ? 'finished' : rawStatus;
-    return { id, date, home_team: homeTeam, away_team: awayTeam, home_score:hScore, away_score:aScore, stage:desc(m.StageName), group:desc(m.GroupName), venue:desc(stadium.Name)||stadium.Name||'', city:desc(stadium.CityName)||stadium.CityName||'', status };
+    return { id, date, raw_date:m.Date||'', home_team: homeTeam, away_team: awayTeam, home_score:hScore, away_score:aScore, stage:desc(m.StageName), group:desc(m.GroupName), venue:desc(stadium.Name)||stadium.Name||'', city:desc(stadium.CityName)||stadium.CityName||'', status };
   });
 }
 
@@ -551,6 +585,53 @@ function findTeam(name) {
   if (partial) return partial;
   // Fallback : équipe inconnue avec ELO moyen
   return { name: name.trim(), code: name.slice(0,3).toUpperCase(), confederation:'Unknown', group:null, fifa_ranking:100, elo:1500 };
+}
+
+// ── ELOs live recalculés depuis les vrais résultats CM2026 ──────────
+// Cache par instance serverless (TTL 2 min)
+let _liveCache = null;
+const LIVE_TTL = 120_000;
+
+async function fetchLiveData() {
+  const now = Date.now();
+  if (_liveCache && now - _liveCache.ts < LIVE_TTL) return _liveCache;
+
+  const elos = new Map(ALL_TEAMS.map(t => [t.name, t.elo]));
+  const playedGroup = []; // { home, away, homeScore, awayScore }
+
+  try {
+    const fixtures = await fetchFifaFixtures();
+    const finished = fixtures
+      .filter(f => f.status === 'finished' && f.home_score != null && f.away_score != null)
+      .sort((a, b) => (a.raw_date || '').localeCompare(b.raw_date || ''));
+
+    for (const f of finished) {
+      const home = findTeam(f.home_team);
+      const away = findTeam(f.away_team);
+      if (!home || !away) continue;
+
+      const homeElo = elos.get(home.name) ?? home.elo;
+      const awayElo = elos.get(away.name) ?? away.elo;
+
+      // K=30 phase de groupes, K=40 phase KO
+      const isKO = !f.group || !f.group.trim();
+      const K = isKO ? 40 : 30;
+      const expectedHome = 1 / (1 + Math.pow(10, (awayElo - homeElo) / 400));
+      const actualHome = f.home_score > f.away_score ? 1 : f.home_score < f.away_score ? 0 : 0.5;
+
+      elos.set(home.name, Math.round((homeElo + K * (actualHome - expectedHome)) * 10) / 10);
+      elos.set(away.name, Math.round((awayElo + K * ((1 - actualHome) - (1 - expectedHome))) * 10) / 10);
+
+      if (!isKO) {
+        playedGroup.push({ home: home.name, away: away.name, homeScore: f.home_score, awayScore: f.away_score });
+      }
+    }
+  } catch (e) {
+    console.error('[fetchLiveData]', e);
+  }
+
+  _liveCache = { ts: now, elos, playedGroup };
+  return _liveCache;
 }
 
 export default async function handler(req, res) {
@@ -714,7 +795,10 @@ export default async function handler(req, res) {
     const { home_team, away_team, is_knockout } = req.body || {};
     const home = findTeam(home_team), away = findTeam(away_team);
     if (!home || !away) return res.status(404).json({ error: 'Team not found: ' + (!home ? home_team : away_team) });
-    return res.json({ ...predictMatch(home.elo, away.elo, is_knockout||false), home_team:home.name, away_team:away.name });
+    const { elos: liveElos } = await fetchLiveData();
+    const homeElo = liveElos.get(home.name) ?? home.elo;
+    const awayElo = liveElos.get(away.name) ?? away.elo;
+    return res.json({ ...predictMatch(homeElo, awayElo, is_knockout||false), home_team:home.name, away_team:away.name });
   }
 
   // POST /api/simulate?n=2000 — simulation Monte Carlo multi-modèles
@@ -727,8 +811,11 @@ export default async function handler(req, res) {
     const reachCounts = {};
     const winCounts   = {};
 
+    const { elos: liveElos, playedGroup } = await fetchLiveData();
+    const playedMap = new Map(playedGroup.map(m => [[m.home, m.away].sort().join('|'), m]));
+
     for (let sim = 0; sim < N; sim++) {
-      const { winner, reached } = simulateOnce();
+      const { winner, reached } = simulateOnce(liveElos, playedGroup);
       winCounts[winner] = (winCounts[winner] || 0) + 1;
       for (const [team, idx] of Object.entries(reached)) {
         if (!reachCounts[team]) reachCounts[team] = [0, 0, 0, 0, 0, 0, 0];
@@ -736,15 +823,15 @@ export default async function handler(req, res) {
       }
     }
 
-    // Probabilités analytiques exactes (groupes)
+    // Probabilités analytiques exactes (groupes) — ELOs live + résultats réels verrouillés
     const analyticalGroups = {};
     const groupMap = {};
     for (const t of TEAMS) {
       if (!groupMap[t.group]) groupMap[t.group] = [];
-      groupMap[t.group].push(t);
+      groupMap[t.group].push({ ...t, elo: liveElos.get(t.name) ?? t.elo });
     }
     for (const [g, teams] of Object.entries(groupMap)) {
-      analyticalGroups[g] = computeGroupProbs(teams);
+      analyticalGroups[g] = computeGroupProbs(teams, playedMap);
     }
 
     const sorted = Object.entries(winCounts)
