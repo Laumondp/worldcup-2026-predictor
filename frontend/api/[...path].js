@@ -424,12 +424,18 @@ async function fetchFifaFixtures() {
     let date = m.Date||'';
     try { const d = new Date(date); date = d.toLocaleDateString('fr-FR',{day:'2-digit',month:'2-digit',year:'numeric'})+' '+d.toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'}); } catch {}
     const stadium = m.Stadium||{};
-    const statusMap = {0:'scheduled',1:'scheduled',3:'live',4:'finished',99:'finished'};
+    const statusMap = {0:'scheduled',1:'scheduled',3:'live',4:'finished',5:'finished',6:'finished',99:'finished'};
     const id = String(m.IdMatch||'');
     const bracket = KO_BRACKET[id] || {};
     const homeTeam = desc(m.Home?.TeamName) || bracket.home || '';
     const awayTeam = desc(m.Away?.TeamName) || bracket.away || '';
-    return { id, date, home_team: homeTeam, away_team: awayTeam, home_score:score(m.Home), away_score:score(m.Away), stage:desc(m.StageName), group:desc(m.GroupName), venue:desc(stadium.Name)||stadium.Name||'', city:desc(stadium.CityName)||stadium.CityName||'', status:statusMap[m.MatchStatus??0]||'scheduled' };
+    const hScore = score(m.Home);
+    const aScore = score(m.Away);
+    const rawStatus = statusMap[m.MatchStatus??0]||'scheduled';
+    // Si les deux scores sont présents et la date est passée → match terminé (robuste aux codes FIFA inconnus)
+    const matchMs = m.Date ? new Date(m.Date).getTime() : 0;
+    const status = (hScore != null && aScore != null && matchMs > 0 && matchMs < Date.now()) ? 'finished' : rawStatus;
+    return { id, date, home_team: homeTeam, away_team: awayTeam, home_score:hScore, away_score:aScore, stage:desc(m.StageName), group:desc(m.GroupName), venue:desc(stadium.Name)||stadium.Name||'', city:desc(stadium.CityName)||stadium.CityName||'', status };
   });
 }
 
