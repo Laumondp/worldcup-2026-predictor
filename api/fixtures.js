@@ -5,6 +5,25 @@ const FIFA_URL =
   'https://api.fifa.com/api/v3/calendar/matches' +
   '?idCompetition=17&idSeason=285023&count=200&language=fr-FR';
 
+// ── Nom français → code 3 lettres (même codes que Calendar.tsx) ──────────────
+const NAME_TO_CODE = {
+  'Mexique':'MEX', 'Afrique du Sud':'RSA', 'Corée du Sud':'KOR', 'Tchéquie':'CZE',
+  'Canada':'CAN', 'Bosnie-Herzégovine':'BIH', 'Qatar':'QAT', 'Suisse':'SUI',
+  'Brésil':'BRA', 'Maroc':'MAR', 'Haïti':'HAI', 'Écosse':'SCO',
+  'États-Unis':'USA', 'Australie':'AUS', 'Turquie':'TUR', 'Paraguay':'PAR',
+  'Allemagne':'GER', "Côte d'Ivoire":'CIV', 'Équateur':'ECU', 'Curaçao':'CUW',
+  'Pays-Bas':'NED', 'Suède':'SWE', 'Japon':'JPN', 'Tunisie':'TUN',
+  'Belgique':'BEL', 'Égypte':'EGY', 'Iran':'IRN', 'Nouvelle-Zélande':'NZL',
+  'Espagne':'ESP', 'Cap-Vert':'CPV', 'Arabie saoudite':'KSA', 'Arabie Saoudite':'KSA',
+  'Uruguay':'URU', 'France':'FRA', 'Sénégal':'SEN', 'Irak':'IRQ', 'Norvège':'NOR',
+  'Argentine':'ARG', 'Algérie':'ALG', 'Autriche':'AUT', 'Jordanie':'JOR',
+  'Portugal':'POR', 'RD Congo':'COD', 'Ouzbékistan':'UZB', 'Colombie':'COL',
+  'Angleterre':'ENG', 'Croatie':'CRO', 'Ghana':'GHA', 'Panama':'PAN',
+  // alias FIFA
+  'Türkiye':'TUR', 'République de Corée':'KOR', 'Corée':'KOR',
+  'Bosnie':'BIH', 'Congo RD':'COD',
+};
+
 // ── Team name normalisation ───────────────────────────────────────────────────
 function norm(s) {
   return (s || '').toLowerCase()
@@ -220,17 +239,19 @@ export default async function handler(req, res) {
     const key = normalizeTeam(entry.home) + '|' + normalizeTeam(entry.away);
     const fifa = fifaByTeams.get(key) || null;
     fixtures.push({
-      id:         fifa ? String(fifa.IdMatch || '') : entry.home + '_' + entry.away,
-      date:       entry.date,
-      home_team:  fifa ? (desc(fifa.Home && fifa.Home.TeamName) || entry.home) : entry.home,
-      away_team:  fifa ? (desc(fifa.Away && fifa.Away.TeamName) || entry.away) : entry.away,
-      home_score: fifa ? score(fifa.Home) : null,
-      away_score: fifa ? score(fifa.Away) : null,
-      stage:      entry.stage,
-      group:      'Groupe ' + entry.group,
-      venue:      entry.venue,
-      city:       entry.city,
-      status:     fifa ? (statusMap[fifa.MatchStatus || 0] || 'scheduled') : 'scheduled',
+      id:             fifa ? String(fifa.IdMatch || '') : entry.home + '_' + entry.away,
+      date:           entry.date,
+      home_team:      fifa ? (desc(fifa.Home && fifa.Home.TeamName) || entry.home) : entry.home,
+      away_team:      fifa ? (desc(fifa.Away && fifa.Away.TeamName) || entry.away) : entry.away,
+      home_team_code: NAME_TO_CODE[entry.home] || '',
+      away_team_code: NAME_TO_CODE[entry.away] || '',
+      home_score:     fifa ? score(fifa.Home) : null,
+      away_score:     fifa ? score(fifa.Away) : null,
+      stage:          entry.stage,
+      group:          'Groupe ' + entry.group,
+      venue:          entry.venue,
+      city:           entry.city,
+      status:         fifa ? (statusMap[fifa.MatchStatus || 0] || 'scheduled') : 'scheduled',
     });
   }
 
