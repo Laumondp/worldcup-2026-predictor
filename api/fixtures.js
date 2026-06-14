@@ -31,13 +31,24 @@ function norm(s) {
     .replace(/[^a-z0-9]/g, '');
 }
 const ALIASES = {
-  'etatsunis':  'etatsunis', 'unitedstates': 'etatsunis', 'usa': 'etatsunis',
-  'rdcongo':    'rdcongo',   'congordc': 'rdcongo',
+  // USA
+  'etatsunis':   'etatsunis', 'unitedstates': 'etatsunis', 'usa': 'etatsunis',
+  // Congo
+  'rdcongo':     'rdcongo', 'congordc': 'rdcongo',
   'republiquedemocratiqueducongo': 'rdcongo',
-  'arabie':     'arabiesaoudite',
-  'coreedelud': 'coreedusud',
-  'republicdecoree': 'coreedusud',
-  'coreedelasud': 'coreedusud',
+  // Arabie Saoudite
+  'arabie':      'arabiesaoudite',
+  // Corée du Sud — FIFA fr retourne "République de Corée"
+  'coreedusud':       'coreedusud',
+  'coreedelasud':     'coreedusud',
+  'republicdecoree':  'coreedusud',
+  'republiquedecoree':'coreedusud',
+  // Tchéquie — FIFA peut retourner "République tchèque"
+  'tchequie':          'tchequie',
+  'republiquetcheque': 'tchequie',
+  // Bosnie
+  'bosnie':             'bosnieherzegovine',
+  'bosniaherzegovine':  'bosnieherzegovine',
 };
 function normalizeTeam(name) { const n = norm(name); return ALIASES[n] || n; }
 
