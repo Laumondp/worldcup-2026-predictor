@@ -47,8 +47,9 @@ const ALIASES = {
   'tchequie':          'tchequie',
   'republiquetcheque': 'tchequie',
   // Bosnie
-  'bosnie':             'bosnieherzegovine',
-  'bosniaherzegovine':  'bosnieherzegovine',
+  'bosnie':               'bosnieherzegovine',
+  'bosniaherzegovine':    'bosnieherzegovine',
+  'bosnieetherzegovine':  'bosnieherzegovine',  // FIFA fr: "Bosnie-et-Herzégovine"
 };
 function normalizeTeam(name) { const n = norm(name); return ALIASES[n] || n; }
 
