@@ -83,10 +83,18 @@ export const RECENT_MATCHES = [
   { date:"2026-06-14", home:"Germany", away:"Curaçao", home_score:7, away_score:1, tournament:"FIFA World Cup" },
   { date:"2026-06-14", home:"Ivory Coast", away:"Ecuador", home_score:1, away_score:0, tournament:"FIFA World Cup" },
   { date:"2026-06-14", home:"Netherlands", away:"Japan", home_score:2, away_score:2, tournament:"FIFA World Cup" },
-  { date:"2026-06-14", home:"Sweden", away:"Tunisia", home_score:5, away_score:1, tournament:"FIFA World Cup" }
+  { date:"2026-06-14", home:"Sweden", away:"Tunisia", home_score:5, away_score:1, tournament:"FIFA World Cup" },
+  { date:"2026-06-15", home:"Belgium", away:"Egypt", home_score:1, away_score:1, tournament:"FIFA World Cup" },
+  { date:"2026-06-15", home:"Iran", away:"New Zealand", home_score:2, away_score:2, tournament:"FIFA World Cup" },
+  { date:"2026-06-15", home:"Spain", away:"Cape Verde", home_score:0, away_score:0, tournament:"FIFA World Cup" },
+  { date:"2026-06-15", home:"Saudi Arabia", away:"Uruguay", home_score:1, away_score:1, tournament:"FIFA World Cup" },
+  { date:"2026-06-16", home:"France", away:"Senegal", home_score:3, away_score:1, tournament:"FIFA World Cup" },
+  { date:"2026-06-16", home:"Iraq", away:"Norway", home_score:1, away_score:4, tournament:"FIFA World Cup" },
+  { date:"2026-06-16", home:"Argentina", away:"Algeria", home_score:3, away_score:0, tournament:"FIFA World Cup" },
+  { date:"2026-06-16", home:"Austria", away:"Jordan", home_score:3, away_score:1, tournament:"FIFA World Cup" }
 ];
 
-export const RECENT_MATCHES_DATE = "2026-06-16";
+export const RECENT_MATCHES_DATE = "2026-06-17";
 
 // ── 48 équipes qualifiées — groupes officiels FIFA ────────────────────────────
 // fifa_ranking = classement FIFA live juin 2026 (source: inside.fifa.com/api/live-world-ranking)
@@ -129,28 +137,28 @@ export const TEAMS = [
   { name:"Tunisia",            code:"TUN", confederation:"CAF",      group:"F", fifa_ranking:43, elo:1496 },
 
   // ── Groupe G : Belgique, Égypte, Iran, Nouvelle-Zélande ──────────────────
-  { name:"Belgium",            code:"BEL", confederation:"UEFA",     group:"G", fifa_ranking:9,  elo:1874 },
-  { name:"Egypt",              code:"EGY", confederation:"CAF",      group:"G", fifa_ranking:28, elo:1578 },
-  { name:"Iran",               code:"IRN", confederation:"AFC",      group:"G", fifa_ranking:21, elo:1721 },
-  { name:"New Zealand",        code:"NZL", confederation:"OFC",      group:"G", fifa_ranking:65, elo:1297 },
+  { name:"Belgium",            code:"BEL", confederation:"UEFA",     group:"G", fifa_ranking:9,  elo:1853 },
+  { name:"Egypt",              code:"EGY", confederation:"CAF",      group:"G", fifa_ranking:28, elo:1599 },
+  { name:"Iran",               code:"IRN", confederation:"AFC",      group:"G", fifa_ranking:21, elo:1696 },
+  { name:"New Zealand",        code:"NZL", confederation:"OFC",      group:"G", fifa_ranking:65, elo:1322 },
 
   // ── Groupe H : Espagne, Cap-Vert, Arabie saoudite, Uruguay ───────────────
-  { name:"Spain",              code:"ESP", confederation:"UEFA",     group:"H", fifa_ranking:2,  elo:1931 },
-  { name:"Cape Verde",         code:"CPV", confederation:"CAF",      group:"H", fifa_ranking:72, elo:1455 },
-  { name:"Saudi Arabia",       code:"KSA", confederation:"AFC",      group:"H", fifa_ranking:63, elo:1507 },
-  { name:"Uruguay",            code:"URU", confederation:"CONMEBOL", group:"H", fifa_ranking:17, elo:1790 },
+  { name:"Spain",              code:"ESP", confederation:"UEFA",     group:"H", fifa_ranking:2,  elo:1905 },
+  { name:"Cape Verde",         code:"CPV", confederation:"CAF",      group:"H", fifa_ranking:72, elo:1481 },
+  { name:"Saudi Arabia",       code:"KSA", confederation:"AFC",      group:"H", fifa_ranking:63, elo:1527 },
+  { name:"Uruguay",            code:"URU", confederation:"CONMEBOL", group:"H", fifa_ranking:17, elo:1770 },
 
   // ── Groupe I : France, Sénégal, Irak, Norvège ────────────────────────────
-  { name:"France",             code:"FRA", confederation:"UEFA",     group:"I", fifa_ranking:3,  elo:1926 },
-  { name:"Senegal",            code:"SEN", confederation:"CAF",      group:"I", fifa_ranking:14, elo:1700 },
-  { name:"Iraq",               code:"IRQ", confederation:"AFC",      group:"I", fifa_ranking:57, elo:1450 },
-  { name:"Norway",             code:"NOR", confederation:"UEFA",     group:"I", fifa_ranking:31, elo:1667 },
+  { name:"France",             code:"FRA", confederation:"UEFA",     group:"I", fifa_ranking:3,  elo:1945 },
+  { name:"Senegal",            code:"SEN", confederation:"CAF",      group:"I", fifa_ranking:14, elo:1681 },
+  { name:"Iraq",               code:"IRQ", confederation:"AFC",      group:"I", fifa_ranking:57, elo:1427 },
+  { name:"Norway",             code:"NOR", confederation:"UEFA",     group:"I", fifa_ranking:31, elo:1690 },
 
   // ── Groupe J : Argentine, Algérie, Autriche, Jordanie ────────────────────
-  { name:"Argentina",          code:"ARG", confederation:"CONMEBOL", group:"J", fifa_ranking:1,  elo:2005 },
-  { name:"Algeria",            code:"ALG", confederation:"CAF",      group:"J", fifa_ranking:29, elo:1619 },
-  { name:"Austria",            code:"AUT", confederation:"UEFA",     group:"J", fifa_ranking:24, elo:1652 },
-  { name:"Jordan",             code:"JOR", confederation:"AFC",      group:"J", fifa_ranking:68, elo:1370 },
+  { name:"Argentina",          code:"ARG", confederation:"CONMEBOL", group:"J", fifa_ranking:1,  elo:2015 },
+  { name:"Algeria",            code:"ALG", confederation:"CAF",      group:"J", fifa_ranking:29, elo:1609 },
+  { name:"Austria",            code:"AUT", confederation:"UEFA",     group:"J", fifa_ranking:24, elo:1667 },
+  { name:"Jordan",             code:"JOR", confederation:"AFC",      group:"J", fifa_ranking:68, elo:1355 },
 
   // ── Groupe K : Portugal, RD Congo, Ouzbékistan, Colombie ─────────────────
   { name:"Portugal",           code:"POR", confederation:"UEFA",     group:"K", fifa_ranking:5,  elo:1886 },
