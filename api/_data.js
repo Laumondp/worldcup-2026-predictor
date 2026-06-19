@@ -95,26 +95,30 @@ export const RECENT_MATCHES = [
   { date:"2026-06-17", home:"Portugal", away:"DR Congo", home_score:1, away_score:1, tournament:"FIFA World Cup" },
   { date:"2026-06-17", home:"Uzbekistan", away:"Colombia", home_score:1, away_score:3, tournament:"FIFA World Cup" },
   { date:"2026-06-17", home:"England", away:"Croatia", home_score:4, away_score:2, tournament:"FIFA World Cup" },
-  { date:"2026-06-17", home:"Ghana", away:"Panama", home_score:1, away_score:0, tournament:"FIFA World Cup" }
+  { date:"2026-06-17", home:"Ghana", away:"Panama", home_score:1, away_score:0, tournament:"FIFA World Cup" },
+  { date:"2026-06-18", home:"Czechia", away:"South Africa", home_score:1, away_score:1, tournament:"FIFA World Cup" },
+  { date:"2026-06-18", home:"Mexico", away:"South Korea", home_score:1, away_score:0, tournament:"FIFA World Cup" },
+  { date:"2026-06-18", home:"Switzerland", away:"Bosnia-Herzegovina", home_score:4, away_score:1, tournament:"FIFA World Cup" },
+  { date:"2026-06-18", home:"Canada", away:"Qatar", home_score:6, away_score:0, tournament:"FIFA World Cup" }
 ];
 
-export const RECENT_MATCHES_DATE = "2026-06-18";
+export const RECENT_MATCHES_DATE = "2026-06-19";
 
 // ── 48 équipes qualifiées — groupes officiels FIFA ────────────────────────────
 // fifa_ranking = classement FIFA live juin 2026 (source: inside.fifa.com/api/live-world-ranking)
 // elo = base avril 2026 + K=30 ajustements amicaux 22 mai–9 juin 2026
 export const TEAMS = [
   // ── Groupe A : Mexique, Afrique du Sud, Corée du Sud, Tchéquie ────────────
-  { name:"Mexico",             code:"MEX", confederation:"CONCACAF", group:"A", fifa_ranking:15, elo:1782 },
-  { name:"South Africa",       code:"RSA", confederation:"CAF",      group:"A", fifa_ranking:60, elo:1465 },
-  { name:"South Korea",        code:"KOR", confederation:"AFC",      group:"A", fifa_ranking:25, elo:1698 },
-  { name:"Czechia",            code:"CZE", confederation:"UEFA",     group:"A", fifa_ranking:40, elo:1579 },
+  { name:"Mexico",             code:"MEX", confederation:"CONCACAF", group:"A", fifa_ranking:15, elo:1805 },
+  { name:"South Africa",       code:"RSA", confederation:"CAF",      group:"A", fifa_ranking:60, elo:1475 },
+  { name:"South Korea",        code:"KOR", confederation:"AFC",      group:"A", fifa_ranking:25, elo:1675 },
+  { name:"Czechia",            code:"CZE", confederation:"UEFA",     group:"A", fifa_ranking:40, elo:1569 },
 
   // ── Groupe B : Canada, Bosnie-Herzégovine, Qatar, Suisse ──────────────────
-  { name:"Canada",             code:"CAN", confederation:"CONCACAF", group:"B", fifa_ranking:30, elo:1567 },
-  { name:"Bosnia-Herzegovina", code:"BIH", confederation:"UEFA",     group:"B", fifa_ranking:51, elo:1492 },
-  { name:"Qatar",              code:"QAT", confederation:"AFC",      group:"B", fifa_ranking:55, elo:1529 },
-  { name:"Switzerland",        code:"SUI", confederation:"UEFA",     group:"B", fifa_ranking:19, elo:1698 },
+  { name:"Canada",             code:"CAN", confederation:"CONCACAF", group:"B", fifa_ranking:30, elo:1618 },
+  { name:"Bosnia-Herzegovina", code:"BIH", confederation:"UEFA",     group:"B", fifa_ranking:51, elo:1467 },
+  { name:"Qatar",              code:"QAT", confederation:"AFC",      group:"B", fifa_ranking:55, elo:1478 },
+  { name:"Switzerland",        code:"SUI", confederation:"UEFA",     group:"B", fifa_ranking:19, elo:1723 },
 
   // ── Groupe C : Brésil, Maroc, Haïti, Écosse ──────────────────────────────
   { name:"Brazil",             code:"BRA", confederation:"CONMEBOL", group:"C", fifa_ranking:6,  elo:1899 },
