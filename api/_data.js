@@ -99,7 +99,11 @@ export const RECENT_MATCHES = [
   { date:"2026-06-18", home:"Czechia", away:"South Africa", home_score:1, away_score:1, tournament:"FIFA World Cup" },
   { date:"2026-06-18", home:"Mexico", away:"South Korea", home_score:1, away_score:0, tournament:"FIFA World Cup" },
   { date:"2026-06-18", home:"Switzerland", away:"Bosnia-Herzegovina", home_score:4, away_score:1, tournament:"FIFA World Cup" },
-  { date:"2026-06-18", home:"Canada", away:"Qatar", home_score:6, away_score:0, tournament:"FIFA World Cup" }
+  { date:"2026-06-18", home:"Canada", away:"Qatar", home_score:6, away_score:0, tournament:"FIFA World Cup" },
+  { date:"2026-06-19", home:"Scotland", away:"Morocco", home_score:0, away_score:1, tournament:"FIFA World Cup" },
+  { date:"2026-06-19", home:"Brazil", away:"Haiti", home_score:3, away_score:0, tournament:"FIFA World Cup" },
+  { date:"2026-06-19", home:"USA", away:"Australia", home_score:2, away_score:0, tournament:"FIFA World Cup" },
+  { date:"2026-06-19", home:"Turkey", away:"Paraguay", home_score:0, away_score:1, tournament:"FIFA World Cup" }
 ];
 
 export const RECENT_MATCHES_DATE = "2026-06-20";
@@ -121,16 +125,16 @@ export const TEAMS = [
   { name:"Switzerland",        code:"SUI", confederation:"UEFA",     group:"B", fifa_ranking:19, elo:1723 },
 
   // ── Groupe C : Brésil, Maroc, Haïti, Écosse ──────────────────────────────
-  { name:"Brazil",             code:"BRA", confederation:"CONMEBOL", group:"C", fifa_ranking:6,  elo:1899 },
-  { name:"Morocco",            code:"MAR", confederation:"CAF",      group:"C", fifa_ranking:8,  elo:1785 },
-  { name:"Haiti",              code:"HAI", confederation:"CONCACAF", group:"C", fifa_ranking:90, elo:1379 },
-  { name:"Scotland",           code:"SCO", confederation:"UEFA",     group:"C", fifa_ranking:42, elo:1649 },
+  { name:"Brazil",             code:"BRA", confederation:"CONMEBOL", group:"C", fifa_ranking:6,  elo:1904 },
+  { name:"Morocco",            code:"MAR", confederation:"CAF",      group:"C", fifa_ranking:8,  elo:1804 },
+  { name:"Haiti",              code:"HAI", confederation:"CONCACAF", group:"C", fifa_ranking:90, elo:1374 },
+  { name:"Scotland",           code:"SCO", confederation:"UEFA",     group:"C", fifa_ranking:42, elo:1630 },
 
   // ── Groupe D : États-Unis, Paraguay, Australie, Turquie ──────────────────
-  { name:"USA",                code:"USA", confederation:"CONCACAF", group:"D", fifa_ranking:16, elo:1799 },
-  { name:"Paraguay",           code:"PAR", confederation:"CONMEBOL", group:"D", fifa_ranking:39, elo:1515 },
-  { name:"Australia",          code:"AUS", confederation:"AFC",      group:"D", fifa_ranking:27, elo:1696 },
-  { name:"Turkey",             code:"TUR", confederation:"UEFA",     group:"D", fifa_ranking:22, elo:1603 },
+  { name:"USA",                code:"USA", confederation:"CONCACAF", group:"D", fifa_ranking:16, elo:1831 },
+  { name:"Paraguay",           code:"PAR", confederation:"CONMEBOL", group:"D", fifa_ranking:39, elo:1552 },
+  { name:"Australia",          code:"AUS", confederation:"AFC",      group:"D", fifa_ranking:27, elo:1664 },
+  { name:"Turkey",             code:"TUR", confederation:"UEFA",     group:"D", fifa_ranking:22, elo:1566 },
 
   // ── Groupe E : Allemagne, Curaçao, Côte d'Ivoire, Équateur ───────────────
   { name:"Germany",            code:"GER", confederation:"UEFA",     group:"E", fifa_ranking:10, elo:1837 },
