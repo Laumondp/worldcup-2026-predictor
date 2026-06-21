@@ -103,10 +103,14 @@ export const RECENT_MATCHES = [
   { date:"2026-06-19", home:"Scotland", away:"Morocco", home_score:0, away_score:1, tournament:"FIFA World Cup" },
   { date:"2026-06-19", home:"Brazil", away:"Haiti", home_score:3, away_score:0, tournament:"FIFA World Cup" },
   { date:"2026-06-19", home:"USA", away:"Australia", home_score:2, away_score:0, tournament:"FIFA World Cup" },
-  { date:"2026-06-19", home:"Turkey", away:"Paraguay", home_score:0, away_score:1, tournament:"FIFA World Cup" }
+  { date:"2026-06-19", home:"Turkey", away:"Paraguay", home_score:0, away_score:1, tournament:"FIFA World Cup" },
+  { date:"2026-06-20", home:"Germany", away:"Ivory Coast", home_score:2, away_score:1, tournament:"FIFA World Cup" },
+  { date:"2026-06-20", home:"Ecuador", away:"Curaçao", home_score:0, away_score:0, tournament:"FIFA World Cup" },
+  { date:"2026-06-20", home:"Netherlands", away:"Sweden", home_score:5, away_score:1, tournament:"FIFA World Cup" },
+  { date:"2026-06-20", home:"Tunisia", away:"Japan", home_score:0, away_score:4, tournament:"FIFA World Cup" }
 ];
 
-export const RECENT_MATCHES_DATE = "2026-06-20";
+export const RECENT_MATCHES_DATE = "2026-06-21";
 
 // ── 48 équipes qualifiées — groupes officiels FIFA ────────────────────────────
 // fifa_ranking = classement FIFA live juin 2026 (source: inside.fifa.com/api/live-world-ranking)
@@ -137,16 +141,16 @@ export const TEAMS = [
   { name:"Turkey",             code:"TUR", confederation:"UEFA",     group:"D", fifa_ranking:22, elo:1566 },
 
   // ── Groupe E : Allemagne, Curaçao, Côte d'Ivoire, Équateur ───────────────
-  { name:"Germany",            code:"GER", confederation:"UEFA",     group:"E", fifa_ranking:10, elo:1837 },
+  { name:"Germany",            code:"GER", confederation:"UEFA",     group:"E", fifa_ranking:10, elo:1848 },
   { name:"Curaçao",            code:"CUW", confederation:"CONCACAF", group:"E", fifa_ranking:96, elo:1380 },
-  { name:"Ivory Coast",        code:"CIV", confederation:"CAF",      group:"E", fifa_ranking:34, elo:1585 },
-  { name:"Ecuador",            code:"ECU", confederation:"CONMEBOL", group:"E", fifa_ranking:23, elo:1591 },
+  { name:"Ivory Coast",        code:"CIV", confederation:"CAF",      group:"E", fifa_ranking:34, elo:1574 },
+  { name:"Ecuador",            code:"ECU", confederation:"CONMEBOL", group:"E", fifa_ranking:23, elo:1583 },
 
   // ── Groupe F : Pays-Bas, Japon, Suède, Tunisie ───────────────────────────
-  { name:"Netherlands",        code:"NED", confederation:"UEFA",     group:"F", fifa_ranking:7,  elo:1839 },
-  { name:"Japan",              code:"JPN", confederation:"AFC",      group:"F", fifa_ranking:18, elo:1745 },
-  { name:"Sweden",             code:"SWE", confederation:"UEFA",     group:"F", fifa_ranking:37, elo:1647 },
-  { name:"Tunisia",            code:"TUN", confederation:"CAF",      group:"F", fifa_ranking:43, elo:1496 },
+  { name:"Netherlands",        code:"NED", confederation:"UEFA",     group:"F", fifa_ranking:7,  elo:1866 },
+  { name:"Japan",              code:"JPN", confederation:"AFC",      group:"F", fifa_ranking:18, elo:1766 },
+  { name:"Sweden",             code:"SWE", confederation:"UEFA",     group:"F", fifa_ranking:37, elo:1620 },
+  { name:"Tunisia",            code:"TUN", confederation:"CAF",      group:"F", fifa_ranking:43, elo:1475 },
 
   // ── Groupe G : Belgique, Égypte, Iran, Nouvelle-Zélande ──────────────────
   { name:"Belgium",            code:"BEL", confederation:"UEFA",     group:"G", fifa_ranking:9,  elo:1853 },
