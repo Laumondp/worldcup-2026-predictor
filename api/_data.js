@@ -134,7 +134,7 @@ export const RECENT_MATCHES = [
   { date:"2026-06-25", home:"Tunisia", away:"Netherlands", home_score:1, away_score:3, tournament:"FIFA World Cup" }
 ];
 
-export const RECENT_MATCHES_DATE = "2026-06-26";
+export const RECENT_MATCHES_DATE = "2026-06-27";
 
 // ── 48 équipes qualifiées — groupes officiels FIFA ────────────────────────────
 // fifa_ranking = classement FIFA live juin 2026 (source: inside.fifa.com/api/live-world-ranking)
