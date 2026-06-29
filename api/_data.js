@@ -143,10 +143,11 @@ export const RECENT_MATCHES = [
   { date:"2026-06-27", home:"Colombia", away:"Portugal", home_score:0, away_score:0, tournament:"FIFA World Cup" },
   { date:"2026-06-27", home:"DR Congo", away:"Uzbekistan", home_score:3, away_score:1, tournament:"FIFA World Cup" },
   { date:"2026-06-27", home:"Panama", away:"England", home_score:0, away_score:2, tournament:"FIFA World Cup" },
-  { date:"2026-06-27", home:"Croatia", away:"Ghana", home_score:2, away_score:1, tournament:"FIFA World Cup" }
+  { date:"2026-06-27", home:"Croatia", away:"Ghana", home_score:2, away_score:1, tournament:"FIFA World Cup" },
+  { date:"2026-06-28", home:"South Africa", away:"Canada", home_score:0, away_score:1, tournament:"FIFA World Cup" }
 ];
 
-export const RECENT_MATCHES_DATE = "2026-06-28";
+export const RECENT_MATCHES_DATE = "2026-06-29";
 
 // ── 48 équipes qualifiées — groupes officiels FIFA ────────────────────────────
 // fifa_ranking = classement FIFA live juin 2026 (source: inside.fifa.com/api/live-world-ranking)
@@ -154,12 +155,12 @@ export const RECENT_MATCHES_DATE = "2026-06-28";
 export const TEAMS = [
   // ── Groupe A : Mexique, Afrique du Sud, Corée du Sud, Tchéquie ────────────
   { name:"Mexico",             code:"MEX", confederation:"CONCACAF", group:"A", fifa_ranking:15, elo:1826 },
-  { name:"South Africa",       code:"RSA", confederation:"CAF",      group:"A", fifa_ranking:60, elo:1521 },
+  { name:"South Africa",       code:"RSA", confederation:"CAF",      group:"A", fifa_ranking:60, elo:1497 },
   { name:"South Korea",        code:"KOR", confederation:"AFC",      group:"A", fifa_ranking:25, elo:1629 },
   { name:"Czechia",            code:"CZE", confederation:"UEFA",     group:"A", fifa_ranking:40, elo:1548 },
 
   // ── Groupe B : Canada, Bosnie-Herzégovine, Qatar, Suisse ──────────────────
-  { name:"Canada",             code:"CAN", confederation:"CONCACAF", group:"B", fifa_ranking:30, elo:1597 },
+  { name:"Canada",             code:"CAN", confederation:"CONCACAF", group:"B", fifa_ranking:30, elo:1621 },
   { name:"Bosnia-Herzegovina", code:"BIH", confederation:"UEFA",     group:"B", fifa_ranking:51, elo:1513 },
   { name:"Qatar",              code:"QAT", confederation:"AFC",      group:"B", fifa_ranking:55, elo:1432 },
   { name:"Switzerland",        code:"SUI", confederation:"UEFA",     group:"B", fifa_ranking:19, elo:1744 },
