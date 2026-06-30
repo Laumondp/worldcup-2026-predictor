@@ -144,10 +144,13 @@ export const RECENT_MATCHES = [
   { date:"2026-06-27", home:"DR Congo", away:"Uzbekistan", home_score:3, away_score:1, tournament:"FIFA World Cup" },
   { date:"2026-06-27", home:"Panama", away:"England", home_score:0, away_score:2, tournament:"FIFA World Cup" },
   { date:"2026-06-27", home:"Croatia", away:"Ghana", home_score:2, away_score:1, tournament:"FIFA World Cup" },
-  { date:"2026-06-28", home:"South Africa", away:"Canada", home_score:0, away_score:1, tournament:"FIFA World Cup" }
+  { date:"2026-06-28", home:"South Africa", away:"Canada", home_score:0, away_score:1, tournament:"FIFA World Cup" },
+  { date:"2026-06-29", home:"Brazil", away:"Japan", home_score:2, away_score:1, tournament:"FIFA World Cup" },
+  { date:"2026-06-29", home:"Germany", away:"Paraguay", home_score:1, away_score:1, tournament:"FIFA World Cup" },
+  { date:"2026-06-29", home:"Netherlands", away:"Morocco", home_score:1, away_score:1, tournament:"FIFA World Cup" }
 ];
 
-export const RECENT_MATCHES_DATE = "2026-06-29";
+export const RECENT_MATCHES_DATE = "2026-06-30";
 
 // ── 48 équipes qualifiées — groupes officiels FIFA ────────────────────────────
 // fifa_ranking = classement FIFA live juin 2026 (source: inside.fifa.com/api/live-world-ranking)
@@ -166,26 +169,26 @@ export const TEAMS = [
   { name:"Switzerland",        code:"SUI", confederation:"UEFA",     group:"B", fifa_ranking:19, elo:1744 },
 
   // ── Groupe C : Brésil, Maroc, Haïti, Écosse ──────────────────────────────
-  { name:"Brazil",             code:"BRA", confederation:"CONMEBOL", group:"C", fifa_ranking:6,  elo:1922 },
-  { name:"Morocco",            code:"MAR", confederation:"CAF",      group:"C", fifa_ranking:8,  elo:1811 },
+  { name:"Brazil",             code:"BRA", confederation:"CONMEBOL", group:"C", fifa_ranking:6,  elo:1939 },
+  { name:"Morocco",            code:"MAR", confederation:"CAF",      group:"C", fifa_ranking:8,  elo:1816 },
   { name:"Haiti",              code:"HAI", confederation:"CONCACAF", group:"C", fifa_ranking:90, elo:1367 },
   { name:"Scotland",           code:"SCO", confederation:"UEFA",     group:"C", fifa_ranking:42, elo:1612 },
 
   // ── Groupe D : États-Unis, Paraguay, Australie, Turquie ──────────────────
   { name:"USA",                code:"USA", confederation:"CONCACAF", group:"D", fifa_ranking:16, elo:1782 },
-  { name:"Paraguay",           code:"PAR", confederation:"CONMEBOL", group:"D", fifa_ranking:39, elo:1561 },
+  { name:"Paraguay",           code:"PAR", confederation:"CONMEBOL", group:"D", fifa_ranking:39, elo:1579 },
   { name:"Australia",          code:"AUS", confederation:"AFC",      group:"D", fifa_ranking:27, elo:1655 },
   { name:"Turkey",             code:"TUR", confederation:"UEFA",     group:"D", fifa_ranking:22, elo:1615 },
 
   // ── Groupe E : Allemagne, Curaçao, Côte d'Ivoire, Équateur ───────────────
-  { name:"Germany",            code:"GER", confederation:"UEFA",     group:"E", fifa_ranking:10, elo:1799 },
+  { name:"Germany",            code:"GER", confederation:"UEFA",     group:"E", fifa_ranking:10, elo:1781 },
   { name:"Curaçao",            code:"CUW", confederation:"CONCACAF", group:"E", fifa_ranking:96, elo:1380 },
   { name:"Ivory Coast",        code:"CIV", confederation:"CAF",      group:"E", fifa_ranking:34, elo:1610 },
   { name:"Ecuador",            code:"ECU", confederation:"CONMEBOL", group:"E", fifa_ranking:23, elo:1632 },
 
   // ── Groupe F : Pays-Bas, Japon, Suède, Tunisie ───────────────────────────
-  { name:"Netherlands",        code:"NED", confederation:"UEFA",     group:"F", fifa_ranking:7,  elo:1875 },
-  { name:"Japan",              code:"JPN", confederation:"AFC",      group:"F", fifa_ranking:18, elo:1754 },
+  { name:"Netherlands",        code:"NED", confederation:"UEFA",     group:"F", fifa_ranking:7,  elo:1870 },
+  { name:"Japan",              code:"JPN", confederation:"AFC",      group:"F", fifa_ranking:18, elo:1737 },
   { name:"Sweden",             code:"SWE", confederation:"UEFA",     group:"F", fifa_ranking:37, elo:1632 },
   { name:"Tunisia",            code:"TUN", confederation:"CAF",      group:"F", fifa_ranking:43, elo:1466 },
 
