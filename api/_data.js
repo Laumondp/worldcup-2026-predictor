@@ -165,10 +165,12 @@ export const RECENT_MATCHES = [
   { date:"2026-07-05", home:"Brazil", away:"Norway", home_score:1, away_score:2, tournament:"FIFA World Cup" },
   { date:"2026-07-05", home:"Mexico", away:"England", home_score:2, away_score:3, tournament:"FIFA World Cup" },
   { date:"2026-07-06", home:"Portugal", away:"Spain", home_score:0, away_score:1, tournament:"FIFA World Cup" },
-  { date:"2026-07-06", home:"USA", away:"Belgium", home_score:1, away_score:4, tournament:"FIFA World Cup" }
+  { date:"2026-07-06", home:"USA", away:"Belgium", home_score:1, away_score:4, tournament:"FIFA World Cup" },
+  { date:"2026-07-07", home:"Argentina", away:"Egypt", home_score:3, away_score:2, tournament:"FIFA World Cup" },
+  { date:"2026-07-07", home:"Switzerland", away:"Colombia", home_score:0, away_score:0, tournament:"FIFA World Cup" }
 ];
 
-export const RECENT_MATCHES_DATE = "2026-07-07";
+export const RECENT_MATCHES_DATE = "2026-07-08";
 
 // ── 48 équipes qualifiées — groupes officiels FIFA ────────────────────────────
 // fifa_ranking = classement FIFA live juin 2026 (source: inside.fifa.com/api/live-world-ranking)
@@ -184,7 +186,7 @@ export const TEAMS = [
   { name:"Canada",             code:"CAN", confederation:"CONCACAF", group:"B", fifa_ranking:30, elo:1595 },
   { name:"Bosnia-Herzegovina", code:"BIH", confederation:"UEFA",     group:"B", fifa_ranking:51, elo:1497 },
   { name:"Qatar",              code:"QAT", confederation:"AFC",      group:"B", fifa_ranking:55, elo:1432 },
-  { name:"Switzerland",        code:"SUI", confederation:"UEFA",     group:"B", fifa_ranking:19, elo:1774 },
+  { name:"Switzerland",        code:"SUI", confederation:"UEFA",     group:"B", fifa_ranking:19, elo:1782 },
 
   // ── Groupe C : Brésil, Maroc, Haïti, Écosse ──────────────────────────────
   { name:"Brazil",             code:"BRA", confederation:"CONMEBOL", group:"C", fifa_ranking:6,  elo:1892 },
@@ -212,7 +214,7 @@ export const TEAMS = [
 
   // ── Groupe G : Belgique, Égypte, Iran, Nouvelle-Zélande ──────────────────
   { name:"Belgium",            code:"BEL", confederation:"UEFA",     group:"G", fifa_ranking:9,  elo:1904 },
-  { name:"Egypt",              code:"EGY", confederation:"CAF",      group:"G", fifa_ranking:28, elo:1625 },
+  { name:"Egypt",              code:"EGY", confederation:"CAF",      group:"G", fifa_ranking:28, elo:1620 },
   { name:"Iran",               code:"IRN", confederation:"AFC",      group:"G", fifa_ranking:21, elo:1701 },
   { name:"New Zealand",        code:"NZL", confederation:"OFC",      group:"G", fifa_ranking:65, elo:1302 },
 
@@ -229,7 +231,7 @@ export const TEAMS = [
   { name:"Norway",             code:"NOR", confederation:"UEFA",     group:"I", fifa_ranking:31, elo:1767 },
 
   // ── Groupe J : Argentine, Algérie, Autriche, Jordanie ────────────────────
-  { name:"Argentina",          code:"ARG", confederation:"CONMEBOL", group:"J", fifa_ranking:1,  elo:2031 },
+  { name:"Argentina",          code:"ARG", confederation:"CONMEBOL", group:"J", fifa_ranking:1,  elo:2036 },
   { name:"Algeria",            code:"ALG", confederation:"CAF",      group:"J", fifa_ranking:29, elo:1593 },
   { name:"Austria",            code:"AUT", confederation:"UEFA",     group:"J", fifa_ranking:24, elo:1636 },
   { name:"Jordan",             code:"JOR", confederation:"AFC",      group:"J", fifa_ranking:68, elo:1342 },
@@ -238,7 +240,7 @@ export const TEAMS = [
   { name:"Portugal",           code:"POR", confederation:"UEFA",     group:"K", fifa_ranking:5,  elo:1864 },
   { name:"DR Congo",           code:"COD", confederation:"CAF",      group:"K", fifa_ranking:45, elo:1506 },
   { name:"Uzbekistan",         code:"UZB", confederation:"AFC",      group:"K", fifa_ranking:49, elo:1407 },
-  { name:"Colombia",           code:"COL", confederation:"CONMEBOL", group:"K", fifa_ranking:13, elo:1863 },
+  { name:"Colombia",           code:"COL", confederation:"CONMEBOL", group:"K", fifa_ranking:13, elo:1855 },
 
   // ── Groupe L : Angleterre, Croatie, Ghana, Panama ────────────────────────
   { name:"England",            code:"ENG", confederation:"UEFA",     group:"L", fifa_ranking:4,  elo:1957 },
