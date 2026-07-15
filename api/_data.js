@@ -171,10 +171,11 @@ export const RECENT_MATCHES = [
   { date:"2026-07-09", home:"France", away:"Morocco", home_score:2, away_score:0, tournament:"FIFA World Cup" },
   { date:"2026-07-10", home:"Spain", away:"Belgium", home_score:2, away_score:1, tournament:"FIFA World Cup" },
   { date:"2026-07-11", home:"Norway", away:"England", home_score:1, away_score:2, tournament:"FIFA World Cup" },
-  { date:"2026-07-11", home:"Argentina", away:"Switzerland", home_score:3, away_score:1, tournament:"FIFA World Cup" }
+  { date:"2026-07-11", home:"Argentina", away:"Switzerland", home_score:3, away_score:1, tournament:"FIFA World Cup" },
+  { date:"2026-07-14", home:"France", away:"Spain", home_score:0, away_score:2, tournament:"FIFA World Cup" }
 ];
 
-export const RECENT_MATCHES_DATE = "2026-07-14";
+export const RECENT_MATCHES_DATE = "2026-07-15";
 
 // ── 48 équipes qualifiées — groupes officiels FIFA ────────────────────────────
 // fifa_ranking = classement FIFA live juin 2026 (source: inside.fifa.com/api/live-world-ranking)
@@ -223,13 +224,13 @@ export const TEAMS = [
   { name:"New Zealand",        code:"NZL", confederation:"OFC",      group:"G", fifa_ranking:65, elo:1302 },
 
   // ── Groupe H : Espagne, Cap-Vert, Arabie saoudite, Uruguay ───────────────
-  { name:"Spain",              code:"ESP", confederation:"UEFA",     group:"H", fifa_ranking:2,  elo:1999 },
+  { name:"Spain",              code:"ESP", confederation:"UEFA",     group:"H", fifa_ranking:2,  elo:2046 },
   { name:"Cape Verde",         code:"CPV", confederation:"CAF",      group:"H", fifa_ranking:72, elo:1499 },
   { name:"Saudi Arabia",       code:"KSA", confederation:"AFC",      group:"H", fifa_ranking:63, elo:1515 },
   { name:"Uruguay",            code:"URU", confederation:"CONMEBOL", group:"H", fifa_ranking:17, elo:1733 },
 
   // ── Groupe I : France, Sénégal, Irak, Norvège ────────────────────────────
-  { name:"France",             code:"FRA", confederation:"UEFA",     group:"I", fifa_ranking:3,  elo:2017 },
+  { name:"France",             code:"FRA", confederation:"UEFA",     group:"I", fifa_ranking:3,  elo:1970 },
   { name:"Senegal",            code:"SEN", confederation:"CAF",      group:"I", fifa_ranking:14, elo:1659 },
   { name:"Iraq",               code:"IRQ", confederation:"AFC",      group:"I", fifa_ranking:57, elo:1399 },
   { name:"Norway",             code:"NOR", confederation:"UEFA",     group:"I", fifa_ranking:31, elo:1752 },
