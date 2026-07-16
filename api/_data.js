@@ -172,10 +172,11 @@ export const RECENT_MATCHES = [
   { date:"2026-07-10", home:"Spain", away:"Belgium", home_score:2, away_score:1, tournament:"FIFA World Cup" },
   { date:"2026-07-11", home:"Norway", away:"England", home_score:1, away_score:2, tournament:"FIFA World Cup" },
   { date:"2026-07-11", home:"Argentina", away:"Switzerland", home_score:3, away_score:1, tournament:"FIFA World Cup" },
-  { date:"2026-07-14", home:"France", away:"Spain", home_score:0, away_score:2, tournament:"FIFA World Cup" }
+  { date:"2026-07-14", home:"France", away:"Spain", home_score:0, away_score:2, tournament:"FIFA World Cup" },
+  { date:"2026-07-15", home:"England", away:"Argentina", home_score:1, away_score:2, tournament:"FIFA World Cup" }
 ];
 
-export const RECENT_MATCHES_DATE = "2026-07-15";
+export const RECENT_MATCHES_DATE = "2026-07-16";
 
 // ── 48 équipes qualifiées — groupes officiels FIFA ────────────────────────────
 // fifa_ranking = classement FIFA live juin 2026 (source: inside.fifa.com/api/live-world-ranking)
@@ -236,7 +237,7 @@ export const TEAMS = [
   { name:"Norway",             code:"NOR", confederation:"UEFA",     group:"I", fifa_ranking:31, elo:1752 },
 
   // ── Groupe J : Argentine, Algérie, Autriche, Jordanie ────────────────────
-  { name:"Argentina",          code:"ARG", confederation:"CONMEBOL", group:"J", fifa_ranking:1,  elo:2053 },
+  { name:"Argentina",          code:"ARG", confederation:"CONMEBOL", group:"J", fifa_ranking:1,  elo:2076 },
   { name:"Algeria",            code:"ALG", confederation:"CAF",      group:"J", fifa_ranking:29, elo:1593 },
   { name:"Austria",            code:"AUT", confederation:"UEFA",     group:"J", fifa_ranking:24, elo:1636 },
   { name:"Jordan",             code:"JOR", confederation:"AFC",      group:"J", fifa_ranking:68, elo:1342 },
@@ -248,7 +249,7 @@ export const TEAMS = [
   { name:"Colombia",           code:"COL", confederation:"CONMEBOL", group:"K", fifa_ranking:13, elo:1855 },
 
   // ── Groupe L : Angleterre, Croatie, Ghana, Panama ────────────────────────
-  { name:"England",            code:"ENG", confederation:"UEFA",     group:"L", fifa_ranking:4,  elo:1972 },
+  { name:"England",            code:"ENG", confederation:"UEFA",     group:"L", fifa_ranking:4,  elo:1949 },
   { name:"Croatia",            code:"CRO", confederation:"UEFA",     group:"L", fifa_ranking:11, elo:1725 },
   { name:"Ghana",              code:"GHA", confederation:"CAF",      group:"L", fifa_ranking:58, elo:1498 },
   { name:"Panama",             code:"PAN", confederation:"CONCACAF", group:"L", fifa_ranking:33, elo:1492 },
