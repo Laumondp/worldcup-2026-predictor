@@ -220,7 +220,98 @@ function computeGroupProbs(groupTeams, playedMap = new Map()) {
 }
 
 // ── SIMULATION MONTE CARLO (modèle Ensemble, suivi par tour) ────────
-function simulateOnce(liveElos = new Map(), playedGroup = []) {
+// Place les 32 qualifiés dans un tableau à élimination directe façon têtes de série :
+// les équipes les mieux classées (Elo) affrontent les plus faibles au 32e de finale,
+// et deux équipes d'un même groupe sont placées dans des moitiés opposées du tableau.
+// Corrige le bug où le 1er et le 2e d'un même groupe se réaffrontaient dès le 32e,
+// et où les 8 meilleurs 3es formaient un mini-tableau isolé.
+function seedKnockout(qualified) {
+  const n = qualified.length;
+  const ranked = [...qualified].sort((a, b) => b.elo - a.elo);
+  // Ordre standard des têtes de série sur n emplacements (1 vs n, etc.)
+  let order = [1, 2];
+  while (order.length < n) {
+    const sum = order.length * 2 + 1;
+    const next = [];
+    for (const s of order) { next.push(s, sum - s); }
+    order = next;
+  }
+  const slots = order.map(s => ranked[s - 1]).filter(Boolean);
+  // Évite un 32e de finale entre deux équipes du même groupe
+  for (let i = 0; i + 1 < slots.length; i += 2) {
+    if (slots[i].group === slots[i + 1].group) {
+      for (let j = 0; j + 1 < slots.length; j += 2) {
+        if (j === i) continue;
+        if (slots[j + 1].group !== slots[i].group && slots[j].group !== slots[i + 1].group) {
+          const t = slots[i + 1]; slots[i + 1] = slots[j + 1]; slots[j + 1] = t;
+          break;
+        }
+      }
+    }
+  }
+  return slots;
+}
+
+// Mappe un libellé de tour FIFA (fr) vers un identifiant de ronde KO. null = groupe ou 3e place.
+const KO_STAGE_IDX = { r32: 1, r16: 2, qf: 3, sf: 4, final: 5 };
+function stageToRound(stage) {
+  const s = (stage || '').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '');
+  if (s.includes('bronze') || s.includes('3e place') || s.includes('third')) return null; // petite finale
+  if (s.includes('demi')) return 'sf';
+  if (s.includes('quart')) return 'qf';
+  if (s.includes('huitieme') || s.includes('round of 16')) return 'r16';
+  if (s.includes('seizieme') || s.includes('round of 32')) return 'r32';
+  if (s.includes('finale') || s === 'final') return 'final';
+  return null;
+}
+
+// Rejoue les résultats réels des phases finales (verrouillés) et ne simule que les matchs restants.
+// koFixtures : [{ round, home, away, finished, hs, as }] — équipes réelles uniquement.
+// Robuste aux tirs au but : le vainqueur d'un match joué est l'équipe qui APPARAÎT au tour suivant.
+function simulateKnockoutReal(koFixtures, reached, eloOf) {
+  for (const f of koFixtures) {
+    const idx = KO_STAGE_IDX[f.round]; if (!idx) continue;
+    if (reached[f.home] !== undefined) reached[f.home] = Math.max(reached[f.home], idx);
+    if (reached[f.away] !== undefined) reached[f.away] = Math.max(reached[f.away], idx);
+  }
+  const nextHas = (idx, name) => koFixtures.some(g => KO_STAGE_IDX[g.round] === idx + 1 && (g.home === name || g.away === name));
+  const winnerOf = (f) => {
+    const idx = KO_STAGE_IDX[f.round];
+    if (nextHas(idx, f.home) && !nextHas(idx, f.away)) return f.home;
+    if (nextHas(idx, f.away) && !nextHas(idx, f.home)) return f.away;
+    return f.hs > f.as ? f.home : f.hs < f.as ? f.away : null; // finale décisive
+  };
+  const simWin = (hn, an) => {
+    const pr = predictMatchEnsemble(eloOf(hn), eloOf(an), true);
+    const s = pr.home_win_probability + pr.away_win_probability;
+    return Math.random() < (s > 0 ? pr.home_win_probability / s : 0.5) ? hn : an;
+  };
+
+  const deepest = Math.max(...koFixtures.map(f => KO_STAGE_IDX[f.round]));
+  let idx = deepest;
+  let winners = koFixtures
+    .filter(f => KO_STAGE_IDX[f.round] === deepest)
+    .map(f => f.finished ? winnerOf(f) : simWin(f.home, f.away))
+    .filter(Boolean);
+
+  // Avance les vainqueurs à travers les rondes restantes (appariement adjacent)
+  while (winners.length > 1) {
+    idx++;
+    const next = [];
+    for (let i = 0; i < winners.length; i += 2) {
+      const a = winners[i], b = winners[i + 1] || winners[i];
+      if (reached[a] !== undefined) reached[a] = Math.max(reached[a], idx);
+      if (reached[b] !== undefined) reached[b] = Math.max(reached[b], idx);
+      next.push(simWin(a, b));
+    }
+    winners = next;
+  }
+  const champion = winners[0] || '';
+  if (champion && reached[champion] !== undefined) reached[champion] = 6;
+  return champion;
+}
+
+function simulateOnce(liveElos = new Map(), playedGroup = [], koFixtures = []) {
   const reached = {};
   for (const t of TEAMS) reached[t.name] = 0;
 
@@ -284,8 +375,17 @@ function simulateOnce(liveElos = new Map(), playedGroup = []) {
     qualified.push(t);
   }
 
-  // Tours à élimination : r16=2, qf=3, sf=4, finale=5, champion=6
-  let surviving = qualified;
+  // Phase à élimination directe.
+  // Si des matchs KO réels existent, on les VERROUILLE (résultats figés, robustes aux tirs au but)
+  // et on ne simule que les rencontres restantes → une équipe réellement éliminée obtient 0 %.
+  // Sinon (avant le début des KO), simulation synthétique par têtes de série.
+  if (koFixtures.length > 0) {
+    const eloOf = (n) => liveElos.get(n) ?? (TEAMS.find(t => t.name === n)?.elo ?? 1500);
+    const champion = simulateKnockoutReal(koFixtures, reached, eloOf);
+    return { winner: champion, reached };
+  }
+
+  let surviving = seedKnockout(qualified);
   for (let roundIdx = 2; roundIdx <= 6; roundIdx++) {
     const next = [];
     for (let i = 0; i < surviving.length; i += 2) {
@@ -598,12 +698,27 @@ async function fetchLiveData() {
 
   const elos = new Map(ALL_TEAMS.map(t => [t.name, t.elo]));
   const playedGroup = []; // { home, away, homeScore, awayScore }
+  const koFixtures = []; // { round, home, away, finished, hs, as } — phases finales (jouées + à venir)
 
   try {
     const fixtures = await fetchFifaFixtures();
     const finished = fixtures
       .filter(f => f.status === 'finished' && f.home_score != null && f.away_score != null)
       .sort((a, b) => (a.raw_date || '').localeCompare(b.raw_date || ''));
+
+    // Fixtures des phases finales (jouées ET à venir) avec équipes réelles → verrouillage du tableau
+    for (const f of fixtures) {
+      const round = stageToRound(f.stage);
+      if (!round) continue;
+      const h = findTeam(f.home_team);
+      const a = findTeam(f.away_team);
+      if (!h || !a) continue; // participant pas encore déterminé (placeholder)
+      koFixtures.push({
+        round, home: h.name, away: a.name,
+        finished: f.status === 'finished' && f.home_score != null && f.away_score != null,
+        hs: f.home_score, as: f.away_score,
+      });
+    }
 
     for (const f of finished) {
       const home = findTeam(f.home_team);
@@ -630,7 +745,7 @@ async function fetchLiveData() {
     console.error('[fetchLiveData]', e);
   }
 
-  _liveCache = { ts: now, elos, playedGroup };
+  _liveCache = { ts: now, elos, playedGroup, koFixtures };
   return _liveCache;
 }
 
@@ -811,11 +926,11 @@ export default async function handler(req, res) {
     const reachCounts = {};
     const winCounts   = {};
 
-    const { elos: liveElos, playedGroup } = await fetchLiveData();
+    const { elos: liveElos, playedGroup, koFixtures } = await fetchLiveData();
     const playedMap = new Map(playedGroup.map(m => [[m.home, m.away].sort().join('|'), m]));
 
     for (let sim = 0; sim < N; sim++) {
-      const { winner, reached } = simulateOnce(liveElos, playedGroup);
+      const { winner, reached } = simulateOnce(liveElos, playedGroup, koFixtures);
       winCounts[winner] = (winCounts[winner] || 0) + 1;
       for (const [team, idx] of Object.entries(reached)) {
         if (!reachCounts[team]) reachCounts[team] = [0, 0, 0, 0, 0, 0, 0];

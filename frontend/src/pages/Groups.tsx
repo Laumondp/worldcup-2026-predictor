@@ -231,7 +231,7 @@ function GroupMatchRow({ fix }: { fix: KOFixture }) {
 
 export default function Groups() {
   const [selectedGroup, setSelectedGroup] = useState<string | null>(null)
-  const [showGroups, setShowGroups] = useState(false)
+  const [showGroups, setShowGroups] = useState(true)
 
   const { data: fixturesData, isLoading } = useQuery({
     queryKey: ['fixtures'],
