@@ -237,6 +237,12 @@ function TimeChip({ time }: { time: string }) {
   )
 }
 
+// L'API stocke certains codes équipes autrement que le calendrier (codes FIFA standard) :
+// Corée du Sud = RÉP (API) vs KOR (calendrier), Bosnie = BOS vs BIH. On ramène à un code
+// canonique pour que le raccordement des résultats fonctionne des deux côtés.
+const CODE_ALIAS: Record<string, string> = { 'RÉP': 'KOR', BOS: 'BIH' }
+const normCode = (c?: string | null): string => (c ? (CODE_ALIAS[c] ?? c) : '')
+
 function GroupMatchCard({ m, fixture }: { m: GroupMatch; fixture: Fixture | null }) {
   const homeName = TEAM_NAMES[m.home] || m.home
   const awayName = TEAM_NAMES[m.away] || m.away
@@ -439,7 +445,7 @@ export default function Calendar() {
     const map: Record<string, Fixture> = {}
     for (const f of fixturesData.fixtures) {
       if (f.home_team_code && f.away_team_code)
-        map[`${f.home_team_code}_${f.away_team_code}`] = f
+        map[`${normCode(f.home_team_code)}_${normCode(f.away_team_code)}`] = f
     }
     return map
   }, [fixturesData])
@@ -627,8 +633,9 @@ export default function Calendar() {
                     let koHomeScore: number | null | undefined
                     let koAwayScore: number | null | undefined
                     if (resolvedHome?.code && resolvedAway?.code) {
-                      const direct = fixturesLookup[`${resolvedHome.code}_${resolvedAway.code}`]
-                      const rev = fixturesLookup[`${resolvedAway.code}_${resolvedHome.code}`]
+                      const hc = normCode(resolvedHome.code), ac = normCode(resolvedAway.code)
+                      const direct = fixturesLookup[`${hc}_${ac}`]
+                      const rev = fixturesLookup[`${ac}_${hc}`]
                       if (direct) { koHomeScore = direct.home_score; koAwayScore = direct.away_score }
                       else if (rev) { koHomeScore = rev.away_score; koAwayScore = rev.home_score }
                     }
