@@ -329,12 +329,17 @@ function KOMatchCard({
   m,
   resolvedHome,
   resolvedAway,
+  homeScore,
+  awayScore,
 }: {
   m: KOMatch
   resolvedHome: ResolvedTeam | null
   resolvedAway: ResolvedTeam | null
+  homeScore?: number | null
+  awayScore?: number | null
 }) {
   const night = isNight(m.time)
+  const hasScore = homeScore != null && awayScore != null
 
   return (
     <div className={`relative overflow-hidden rounded-2xl transition-all duration-200 hover:-translate-y-px hover:shadow-lg ${
@@ -367,9 +372,17 @@ function KOMatchCard({
             )}
           </div>
 
-          <span className={`shrink-0 font-thin text-xl px-1 ${
-            night ? 'text-indigo-800/80' : 'text-slate-200 dark:text-slate-700'
-          }`}>—</span>
+          {hasScore ? (
+            <span className="shrink-0 flex items-center gap-1.5 px-1 font-black text-xl tabular-nums">
+              <span className={night ? 'text-white' : 'text-slate-900 dark:text-slate-100'}>{homeScore}</span>
+              <span className={night ? 'text-indigo-700' : 'text-slate-300 dark:text-slate-600'}>-</span>
+              <span className={night ? 'text-white' : 'text-slate-900 dark:text-slate-100'}>{awayScore}</span>
+            </span>
+          ) : (
+            <span className={`shrink-0 font-thin text-xl px-1 ${
+              night ? 'text-indigo-800/80' : 'text-slate-200 dark:text-slate-700'
+            }`}>—</span>
+          )}
 
           <div className="flex items-center gap-2.5 flex-1 min-w-0 justify-end">
             {resolvedAway ? (
@@ -609,12 +622,24 @@ export default function Calendar() {
                     if (!resolvedHome) resolvedHome = resolveGroupLabel(m.homeLabel, standingsLookup)
                     if (!resolvedAway) resolvedAway = resolveGroupLabel(m.awayLabel, standingsLookup)
 
+                    // Score du match KO depuis les fixtures de l'API, raccordé par codes
+                    // équipes (l'API peut stocker les équipes dans l'ordre inverse du bracket).
+                    let koHomeScore: number | null | undefined
+                    let koAwayScore: number | null | undefined
+                    if (resolvedHome?.code && resolvedAway?.code) {
+                      const direct = fixturesLookup[`${resolvedHome.code}_${resolvedAway.code}`]
+                      const rev = fixturesLookup[`${resolvedAway.code}_${resolvedHome.code}`]
+                      if (direct) { koHomeScore = direct.home_score; koAwayScore = direct.away_score }
+                      else if (rev) { koHomeScore = rev.away_score; koAwayScore = rev.home_score }
+                    }
+
                     return (
                       <div key={m.id}>
                         <p className="text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest mb-1.5 px-1">
                           {formatDayShort(displayDate(m.date, m.time))}
                         </p>
-                        <KOMatchCard m={m} resolvedHome={resolvedHome} resolvedAway={resolvedAway} />
+                        <KOMatchCard m={m} resolvedHome={resolvedHome} resolvedAway={resolvedAway}
+                          homeScore={koHomeScore} awayScore={koAwayScore} />
                       </div>
                     )
                   })

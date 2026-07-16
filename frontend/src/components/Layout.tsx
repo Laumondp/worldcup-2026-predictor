@@ -160,10 +160,10 @@ export default function Layout() {
                 href="https://cm2026-deploy.vercel.app"
                 target="_blank"
                 rel="noopener noreferrer"
-                title="Ouvrir l'application de pronostics Valeo"
+                title="Ouvrir l'application de pronostics"
                 className="flex items-center px-3 py-1.5 rounded-lg transition-all hover:opacity-75 hover:bg-gray-100 dark:hover:bg-gray-800"
               >
-                <img src="/valeo-logo.png" alt="Valeo" className="h-6 w-auto object-contain" />
+                <img src="/logo_cup.png" alt="Coupe du Monde FIFA 2026" className="h-9 w-auto object-contain" />
               </a>
               <button
                 onClick={toggleTheme}
