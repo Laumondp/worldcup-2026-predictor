@@ -174,10 +174,11 @@ export const RECENT_MATCHES = [
   { date:"2026-07-11", home:"Argentina", away:"Switzerland", home_score:3, away_score:1, tournament:"FIFA World Cup" },
   { date:"2026-07-14", home:"France", away:"Spain", home_score:0, away_score:2, tournament:"FIFA World Cup" },
   { date:"2026-07-15", home:"England", away:"Argentina", home_score:1, away_score:2, tournament:"FIFA World Cup" },
-  { date:"2026-07-18", home:"France", away:"England", home_score:4, away_score:6, tournament:"FIFA World Cup" }
+  { date:"2026-07-18", home:"France", away:"England", home_score:4, away_score:6, tournament:"FIFA World Cup" },
+  { date:"2026-07-19", home:"Spain", away:"Argentina", home_score:1, away_score:0, tournament:"FIFA World Cup" }
 ];
 
-export const RECENT_MATCHES_DATE = "2026-07-19";
+export const RECENT_MATCHES_DATE = "2026-07-20";
 
 // ── 48 équipes qualifiées — groupes officiels FIFA ────────────────────────────
 // fifa_ranking = classement FIFA live juin 2026 (source: inside.fifa.com/api/live-world-ranking)
@@ -226,7 +227,7 @@ export const TEAMS = [
   { name:"New Zealand",        code:"NZL", confederation:"OFC",      group:"G", fifa_ranking:65, elo:1302 },
 
   // ── Groupe H : Espagne, Cap-Vert, Arabie saoudite, Uruguay ───────────────
-  { name:"Spain",              code:"ESP", confederation:"UEFA",     group:"H", fifa_ranking:2,  elo:2046 },
+  { name:"Spain",              code:"ESP", confederation:"UEFA",     group:"H", fifa_ranking:2,  elo:2079 },
   { name:"Cape Verde",         code:"CPV", confederation:"CAF",      group:"H", fifa_ranking:72, elo:1499 },
   { name:"Saudi Arabia",       code:"KSA", confederation:"AFC",      group:"H", fifa_ranking:63, elo:1515 },
   { name:"Uruguay",            code:"URU", confederation:"CONMEBOL", group:"H", fifa_ranking:17, elo:1733 },
@@ -238,7 +239,7 @@ export const TEAMS = [
   { name:"Norway",             code:"NOR", confederation:"UEFA",     group:"I", fifa_ranking:31, elo:1752 },
 
   // ── Groupe J : Argentine, Algérie, Autriche, Jordanie ────────────────────
-  { name:"Argentina",          code:"ARG", confederation:"CONMEBOL", group:"J", fifa_ranking:1,  elo:2076 },
+  { name:"Argentina",          code:"ARG", confederation:"CONMEBOL", group:"J", fifa_ranking:1,  elo:2043 },
   { name:"Algeria",            code:"ALG", confederation:"CAF",      group:"J", fifa_ranking:29, elo:1593 },
   { name:"Austria",            code:"AUT", confederation:"UEFA",     group:"J", fifa_ranking:24, elo:1636 },
   { name:"Jordan",             code:"JOR", confederation:"AFC",      group:"J", fifa_ranking:68, elo:1342 },
