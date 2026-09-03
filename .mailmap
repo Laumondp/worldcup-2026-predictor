@@ -1,0 +1,5 @@
+# Unifie toutes les identites Git vers un seul auteur
+LAUMOND Philippe <laumondp@gmail.com> <philippe@example.com>
+LAUMOND Philippe <laumondp@gmail.com> <philippe@wc2026>
+LAUMOND Philippe <laumondp@gmail.com> Laumondp <laumondp@gmail.com>
+LAUMOND Philippe <laumondp@gmail.com> Philippe Laumond <laumondp@gmail.com>
