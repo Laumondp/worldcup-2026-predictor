@@ -1,15 +1,5 @@
 // Routeur unique — toutes les routes /api/* sont gérées ici
 
-import Redis from 'ioredis';
-let _redis = null;
-function getRedis() {
-  if (!_redis && process.env.REDIS_URL) {
-    _redis = new Redis(process.env.REDIS_URL, { maxRetriesPerRequest: 2, connectTimeout: 3000, commandTimeout: 2000 });
-    _redis.on('error', () => {});
-  }
-  return _redis;
-}
-
 const TEAMS = [
   // GROUPE A — classement FIFA live 10/06/2026
   { name:"Mexico",             code:"MEX", confederation:"CONCACAF", group:"A", fifa_ranking:14, elo:1768 },
@@ -758,12 +748,7 @@ export default async function handler(req, res) {
   const method = req.method;
   const q = req.query || {};
 
-  // Pas de cache pour les endpoints temps-réel
-  if (route === 'visitors' || route === 'visit') {
-    res.setHeader('Cache-Control', 'no-store');
-  } else {
-    res.setHeader('Cache-Control', 's-maxage=60, stale-while-revalidate=30');
-  }
+  res.setHeader('Cache-Control', 's-maxage=60, stale-while-revalidate=30');
 
   // GET /api/teams — list all teams (optional ?confederation= or ?group=)
   if (route === 'teams') {
@@ -1017,43 +1002,6 @@ export default async function handler(req, res) {
     } catch(e) {
       return res.status(500).json({ status:'error', message:String(e) });
     }
-  }
-
-  // POST /api/visit — enregistre ou rafraîchit une visite
-  if (route === 'visit' && method === 'POST') {
-    const r = getRedis();
-    const now = Date.now();
-    const body = req.body || {};
-    // visit_id stable par session ; is_new=false pour les heartbeats (pas d'incr du total)
-    const visitId = body.visit_id || (now + ':' + Math.random().toString(36).slice(2));
-    const isNew = body.is_new !== false;
-    const fiveMinAgo = now - 5 * 60 * 1000;
-    let total = 0;
-    if (r) {
-      const pipe = r.pipeline();
-      if (isNew) pipe.incr('wc:total');
-      pipe.zadd('wc:recent', now, visitId); // met à jour le score si l'ID existe déjà
-      pipe.zremrangebyscore('wc:recent', 0, fiveMinAgo);
-      const results = await pipe.exec();
-      if (isNew) {
-        total = results[0][1] || 0;
-      } else {
-        const t = await r.get('wc:total');
-        total = parseInt(t) || 0;
-      }
-    }
-    return res.json({ status: 'ok', total_visits: total, visit_id: visitId });
-  }
-
-  if (route === 'visitors') {
-    const r = getRedis();
-    if (r) {
-      const now = Date.now();
-      const threeMinAgo = now - 3 * 60 * 1000;
-      const [total, active] = await Promise.all([r.get('wc:total'), r.zcount('wc:recent', threeMinAgo, '+inf')]);
-      return res.json({ total_visits: parseInt(total) || 0, active_now: active || 0 });
-    }
-    return res.json({ total_visits: 0, active_now: 0 });
   }
 
   return res.status(404).json({ error:`Route not found: /api/${route}`, url:req.url });

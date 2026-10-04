@@ -1,8 +1,8 @@
 import { Outlet, Link, useLocation } from 'react-router-dom'
-import { Trophy, BarChart3, Grid3X3, GitBranch, RefreshCw, CheckCircle, XCircle, Award, Eye, Sun, Moon, ShoppingBag, Calendar as CalendarIcon } from 'lucide-react'
-import { useState, useRef, useEffect } from 'react'
+import { Trophy, BarChart3, Grid3X3, GitBranch, RefreshCw, CheckCircle, XCircle, Award, Sun, Moon, ShoppingBag, Calendar as CalendarIcon } from 'lucide-react'
+import { useState } from 'react'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
-import { adminApi, statsApi } from '../services/api'
+import { adminApi } from '../services/api'
 import { useTheme } from '../context/ThemeContext'
 
 const navItems = [
@@ -22,40 +22,6 @@ export default function Layout() {
   const [refreshState, setRefreshState] = useState<RefreshState>('idle')
   const [refreshInfo, setRefreshInfo] = useState<string>('')
   const { theme, toggleTheme } = useTheme()
-
-  const visitRecorded = useRef(false)
-  const sessionVisitId = useRef<string | null>(null)
-
-  const { data: visitors, refetch: refetchVisitors } = useQuery({
-    queryKey: ['visitors'],
-    queryFn: () => statsApi.getVisitors(),
-    refetchInterval: 10_000,
-  })
-
-  // Enregistre la visite une seule fois par session (ID stable dans sessionStorage)
-  useEffect(() => {
-    if (visitRecorded.current) return
-    visitRecorded.current = true
-    let id = sessionStorage.getItem('wc_visit_id')
-    if (!id) {
-      id = Date.now() + ':' + Math.random().toString(36).slice(2)
-      sessionStorage.setItem('wc_visit_id', id)
-    }
-    sessionVisitId.current = id
-    statsApi.recordVisit(id, true)
-      .then(() => refetchVisitors())
-      .catch(() => {})
-  }, [])
-
-  // Heartbeat toutes les 90s pour maintenir le compteur "en ligne" actif
-  useEffect(() => {
-    const interval = setInterval(() => {
-      if (sessionVisitId.current) {
-        statsApi.recordVisit(sessionVisitId.current, false).catch(() => {})
-      }
-    }, 90_000)
-    return () => clearInterval(interval)
-  }, [])
 
   const handleRefresh = async () => {
     setRefreshState('loading')
@@ -89,25 +55,6 @@ export default function Layout() {
 
             {/* Left nav */}
             <nav className="hidden md:flex items-center gap-1 whitespace-nowrap overflow-x-auto">
-              {/* Visitor counter */}
-              <div
-                title={`${visitors?.data?.total_visits?.toLocaleString('fr-FR') ?? '—'} visites au total · ${visitors?.data?.active_now ?? '—'} en ligne maintenant`}
-                className="flex items-center gap-1.5 px-3 py-1.5 mr-1 rounded-lg bg-gray-100/80 border border-gray-200 text-xs text-gray-600 cursor-default dark:bg-gray-800/60 dark:border-gray-700 dark:text-gray-400"
-              >
-                <Eye className="w-3.5 h-3.5" />
-                <span className="font-semibold text-gray-900 dark:text-white" title="Visites totales (cumulées)">
-                  {visitors?.data?.total_visits?.toLocaleString('fr-FR') ?? '—'}
-                </span>
-                <span className="w-px h-3 bg-gray-300 mx-0.5 dark:bg-gray-600" />
-                <span className="relative flex h-2 w-2">
-                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75" />
-                  <span className="relative inline-flex h-2 w-2 rounded-full bg-green-500" />
-                </span>
-                <span className="font-semibold text-green-600 dark:text-green-400" title="En ligne ces 2 dernières minutes">
-                  {visitors?.data?.active_now ?? '—'}
-                </span>
-              </div>
-
               {navItems.map(({ path, label, icon: Icon }) => (
                 <Link
                   key={path}
