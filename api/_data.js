@@ -375,7 +375,7 @@ export const RECENT_MATCHES = [
   { date:"2026-11-17", home:"Iraq", away:"Iran", home_score:1, away_score:1, tournament:"Basra International Tournament" }
 ];
 
-export const RECENT_MATCHES_DATE = "2026-11-24";
+export const RECENT_MATCHES_DATE = "2026-11-25";
 
 // ── 48 équipes qualifiées — groupes officiels FIFA ────────────────────────────
 // fifa_ranking = classement FIFA live juin 2026 (source: inside.fifa.com/api/live-world-ranking)
